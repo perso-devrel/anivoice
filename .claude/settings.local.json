@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(git remote:*)",
+      "Bash(git reset:*)",
+      "Bash(git commit --allow-empty -m ':*)",
+      "Bash(git push:*)",
+      "Bash(git -c http.sslVerify=false push -u origin main)",
+      "Bash(git checkout:*)",
+      "Bash(git -c http.sslVerify=false push -u origin develop)",
+      "Bash(git commit -m ':*)"
+    ]
+  }
+}

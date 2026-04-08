@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -H \"XP-API-KEY: pk_live_090e17b3692441ca8c66ccade7e\" \"https://api.perso.ai/portal/api/v1/spaces\")",
+      "Bash(curl -s -H \"XP-API-KEY: pk_live_090e17b3692441ca8c66ccade7e\" \"https://api.perso.ai/portal/api/v1/spaces\")",
+      "Bash(curl -s -H \"XP-API-KEY: pk_live_090e17b3692441ca8c66ccade7e\" \"https://api.perso.ai/video-translator/api/v1/projects/325965/spaces/501071/download?target=all\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s -H \"XP-API-KEY: pk_live_090e17b3692441ca8c66ccade7e\" \"https://api.perso.ai/video-translator/api/v1/projects/325965/spaces/501071/download-info\")",
+      "Bash(curl -s -H 'XP-API-KEY: pk_live_090e17b3692441ca8c66ccade7e' 'https://api.perso.ai/video-translator/api/v1/projects/325965/spaces/501071/download?target=__TRACKED_VAR__')",
+      "Bash(curl -s -H \"XP-API-KEY: pk_live_090e17b3692441ca8c66ccade7e\" \"https://api.perso.ai/video-translator/api/v1/projects/325965/spaces/501071/download?target=originalSubtitle\")",
+      "Bash(curl -s -H \"XP-API-KEY: pk_live_090e17b3692441ca8c66ccade7e\" \"https://api.perso.ai/video-translator/api/v1/projects/325965/spaces/501071/download?target=translatedSubtitle\")",
+      "Read(//c/Users/EST/AppData/**)",
+      "Bash(ls -la /c/Users/EST/Desktop/anivoice/test_*)",
+      "Bash(ls -la /c/Users/EST/Desktop/anivoice/public/test_*)",
+      "Bash(grep -E \"TimeSegment|Speaker\\\\\\(\" /c/Users/EST/Desktop/anivoice/src/**/*.tsx /c/Users/EST/Desktop/anivoice/src/**/*.ts)",
+      "Bash(git config:*)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\EST\\Desktop\\anivoice\\src\\stores"
+    ]
+  }
+}
