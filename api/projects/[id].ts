@@ -20,7 +20,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (req.method === 'PATCH') {
       const fields: string[] = [];
-      const args: unknown[] = [];
+      const args: (string | number | null)[] = [];
       const allowed = ['title', 'status', 'progress', 'duration_ms', 'perso_project_seq', 'perso_space_seq', 'thumbnail_url', 'video_url', 'audio_url', 'subtitle_url', 'zip_url'];
 
       // Map camelCase body to snake_case columns
