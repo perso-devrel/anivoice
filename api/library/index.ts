@@ -17,7 +17,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       LEFT JOIN tags t ON pt.tag_id = t.id
       WHERE p.is_public = 1 AND p.status = 'completed'
     `;
-    const args: unknown[] = [];
+    const args: (string | number | null)[] = [];
 
     if (tag && tag !== 'all') {
       sql += ` AND EXISTS (SELECT 1 FROM project_tags pt2 JOIN tags t2 ON pt2.tag_id = t2.id WHERE pt2.project_id = p.id AND t2.name = ?)`;
