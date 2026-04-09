@@ -197,7 +197,7 @@ export async function getExternalMetadata(
 export interface TranslateRequest {
   mediaSeq: number;
   isVideoProject: boolean;
-  sourceLanguageCode: string;
+  sourceLanguageCode?: string;
   targetLanguageCodes: string[];
   numberOfSpeakers: number;
   withLipSync?: boolean;

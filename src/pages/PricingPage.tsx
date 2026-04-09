@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
+import { purchaseCredits, formatSeconds } from '../services/anivoiceApi';
 import type { PlanType } from '../types';
 
 interface Plan {
@@ -10,6 +11,8 @@ interface Plan {
   planType: PlanType;
   price: string;
   period?: string;
+  timeLabel: string;
+  creditSeconds: number;
   features: string[];
   highlighted?: boolean;
 }
@@ -19,13 +22,14 @@ interface ModalState {
   planType?: PlanType;
   label: string;
   price: string;
-  credits?: number;
+  seconds?: number;
+  creditSeconds?: number;
 }
 
 export default function PricingPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, updatePlan, addCredits } = useAuthStore();
+  const { user } = useAuthStore();
 
   const [modal, setModal] = useState<ModalState | null>(null);
   const [cardNumber, setCardNumber] = useState('4242 4242 4242 4242');
@@ -40,8 +44,10 @@ export default function PricingPage() {
       priceKey: 'free',
       planType: 'free',
       price: '$0',
+      timeLabel: '1분',
+      creditSeconds: 60,
       features: [
-        t('pricing.freeFeature1'),
+        '매월 1분 무료 더빙',
         t('pricing.freeFeature2'),
         t('pricing.freeFeature3'),
       ],
@@ -52,8 +58,10 @@ export default function PricingPage() {
       planType: 'basic',
       price: '$4.99',
       period: t('pricing.perMonth'),
+      timeLabel: '30분',
+      creditSeconds: 1800,
       features: [
-        t('pricing.basicFeature1'),
+        '매월 30분 더빙 시간',
         t('pricing.basicFeature2'),
         t('pricing.basicFeature3'),
         t('pricing.basicFeature4'),
@@ -66,8 +74,10 @@ export default function PricingPage() {
       price: '$14.99',
       period: t('pricing.perMonth'),
       highlighted: true,
+      timeLabel: '2시간',
+      creditSeconds: 7200,
       features: [
-        t('pricing.proFeature1'),
+        '매월 2시간 더빙 시간',
         t('pricing.proFeature2'),
         t('pricing.proFeature3'),
         t('pricing.proFeature4'),
@@ -80,18 +90,20 @@ export default function PricingPage() {
       planType: 'pay-per-use',
       price: '$1.5',
       period: t('pricing.perMinute'),
+      timeLabel: '종량제',
+      creditSeconds: 0,
       features: [
-        t('pricing.payPerUseFeature1'),
+        '사용한 만큼만 결제',
         t('pricing.payPerUseFeature2'),
         t('pricing.payPerUseFeature3'),
       ],
     },
   ];
 
-  const creditPackages = [
-    { credits: 10, price: '$12', priceNum: 12, savings: '' },
-    { credits: 50, price: '$50', priceNum: 50, savings: t('pricing.save17') },
-    { credits: 100, price: '$90', priceNum: 90, savings: t('pricing.save40') },
+  const timePackages = [
+    { seconds: 600, label: '10분', price: '$12', priceNum: 12, savings: '' },
+    { seconds: 3000, label: '50분', price: '$50', priceNum: 50, savings: t('pricing.save17') },
+    { seconds: 6000, label: '100분', price: '$90', priceNum: 90, savings: t('pricing.save40') },
   ];
 
   const handleSelectPlan = (plan: Plan) => {
@@ -105,36 +117,40 @@ export default function PricingPage() {
       planType: plan.planType,
       label: plan.name,
       price: plan.price + (plan.period ? ` / ${plan.period}` : ''),
+      creditSeconds: plan.creditSeconds,
     });
   };
 
-  const handleBuyCredits = (pkg: { credits: number; price: string }) => {
+  const handleBuyTime = (pkg: { seconds: number; label: string; price: string }) => {
     if (!user) {
       navigate('/login');
       return;
     }
     setModal({
       type: 'credit',
-      label: `${pkg.credits} ${t('pricing.credits')}`,
+      label: `${pkg.label} 더빙 시간`,
       price: pkg.price,
-      credits: pkg.credits,
+      seconds: pkg.seconds,
     });
   };
 
-  const handleCheckout = () => {
-    // TODO: Replace with real Stripe checkout
-    // const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
-    // const session = await createCheckoutSession(planId);
-    // stripe.redirectToCheckout({ sessionId: session.id });
-
+  const handleCheckout = async () => {
     if (!user || !modal) return;
     setIsProcessing(true);
 
-    setTimeout(() => {
+    try {
+      // Fake 1.5s payment delay
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       if (modal.type === 'plan' && modal.planType) {
-        updatePlan(modal.planType);
-      } else if (modal.type === 'credit' && modal.credits) {
-        addCredits(modal.credits);
+        const result = await purchaseCredits({ plan: modal.planType });
+        useAuthStore.getState().updatePlan(modal.planType, result.creditSeconds);
+      } else if (modal.type === 'credit' && modal.seconds) {
+        const result = await purchaseCredits({
+          seconds: modal.seconds,
+          description: `${modal.label} 충전`,
+        });
+        useAuthStore.getState().setCreditSeconds(result.creditSeconds);
       }
 
       setIsProcessing(false);
@@ -142,11 +158,15 @@ export default function PricingPage() {
       setSuccessMessage(
         modal.type === 'plan'
           ? t('pricing.planChanged')
-          : t('pricing.creditsAdded', { amount: modal.credits })
+          : t('pricing.creditsAdded', { amount: modal.label })
       );
 
       setTimeout(() => setSuccessMessage(''), 3000);
-    }, 1500);
+    } catch {
+      setIsProcessing(false);
+      setSuccessMessage('결제 처리 중 오류가 발생했습니다');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    }
   };
 
   const isCurrentPlan = (planType: PlanType) => user?.plan === planType;
@@ -169,6 +189,11 @@ export default function PricingPage() {
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             {t('pricing.subtitle')}
           </p>
+          {user && (
+            <p className="mt-4 text-sm text-gray-500">
+              현재 잔여 시간: <span className="text-primary-400 font-medium">{formatSeconds(user.creditSeconds)}</span>
+            </p>
+          )}
         </div>
 
         {/* Plan Cards */}
@@ -204,7 +229,7 @@ export default function PricingPage() {
                 {plan.name}
               </h3>
 
-              <div className="mb-6">
+              <div className="mb-2">
                 <span className="text-4xl font-bold text-white">
                   {plan.price}
                 </span>
@@ -212,6 +237,10 @@ export default function PricingPage() {
                   <span className="text-gray-400 ml-1">/ {plan.period}</span>
                 )}
               </div>
+
+              <p className="text-sm text-primary-400 font-medium mb-4">
+                {plan.timeLabel}
+              </p>
 
               <ul className="space-y-3 mb-8 flex-1">
                 {plan.features.map((feature, i) => (
@@ -263,7 +292,7 @@ export default function PricingPage() {
           ))}
         </div>
 
-        {/* Credit Packages */}
+        {/* Time Packages */}
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold gradient-text mb-3">
@@ -275,9 +304,9 @@ export default function PricingPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {creditPackages.map((pkg) => (
+            {timePackages.map((pkg) => (
               <div
-                key={pkg.credits}
+                key={pkg.seconds}
                 className="glass rounded-2xl border border-surface-700 p-6 flex flex-col items-center text-center hover:border-primary-500/50 transition-colors"
               >
                 <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
@@ -291,13 +320,13 @@ export default function PricingPage() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={1.5}
-                      d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125v-3.75"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
                 </div>
 
                 <p className="text-2xl font-bold text-white mb-1">
-                  {pkg.credits} {t('pricing.credits')}
+                  {pkg.label}
                 </p>
                 <p className="text-3xl font-bold gradient-text mb-2">
                   {pkg.price}
@@ -309,7 +338,7 @@ export default function PricingPage() {
                 )}
 
                 <button
-                  onClick={() => handleBuyCredits(pkg)}
+                  onClick={() => handleBuyTime(pkg)}
                   className="mt-auto w-full py-3 rounded-xl border border-surface-600 text-gray-300 font-medium hover:border-primary-500 hover:text-white transition-colors"
                 >
                   {t('common.buy')}

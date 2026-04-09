@@ -1,0 +1,190 @@
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: '/api',
+  headers: { 'Content-Type': 'application/json' },
+});
+
+// Attach Firebase ID token to every request
+api.interceptors.request.use(async (config) => {
+  try {
+    const token = await getFirebaseIdToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  } catch {
+    // No token available — endpoints that don't need auth will still work
+  }
+  return config;
+});
+
+/** Get Firebase ID token from current user */
+async function getFirebaseIdToken(): Promise<string | null> {
+  // Dynamic import to avoid circular dependency with firebase.ts
+  try {
+    const { getAuth } = await import('firebase/auth');
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) return null;
+    return user.getIdToken();
+  } catch {
+    // Firebase not initialized — check localStorage for mock token
+    const mockUser = localStorage.getItem('anivoice_mock_user');
+    if (mockUser) {
+      // For mock auth, create a fake JWT-like token
+      const payload = btoa(JSON.stringify({
+        sub: JSON.parse(mockUser).id,
+        email: JSON.parse(mockUser).email,
+        name: JSON.parse(mockUser).displayName,
+        exp: Math.floor(Date.now() / 1000) + 3600,
+        aud: 'mock',
+      }));
+      return `header.${payload}.signature`;
+    }
+    return null;
+  }
+}
+
+// ── User ──
+
+export interface DbUser {
+  id: string;
+  email: string;
+  displayName: string;
+  photoURL?: string;
+  plan: string;
+  creditSeconds: number;
+  language: string;
+  createdAt: string;
+}
+
+export async function getMe(): Promise<DbUser> {
+  const { data } = await api.get('/user/me');
+  return data;
+}
+
+// ── Projects ──
+
+export interface DbProject {
+  id: number;
+  title: string;
+  originalFileName: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  status: string;
+  progress: number;
+  durationMs: number;
+  persoProjectSeq: number | null;
+  persoSpaceSeq: number | null;
+  thumbnailUrl: string | null;
+  videoUrl: string | null;
+  audioUrl: string | null;
+  zipUrl: string | null;
+  isPublic: boolean;
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function listMyProjects(limit = 20, offset = 0): Promise<{ projects: DbProject[]; total: number }> {
+  const { data } = await api.get('/projects', { params: { limit, offset } });
+  return data;
+}
+
+export async function createProject(params: {
+  title: string;
+  originalFileName?: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  durationMs?: number;
+  persoProjectSeq?: number;
+  persoSpaceSeq?: number;
+}): Promise<{ id: number }> {
+  const { data } = await api.post('/projects', params);
+  return data;
+}
+
+export async function updateProject(id: number, params: {
+  status?: string;
+  progress?: number;
+  durationMs?: number;
+  persoProjectSeq?: number;
+  persoSpaceSeq?: number;
+  thumbnailUrl?: string;
+  videoUrl?: string;
+  audioUrl?: string;
+  subtitleUrl?: string;
+  zipUrl?: string;
+}): Promise<void> {
+  await api.patch(`/projects/${id}`, params);
+}
+
+export async function publishProject(id: number, tagIds: number[], isPublic = true): Promise<void> {
+  await api.post(`/projects/${id}/publish`, { tagIds, isPublic });
+}
+
+// ── Credits ──
+
+export async function deductCredits(projectId: number, durationMs: number): Promise<{ remainingSeconds: number; deducted: number }> {
+  const { data } = await api.post('/credits/deduct', { projectId, durationMs });
+  return data;
+}
+
+export async function purchaseCredits(params: { seconds?: number; plan?: string; description?: string }): Promise<{ creditSeconds: number }> {
+  const { data } = await api.post('/credits/purchase', params);
+  return data;
+}
+
+// ── Library (public, no auth) ──
+
+export interface LibraryItem {
+  id: number;
+  title: string;
+  authorName: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  durationMs: number;
+  thumbnailUrl: string | null;
+  videoUrl: string | null;
+  tags: string[];
+  createdAt: string;
+}
+
+export async function getLibrary(params: {
+  tag?: string;
+  lang?: string;
+  sort?: string;
+  search?: string;
+  limit?: number;
+  offset?: number;
+} = {}): Promise<{ items: LibraryItem[]; total: number }> {
+  const { data } = await api.get('/library', { params });
+  return data;
+}
+
+// ── Tags ──
+
+export interface Tag {
+  id: number;
+  name: string;
+  displayNameKo: string;
+  displayNameEn: string;
+}
+
+export async function getTags(): Promise<Tag[]> {
+  const { data } = await api.get('/tags');
+  return data.tags;
+}
+
+// ── Helper ──
+
+export function formatSeconds(seconds: number): string {
+  if (seconds >= 3600) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    return `${h}시간 ${m}분`;
+  }
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return m > 0 ? `${m}분 ${s}초` : `${s}초`;
+}

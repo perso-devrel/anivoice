@@ -4,7 +4,7 @@ export interface User {
   displayName: string;
   photoURL?: string;
   plan: PlanType;
-  credits: number;
+  creditSeconds: number;
   language: SupportedLanguage;
   createdAt: string;
 }

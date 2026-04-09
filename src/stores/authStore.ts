@@ -6,9 +6,9 @@ interface AuthState {
   isLoading: boolean;
   setUser: (user: User | null) => void;
   setLoading: (loading: boolean) => void;
-  updatePlan: (plan: PlanType) => void;
-  addCredits: (amount: number) => void;
-  useCredits: (amount: number) => boolean;
+  updatePlan: (plan: PlanType, creditSeconds: number) => void;
+  setCreditSeconds: (seconds: number) => void;
+  addCreditSeconds: (seconds: number) => void;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -16,30 +16,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: true,
   setUser: (user) => set({ user, isLoading: false }),
   setLoading: (isLoading) => set({ isLoading }),
-  updatePlan: (plan) => {
+  updatePlan: (plan, creditSeconds) => {
     const { user } = get();
     if (user) {
-      const creditMap: Record<PlanType, number> = {
-        free: 60,
-        basic: 1800,
-        pro: 7200,
-        'pay-per-use': user.credits,
-      };
-      set({ user: { ...user, plan, credits: creditMap[plan] } });
+      set({ user: { ...user, plan, creditSeconds } });
     }
   },
-  addCredits: (amount) => {
+  setCreditSeconds: (creditSeconds) => {
     const { user } = get();
     if (user) {
-      set({ user: { ...user, credits: user.credits + amount } });
+      set({ user: { ...user, creditSeconds } });
     }
   },
-  useCredits: (amount) => {
+  addCreditSeconds: (seconds) => {
     const { user } = get();
-    if (user && user.credits >= amount) {
-      set({ user: { ...user, credits: user.credits - amount } });
-      return true;
+    if (user) {
+      set({ user: { ...user, creditSeconds: user.creditSeconds + seconds } });
     }
-    return false;
   },
 }));

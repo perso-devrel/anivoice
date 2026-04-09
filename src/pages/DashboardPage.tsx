@@ -1,34 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
-import { listSpaces, getQuotaStatus } from '../services/persoApi';
+import { listMyProjects, formatSeconds, type DbProject } from '../services/anivoiceApi';
 import { useAuthStore } from '../stores/authStore';
 import type { ProjectStatus } from '../types';
 
-const BASE = (import.meta.env.VITE_PERSO_PROXY_PATH || '/api/perso').replace(/\/+$/, '');
-
-interface ApiProject {
-  seq: number;
-  title: string;
-  projectType: string;
-  durationMs: number;
-  sourceLanguage: { code: string; name: string };
-  targetLanguage: { code: string; name: string };
-  progress: number;
-  hasFailed: boolean;
-  status: string;
-  projectGenerationType: string;
-  createDate: string;
-  thumbnailUrl?: string;
-}
-
 type FilterTab = 'all' | 'in-progress' | 'completed';
 
-function mapApiStatus(project: ApiProject): ProjectStatus {
-  if (project.hasFailed) return 'failed';
-  if (project.progress >= 100) return 'completed';
+function mapDbStatus(project: DbProject): ProjectStatus {
   const s = project.status?.toLowerCase() || '';
+  if (s === 'failed') return 'failed';
+  if (s === 'completed' || project.progress >= 100) return 'completed';
   if (s.includes('lip')) return 'lip-syncing';
   if (s.includes('dub') || s.includes('translat')) return 'dubbing';
   if (s.includes('upload')) return 'uploading';
@@ -115,10 +97,7 @@ export default function DashboardPage() {
   const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
-  const [projects, setProjects] = useState<ApiProject[]>([]);
-  const [spaceSeq, setSpaceSeq] = useState<number | null>(null);
-  const [planName, setPlanName] = useState<string>('');
-  const [remainingQuota, setRemainingQuota] = useState<number | null>(null);
+  const [projects, setProjects] = useState<DbProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -129,56 +108,9 @@ export default function DashboardPage() {
       setLoading(true);
       setError(null);
       try {
-        const spaces = await listSpaces();
+        const result = await listMyProjects(20, 0);
         if (cancelled) return;
-        if (!spaces || spaces.length === 0) {
-          setProjects([]);
-          setLoading(false);
-          return;
-        }
-
-        const seq = (spaces[0] as { seq?: number; spaceSeq?: number }).seq
-          ?? (spaces[0] as { seq?: number; spaceSeq?: number }).spaceSeq
-          ?? 0;
-        setSpaceSeq(seq);
-
-        const [projectsRes, quotaRes] = await Promise.allSettled([
-          axios.get(`${BASE}/video-translator/api/v1/projects/spaces/${seq}`, {
-            params: {
-              memberRole: 'space_owner',
-              size: 20,
-              offset: 0,
-              sortType: 'update_date',
-              sortDirection: 'desc',
-            },
-          }),
-          getQuotaStatus(seq),
-        ]);
-
-        if (cancelled) return;
-
-        if (projectsRes.status === 'fulfilled') {
-          const content = projectsRes.value.data?.result?.content ?? [];
-          setProjects(content);
-        }
-
-        if (quotaRes.status === 'fulfilled') {
-          const q = quotaRes.value as unknown as Record<string, unknown>;
-          setRemainingQuota(
-            typeof q.remainingQuota === 'number'
-              ? q.remainingQuota
-              : typeof q.remainingMinutes === 'number'
-                ? q.remainingMinutes
-                : null
-          );
-          if (typeof q.planName === 'string') setPlanName(q.planName);
-        }
-
-        // Try to get plan name from space if not from quota
-        if (!planName && spaces[0]) {
-          const sp = spaces[0] as unknown as Record<string, unknown>;
-          if (typeof sp.planName === 'string') setPlanName(sp.planName);
-        }
+        setProjects(result.projects);
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : String(err));
@@ -190,11 +122,11 @@ export default function DashboardPage() {
 
     fetchData();
     return () => { cancelled = true; };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const mappedProjects = projects.map((p) => ({
     ...p,
-    mappedStatus: mapApiStatus(p),
+    mappedStatus: mapDbStatus(p),
   }));
 
   const filteredProjects = mappedProjects.filter((project) => {
@@ -274,10 +206,10 @@ export default function DashboardPage() {
             <div>
               <p className="text-sm text-gray-400">
                 {t('dashboard.creditsRemaining')}
-                {planName && <span className="ml-1 text-gray-500">({planName})</span>}
+                {user?.plan && <span className="ml-1 text-gray-500">({user.plan})</span>}
               </p>
               <p className="text-2xl font-bold text-white">
-                {loading ? '...' : remainingQuota ?? '--'}
+                {loading ? '...' : user ? formatSeconds(user.creditSeconds) : '--'}
               </p>
             </div>
           </div>
@@ -437,8 +369,8 @@ export default function DashboardPage() {
               const gradient = GRADIENT_PLACEHOLDERS[idx % GRADIENT_PLACEHOLDERS.length];
               return (
                 <Link
-                  key={project.seq}
-                  to={`/studio?project=${project.seq}&space=${spaceSeq}`}
+                  key={project.id}
+                  to={`/studio?project=${project.persoProjectSeq}&space=${project.persoSpaceSeq}`}
                   className="glass rounded-xl overflow-hidden group hover:ring-1 hover:ring-primary-500/40 transition-all"
                 >
                   {/* Thumbnail */}
@@ -469,8 +401,8 @@ export default function DashboardPage() {
                     )}
                     {/* Language badge */}
                     <span className="absolute top-2 left-2 px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-900/80 text-gray-300 backdrop-blur-sm">
-                      {project.sourceLanguage?.code?.toUpperCase() || '?'} &rarr;{' '}
-                      {project.targetLanguage?.code?.toUpperCase() || '?'}
+                      {project.sourceLanguage?.toUpperCase() || '?'} &rarr;{' '}
+                      {project.targetLanguage?.toUpperCase() || '?'}
                     </span>
                     {/* Duration */}
                     <span className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded text-[11px] font-medium bg-black/60 text-gray-300">
@@ -501,7 +433,7 @@ export default function DashboardPage() {
                           {project.progress}%
                         </span>
                         <span className="text-[11px] text-gray-600">
-                          {project.createDate?.split('T')[0] || ''}
+                          {project.createdAt?.split('T')[0] || ''}
                         </span>
                       </div>
                       <div className="w-full h-1.5 rounded-full bg-surface-800">

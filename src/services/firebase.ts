@@ -15,7 +15,7 @@ const MOCK_ACCOUNTS: Record<string, { password: string; user: User }> = {
       email: 'dervel@estsoft.com',
       displayName: 'Dervel',
       plan: 'pro',
-      credits: 7200,
+      creditSeconds: 7200,
       language: 'ko',
       createdAt: '2026-01-01T00:00:00Z',
     },
@@ -61,7 +61,7 @@ async function mockSignUpWithEmail(email: string, password: string, displayName:
     email,
     displayName,
     plan: 'free',
-    credits: 60,
+    creditSeconds: 60,
     language: 'ko',
     createdAt: new Date().toISOString(),
   };
@@ -133,7 +133,7 @@ if (FIREBASE_CONFIGURED) {
       displayName: fbUser.displayName || fbUser.email?.split('@')[0] || 'User',
       photoURL: fbUser.photoURL || undefined,
       plan: 'free',
-      credits: 60,
+      creditSeconds: 60,
       language: 'ko',
       createdAt: fbUser.metadata.creationTime || new Date().toISOString(),
     };
