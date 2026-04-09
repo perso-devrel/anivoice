@@ -4,7 +4,6 @@ import { useSearchParams } from 'react-router-dom';
 import {
   listSpaces,
   uploadVideoFile,
-  uploadExternalVideo,
   ensureSpaceQueue,
   requestTranslation,
   pollProgress,
@@ -16,11 +15,14 @@ import {
   getDownloadLinks,
   resolvePersoFileUrl,
 } from '../services/persoApi';
+import { createProject, updateProject, deductCredits, getTags, publishProject } from '../services/anivoiceApi';
+import { useAuthStore } from '../stores/authStore';
+import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 
 type Step = 'upload' | 'settings' | 'result';
 
-const LANGUAGES = ['ja', 'ko', 'en', 'es', 'pt', 'id', 'ar'] as const;
+const LANGUAGES = ['auto', 'ja', 'ko', 'en', 'es', 'pt', 'id', 'ar'] as const;
 
 const SPEAKER_COLORS = ['#f472b6', '#a78bfa', '#38bdf8', '#34d399', '#fbbf24', '#fb923c'];
 
@@ -53,14 +55,6 @@ function DownloadIcon({ className = 'w-5 h-5' }: { className?: string }) {
   );
 }
 
-function LinkIcon({ className = 'w-5 h-5' }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m9.856-2.07a4.5 4.5 0 0 0-1.242-7.244l-4.5-4.5a4.5 4.5 0 0 0-6.364 6.364l1.757 1.757" />
-    </svg>
-  );
-}
-
 function CheckIcon({ className = 'w-4 h-4' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
@@ -87,8 +81,7 @@ export default function StudioPage() {
 
   const [step, setStep] = useState<Step>('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [url, setUrl] = useState('');
-  const [sourceLanguage, setSourceLanguage] = useState('ja');
+  const [sourceLanguage, setSourceLanguage] = useState('auto');
   const [targetLanguage, setTargetLanguage] = useState<string>('');
   const [isDragOver, setIsDragOver] = useState(false);
   const [withLipSync, setWithLipSync] = useState(false);
@@ -109,7 +102,22 @@ export default function StudioPage() {
   const [savingSentence, setSavingSentence] = useState<number | null>(null);
   const [loadingProject, setLoadingProject] = useState(false);
 
+  // DB project tracking
+  const [dbProjectId, setDbProjectId] = useState<number | null>(null);
+
+  // Publish
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Store uploaded file info for use after polling
+  const uploadedFileRef = useRef<{ seq: number; durationMs: number } | null>(null);
+
+  // Fetch tags on mount
+  useEffect(() => { getTags().then(setTags).catch(() => {}); }, []);
 
   // Load existing project from URL params (?project=SEQ&space=SEQ)
   useEffect(() => {
@@ -268,12 +276,11 @@ export default function StudioPage() {
       let uploadedFile;
       if (selectedFile) {
         uploadedFile = await uploadVideoFile(space.spaceSeq, selectedFile);
-      } else if (url) {
-        uploadedFile = await uploadExternalVideo(space.spaceSeq, url, sourceLanguage);
       } else {
-        throw new Error('No file or URL provided');
+        throw new Error('No file provided');
       }
       setProgress(30);
+      uploadedFileRef.current = uploadedFile;
 
       // 3. Ensure the queue exists before the first translation request
       setProgress(33);
@@ -285,7 +292,7 @@ export default function StudioPage() {
       const projectIds = await requestTranslation(space.spaceSeq, {
         mediaSeq: uploadedFile.seq,
         isVideoProject: true,
-        sourceLanguageCode: sourceLanguage,
+        sourceLanguageCode: sourceLanguage === 'auto' ? undefined : sourceLanguage,
         targetLanguageCodes: [targetLanguage],
         numberOfSpeakers: 1,
         withLipSync,
@@ -297,6 +304,18 @@ export default function StudioPage() {
         throw new Error('Perso did not return a project id for this dubbing request.');
       }
       setProjectSeq(primaryProjectSeq);
+
+      // Create project record in DB
+      const dbProject = await createProject({
+        title: selectedFile?.name || 'Untitled',
+        originalFileName: selectedFile?.name,
+        sourceLanguage,
+        targetLanguage: targetLanguage,
+        durationMs: uploadedFile.durationMs,
+        persoProjectSeq: primaryProjectSeq,
+        persoSpaceSeq: space.spaceSeq,
+      });
+      setDbProjectId(dbProject.id);
 
       // 5. Poll progress (every 5 seconds)
       await pollProgress(primaryProjectSeq, space.spaceSeq, (p: PersoProgress) => {
@@ -319,11 +338,28 @@ export default function StudioPage() {
       }
 
       // 7. Fetch download links
+      let links: PersoDownloadLinks | null = null;
       try {
-        const links = await getDownloadLinks(primaryProjectSeq, space.spaceSeq);
+        links = await getDownloadLinks(primaryProjectSeq, space.spaceSeq);
         setDownloadLinks(links);
       } catch {
         // Downloads may not be available yet
+      }
+
+      // 8. Update DB project with completed status
+      if (dbProject.id && links) {
+        await updateProject(dbProject.id, {
+          status: 'completed',
+          progress: 100,
+          videoUrl: links.videoFile?.videoDownloadLink,
+          audioUrl: links.audioFile?.voiceWithBackgroundAudioDownloadLink || links.audioFile?.voiceAudioDownloadLink,
+          zipUrl: links.zippedFileDownloadLink,
+        });
+        // Deduct credits
+        try {
+          const result = await deductCredits(dbProject.id, uploadedFile.durationMs);
+          useAuthStore.getState().setCreditSeconds(result.remainingSeconds);
+        } catch { /* credits may not be set up yet */ }
       }
 
       setProgress(100);
@@ -335,7 +371,7 @@ export default function StudioPage() {
       setRemainingMinutes(null);
       setIsProcessing(false);
     }
-  }, [selectedFile, url, sourceLanguage, targetLanguage, withLipSync, t]);
+  }, [selectedFile, sourceLanguage, targetLanguage, withLipSync, t]);
 
   async function handleSaveSentence(sentenceSeq: number) {
     if (!projectSeq || !(sentenceSeq in editingValues)) return;
@@ -418,6 +454,19 @@ export default function StudioPage() {
     }
   }
 
+  async function handlePublish() {
+    if (!dbProjectId) return;
+    setIsPublishing(true);
+    try {
+      await publishProject(dbProjectId, selectedTags);
+      setIsPublished(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setIsPublishing(false);
+    }
+  }
+
   /* ── step: upload ── */
 
   function UploadStep() {
@@ -453,31 +502,6 @@ export default function StudioPage() {
           />
         </div>
 
-        <div className="glass rounded-2xl p-5 space-y-3">
-          <label className="flex items-center gap-2 text-sm font-medium text-surface-200/80">
-            <LinkIcon className="w-4 h-4" />
-            {t('studio.urlInput')}
-          </label>
-          <div className="flex gap-2">
-            <input
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder={t('studio.urlPlaceholder')}
-              className="flex-1 bg-surface-900 border border-surface-700 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-surface-200/30 focus:outline-none focus:border-primary-500 transition-colors"
-            />
-            <button
-              type="button"
-              disabled={!url}
-              onClick={() => { setSelectedFile(null); setError(null); setStep('settings'); }}
-              className="gradient-bg px-4 py-2.5 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
-            >
-              {t('common.upload')}
-            </button>
-          </div>
-          <p className="text-xs text-surface-200/40">YouTube, TikTok, Google Drive URL</p>
-        </div>
-
         <p className="text-center text-xs text-surface-200/40">{t('studio.supportedFormats')}</p>
       </div>
     );
@@ -492,13 +516,13 @@ export default function StudioPage() {
           <h2 className="text-2xl font-bold gradient-text mb-2">{t('studio.selectLanguage')}</h2>
         </div>
 
-        {(selectedFile || url) && (
+        {selectedFile && (
           <div className="glass rounded-xl px-4 py-3 flex items-center gap-3 text-sm text-surface-200/80">
             <FileIcon className="w-5 h-5 shrink-0" />
-            <span className="truncate">{selectedFile?.name || url}</span>
+            <span className="truncate">{selectedFile.name}</span>
             <button
               type="button"
-              onClick={() => { setSelectedFile(null); setUrl(''); setStep('upload'); }}
+              onClick={() => { setSelectedFile(null); setStep('upload'); }}
               className="ml-auto text-xs text-surface-200/40 hover:text-red-400 transition-colors"
             >
               {t('common.cancel')}
@@ -521,7 +545,9 @@ export default function StudioPage() {
             className="w-full bg-surface-900 border border-surface-700 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary-500 transition-colors appearance-none"
           >
             {LANGUAGES.map((lang) => (
-              <option key={lang} value={lang}>{t(`languages.${lang}`)}</option>
+              <option key={lang} value={lang}>
+                {lang === 'auto' ? '\uC790\uB3D9 \uAC10\uC9C0 (Auto)' : t(`languages.${lang}`)}
+              </option>
             ))}
           </select>
         </div>
@@ -532,7 +558,7 @@ export default function StudioPage() {
             {t('studio.targetLanguage')}
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {LANGUAGES.filter((l) => l !== sourceLanguage).map((lang) => {
+            {LANGUAGES.filter((l) => l !== 'auto' && l !== sourceLanguage).map((lang) => {
               const checked = targetLanguage === lang;
               return (
                 <label
@@ -723,6 +749,52 @@ export default function StudioPage() {
           </button>
         )}
 
+        {/* publish section */}
+        <div className="glass rounded-2xl p-5 space-y-4">
+          <h3 className="text-base font-semibold text-surface-200/90">
+            {isPublished ? '\u2705 \uACF5\uAC1C\uB428' : '\uACF5\uAC1C\uD558\uAE30'}
+          </h3>
+          {isPublished ? (
+            <p className="text-sm text-green-400">{t('studio.publishedMessage') || '\uB77C\uC774\uBE0C\uB7EC\uB9AC\uC5D0 \uACF5\uAC1C\uB418\uC5C8\uC2B5\uB2C8\uB2E4.'}</p>
+          ) : (
+            <>
+              {tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag) => {
+                    const isSelected = selectedTags.includes(tag.id);
+                    return (
+                      <button
+                        key={tag.id}
+                        type="button"
+                        onClick={() =>
+                          setSelectedTags((prev) =>
+                            isSelected ? prev.filter((id) => id !== tag.id) : [...prev, tag.id]
+                          )
+                        }
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                          isSelected
+                            ? 'border-primary-500 bg-primary-500/15 text-primary-400'
+                            : 'border-surface-700 bg-surface-900/50 text-surface-200/60 hover:border-surface-200/30'
+                        }`}
+                      >
+                        {tag.displayNameKo}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={handlePublish}
+                disabled={!dbProjectId || isPublishing}
+                className="w-full gradient-bg py-2.5 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-40"
+              >
+                {isPublishing ? <SpinnerIcon className="w-4 h-4 mx-auto" /> : '\uACF5\uAC1C\uD558\uAE30'}
+              </button>
+            </>
+          )}
+        </div>
+
         {/* translation edit */}
         {sentences.length > 0 && (
           <div className="glass rounded-2xl p-5 space-y-4">
@@ -786,7 +858,6 @@ export default function StudioPage() {
             onClick={() => {
               setStep('upload');
               setSelectedFile(null);
-              setUrl('');
               setTargetLanguage('');
               setProjectSeq(null);
               setSpaceSeq(null);
@@ -796,6 +867,9 @@ export default function StudioPage() {
               setError(null);
               setProgress(0);
               setWithLipSync(false);
+              setDbProjectId(null);
+              setSelectedTags([]);
+              setIsPublished(false);
             }}
             className="text-sm text-primary-400 hover:text-primary-300 transition-colors"
           >
