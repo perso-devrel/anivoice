@@ -53,7 +53,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     return res.json({
-      items: result.rows.map((row) => ({
+      items: result.rows.map((row: Record<string, unknown>) => ({
         id: row.id,
         title: row.title,
         authorName: row.author_name,

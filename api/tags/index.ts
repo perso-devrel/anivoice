@@ -8,7 +8,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await migrate();
     const result = await db.execute('SELECT * FROM tags ORDER BY id');
     return res.json({
-      tags: result.rows.map((row) => ({
+      tags: result.rows.map((row: Record<string, unknown>) => ({
         id: row.id,
         name: row.name,
         displayNameKo: row.display_name_ko,
