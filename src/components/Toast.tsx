@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { useToastStore } from '../stores/toastStore';
 import type { ToastType } from '../stores/toastStore';
+import { XIcon } from './icons';
 
 const iconByType: Record<ToastType, ReactNode> = {
   success: (
@@ -8,11 +9,7 @@ const iconByType: Record<ToastType, ReactNode> = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
     </svg>
   ),
-  error: (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  ),
+  error: <XIcon />,
   info: (
     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
@@ -45,9 +42,7 @@ export default function ToastContainer() {
             aria-label="Close"
             className="ml-2 opacity-70 hover:opacity-100 transition-opacity"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <XIcon className="w-4 h-4" />
           </button>
         </div>
       ))}
