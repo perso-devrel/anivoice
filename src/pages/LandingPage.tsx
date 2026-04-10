@@ -12,23 +12,11 @@ const LANGUAGES = [
   { key: 'ar', flag: '🇸🇦' },
 ];
 
-const FAQ_ITEMS = [
-  {
-    q: 'How does AniVoice preserve the original character voice?',
-    a: 'AniVoice uses advanced AI voice-cloning technology to analyze each character\'s unique vocal signature — pitch, tone, cadence, and emotion — then reconstructs speech in the target language while preserving those characteristics.',
-  },
-  {
-    q: 'Is there a limit on video length?',
-    a: 'Free users can dub up to 1 minute per month. Basic and Pro plans offer 30 and 120 minutes respectively. You can also purchase additional credits on a pay-per-use basis at $1.50/min.',
-  },
-  {
-    q: 'What video formats are supported?',
-    a: 'We currently support MP4, MOV, and WebM formats. The maximum upload size depends on your plan — Free users can upload up to 500 MB, while Pro users can upload up to 4 GB per file.',
-  },
-  {
-    q: 'Can I edit the AI-generated translations?',
-    a: 'Yes! Pro plan users have full access to our translation editor. You can refine any segment\'s translation and regenerate just that portion of the dub without re-processing the entire video.',
-  },
+const FAQ_KEYS = [
+  { qKey: 'landing.faqVoiceQ', aKey: 'landing.faqVoiceA' },
+  { qKey: 'landing.faqLimitQ', aKey: 'landing.faqLimitA' },
+  { qKey: 'landing.faqFormatQ', aKey: 'landing.faqFormatA' },
+  { qKey: 'landing.faqEditQ', aKey: 'landing.faqEditA' },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -178,12 +166,14 @@ function PricingCard({
   features,
   highlight,
   selectLabel,
+  popularLabel,
 }: {
   name: string;
   price: string;
   features: string[];
   highlight: boolean;
   selectLabel: string;
+  popularLabel?: string;
 }) {
   return (
     <div
@@ -195,7 +185,7 @@ function PricingCard({
     >
       {highlight && (
         <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-500 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
-          Popular
+          {popularLabel}
         </span>
       )}
       <h3 className={`text-xl font-bold mb-1 ${highlight ? 'text-white' : 'text-white'}`}>
@@ -324,10 +314,10 @@ export default function LandingPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <IconPlay />
                   <span className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-xs text-white px-3 py-1 rounded-full font-medium">
-                    Original
+                    {t('landing.videoOriginal')}
                   </span>
                   <span className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-xs text-gray-300 px-3 py-1 rounded-full">
-                    Japanese
+                    {t('landing.videoOriginalLang')}
                   </span>
                   {/* Waveform decoration */}
                   <div className="absolute bottom-3 left-3 flex items-end gap-0.5">
@@ -341,10 +331,10 @@ export default function LandingPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <IconPlay />
                   <span className="absolute top-3 left-3 gradient-bg text-xs text-white px-3 py-1 rounded-full font-medium">
-                    Dubbed
+                    {t('landing.videoDubbed')}
                   </span>
                   <span className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-xs text-gray-300 px-3 py-1 rounded-full">
-                    English
+                    {t('landing.videoDubbedLang')}
                   </span>
                   <div className="absolute bottom-3 left-3 flex items-end gap-0.5">
                     {[4, 6, 3, 7, 5, 2, 6, 4, 7, 3, 5, 2, 6, 4, 5].map((h, i) => (
@@ -438,6 +428,7 @@ export default function LandingPage() {
                 features={t(plan.featuresKey, { returnObjects: true }) as string[]}
                 highlight={plan.highlight}
                 selectLabel={t('pricing.selectPlan')}
+                popularLabel={plan.highlight ? t('landing.popular') : undefined}
               />
             ))}
           </div>
@@ -451,8 +442,8 @@ export default function LandingPage() {
             {t('landing.faq')}
           </h2>
           <div className="glass rounded-2xl p-6 md:p-8">
-            {FAQ_ITEMS.map((item, i) => (
-              <FAQItem key={i} question={item.q} answer={item.a} />
+            {FAQ_KEYS.map((item, i) => (
+              <FAQItem key={i} question={t(item.qKey)} answer={t(item.aKey)} />
             ))}
           </div>
         </section>
