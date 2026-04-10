@@ -111,9 +111,10 @@ export default function DashboardPage() {
         const result = await listMyProjects(20, 0);
         if (cancelled) return;
         setProjects(result.projects);
-      } catch (err) {
+      } catch {
+        // API 미연결(로컬) 또는 에러 시 빈 목록으로 표시
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : String(err));
+          setProjects([]);
         }
       } finally {
         if (!cancelled) setLoading(false);

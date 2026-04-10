@@ -84,9 +84,10 @@ export default function LibraryPage() {
           setItems(result.items);
           setTotal(result.total);
         }
-      } catch (err) {
+      } catch {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to load library');
+          setItems([]);
+          setTotal(0);
         }
       } finally {
         if (!cancelled) setLoading(false);
