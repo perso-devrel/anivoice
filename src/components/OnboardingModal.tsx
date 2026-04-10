@@ -1,0 +1,149 @@
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+
+const STORAGE_KEY = 'anivoice_onboarding_done';
+
+export function shouldShowOnboarding(projectCount: number): boolean {
+  if (projectCount > 0) return false;
+  return localStorage.getItem(STORAGE_KEY) !== '1';
+}
+
+export function markOnboardingDone() {
+  localStorage.setItem(STORAGE_KEY, '1');
+}
+
+const STEPS = [
+  {
+    icon: (
+      <svg className="w-10 h-10 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+      </svg>
+    ),
+    titleKey: 'onboarding.step1Title',
+    descKey: 'onboarding.step1Desc',
+  },
+  {
+    icon: (
+      <svg className="w-10 h-10 text-accent-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802" />
+      </svg>
+    ),
+    titleKey: 'onboarding.step2Title',
+    descKey: 'onboarding.step2Desc',
+  },
+  {
+    icon: (
+      <svg className="w-10 h-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    titleKey: 'onboarding.step3Title',
+    descKey: 'onboarding.step3Desc',
+  },
+];
+
+interface Props {
+  onClose: () => void;
+}
+
+export default function OnboardingModal({ onClose }: Props) {
+  const { t } = useTranslation();
+  const [step, setStep] = useState(0);
+
+  function handleNext() {
+    if (step < STEPS.length - 1) {
+      setStep(step + 1);
+    } else {
+      markOnboardingDone();
+      onClose();
+    }
+  }
+
+  function handleSkip() {
+    markOnboardingDone();
+    onClose();
+  }
+
+  const current = STEPS[step];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+      <div className="w-full max-w-md glass rounded-2xl p-8 relative animate-in fade-in">
+        <button
+          onClick={handleSkip}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-300 transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {step === 0 && (
+          <h2 className="text-xl font-bold text-white mb-6 text-center">
+            {t('onboarding.welcome')}
+          </h2>
+        )}
+
+        <div className="flex flex-col items-center text-center space-y-4">
+          <div className="w-20 h-20 rounded-2xl bg-surface-800 flex items-center justify-center">
+            {current.icon}
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-400">
+            <span className="font-semibold text-primary-400">{step + 1}</span>
+            <span>/</span>
+            <span>{STEPS.length}</span>
+          </div>
+          <h3 className="text-lg font-semibold text-white">
+            {t(current.titleKey)}
+          </h3>
+          <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
+            {t(current.descKey)}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 justify-center mt-6 mb-6">
+          {STEPS.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1.5 rounded-full transition-all ${
+                i === step ? 'w-6 bg-primary-500' : 'w-1.5 bg-surface-700'
+              }`}
+            />
+          ))}
+        </div>
+
+        <div className="flex items-center justify-between">
+          <button
+            onClick={handleSkip}
+            className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            {t('onboarding.skip')}
+          </button>
+          {step === STEPS.length - 1 ? (
+            <Link
+              to="/studio"
+              onClick={() => markOnboardingDone()}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+            >
+              {t('onboarding.startNow')}
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </Link>
+          ) : (
+            <button
+              onClick={handleNext}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+            >
+              {t('onboarding.next')}
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

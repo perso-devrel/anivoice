@@ -233,6 +233,18 @@ export default {
     'payPerUse.price': '1분당 $1.5',
     'payPerUse.features': ['구독 없이 이용', '필요할 때만 결제'],
   },
+  onboarding: {
+    welcome: 'AniVoice에 오신 것을 환영합니다!',
+    step1Title: '영상 업로드',
+    step1Desc: 'MP4, MOV, WebM 형식의 애니메이션 영상을 업로드하세요. 드래그 앤 드롭도 지원합니다.',
+    step2Title: '더빙 언어 선택',
+    step2Desc: '원본 언어와 대상 언어를 선택하면 AI가 캐릭터 음색을 보존한 채 더빙합니다.',
+    step3Title: '결과 확인 & 다운로드',
+    step3Desc: '더빙된 영상, 자막, 오디오를 다운로드하거나 라이브러리에 공유하세요.',
+    next: '다음',
+    skip: '건너뛰기',
+    startNow: '시작하기',
+  },
   languages: {
     ja: '일본어',
     ko: '한국어',

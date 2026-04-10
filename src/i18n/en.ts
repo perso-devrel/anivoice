@@ -233,6 +233,18 @@ export default {
     'payPerUse.price': '$1.5/min',
     'payPerUse.features': ['No subscription', 'Pay only when needed'],
   },
+  onboarding: {
+    welcome: 'Welcome to AniVoice!',
+    step1Title: 'Upload your video',
+    step1Desc: 'Upload an anime video in MP4, MOV, or WebM format. Drag & drop is supported.',
+    step2Title: 'Choose dubbing language',
+    step2Desc: 'Select source and target languages. AI will dub while preserving each character\'s voice.',
+    step3Title: 'Review & download',
+    step3Desc: 'Download your dubbed video, subtitles, and audio — or share it to the library.',
+    next: 'Next',
+    skip: 'Skip',
+    startNow: 'Get started',
+  },
   languages: {
     ja: 'Japanese',
     ko: 'Korean',

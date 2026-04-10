@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { listMyProjects, toggleFavorite, formatSeconds, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
 import { useAuthStore } from '../stores/authStore';
+import OnboardingModal, { shouldShowOnboarding } from '../components/OnboardingModal';
 import type { ProjectStatus } from '../types';
 
 type FilterTab = 'all' | 'favorites' | 'in-progress' | 'completed';
@@ -107,6 +108,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [usageData, setUsageData] = useState<CreditHistoryDay[]>([]);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -118,6 +120,9 @@ export default function DashboardPage() {
         const result = await listMyProjects(20, 0);
         if (cancelled) return;
         setProjects(result.projects);
+        if (shouldShowOnboarding(result.projects.length)) {
+          setShowOnboarding(true);
+        }
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : String(err));
@@ -198,6 +203,9 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-surface-950 pt-20 pb-12">
+      {showOnboarding && (
+        <OnboardingModal onClose={() => setShowOnboarding(false)} />
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
