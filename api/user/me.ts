@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db, migrate } from '../_lib/db.js';
 import { verifyFirebaseToken, sendAuthAwareError } from '../_lib/auth.js';
+import { mapUserRow } from '../_lib/mappers.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -28,17 +29,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       args: [token.sub],
     });
 
-    const row = user.rows[0];
-    return res.json({
-      id: row.id,
-      email: row.email,
-      displayName: row.display_name,
-      photoURL: row.photo_url,
-      plan: row.plan,
-      creditSeconds: row.credit_seconds,
-      language: row.language,
-      createdAt: row.created_at,
-    });
+    const row = user.rows[0] as Record<string, unknown>;
+    return res.json(mapUserRow(row));
   } catch (e) {
     return sendAuthAwareError(res, e);
   }

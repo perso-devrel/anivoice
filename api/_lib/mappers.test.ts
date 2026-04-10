@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseTags, mapProjectRow, mapLibraryRow } from './mappers';
+import { parseTags, mapProjectRow, mapLibraryRow, mapLibraryDetailRow, mapUserRow, mapTagRow, buildPatchFields } from './mappers';
 
 describe('parseTags', () => {
   it('splits comma-separated string', () => {
@@ -129,5 +129,156 @@ describe('mapLibraryRow', () => {
 
   it('returns empty tags for null', () => {
     expect(mapLibraryRow({ ...baseRow, tag_names: null }).tags).toEqual([]);
+  });
+});
+
+describe('mapLibraryDetailRow', () => {
+  const baseRow: Record<string, unknown> = {
+    id: 10,
+    title: 'Detail Item',
+    author_name: 'Author',
+    source_language: 'ja',
+    target_language: 'en',
+    duration_ms: 60000,
+    thumbnail_url: '/thumb.jpg',
+    video_url: '/video.mp4',
+    audio_url: '/audio.mp3',
+    subtitle_url: '/subs.srt',
+    tag_names: 'sci-fi,action',
+    created_at: '2026-04-05',
+  };
+
+  it('maps all fields including audioUrl and subtitleUrl', () => {
+    const result = mapLibraryDetailRow(baseRow);
+    expect(result.id).toBe(10);
+    expect(result.title).toBe('Detail Item');
+    expect(result.authorName).toBe('Author');
+    expect(result.sourceLanguage).toBe('ja');
+    expect(result.targetLanguage).toBe('en');
+    expect(result.durationMs).toBe(60000);
+    expect(result.thumbnailUrl).toBe('/thumb.jpg');
+    expect(result.videoUrl).toBe('/video.mp4');
+    expect(result.audioUrl).toBe('/audio.mp3');
+    expect(result.subtitleUrl).toBe('/subs.srt');
+    expect(result.tags).toEqual(['sci-fi', 'action']);
+    expect(result.createdAt).toBe('2026-04-05');
+  });
+
+  it('handles null audioUrl and subtitleUrl', () => {
+    const result = mapLibraryDetailRow({ ...baseRow, audio_url: null, subtitle_url: null });
+    expect(result.audioUrl).toBeNull();
+    expect(result.subtitleUrl).toBeNull();
+  });
+
+  it('returns empty tags for undefined tag_names', () => {
+    expect(mapLibraryDetailRow({ ...baseRow, tag_names: undefined }).tags).toEqual([]);
+  });
+});
+
+describe('mapUserRow', () => {
+  const baseRow: Record<string, unknown> = {
+    id: 'uid-123',
+    email: 'test@example.com',
+    display_name: 'Test User',
+    photo_url: 'https://example.com/photo.jpg',
+    plan: 'free',
+    credit_seconds: 360000,
+    language: 'ko',
+    created_at: '2026-04-01',
+  };
+
+  it('maps all fields correctly', () => {
+    const result = mapUserRow(baseRow);
+    expect(result.id).toBe('uid-123');
+    expect(result.email).toBe('test@example.com');
+    expect(result.displayName).toBe('Test User');
+    expect(result.photoURL).toBe('https://example.com/photo.jpg');
+    expect(result.plan).toBe('free');
+    expect(result.creditSeconds).toBe(360000);
+    expect(result.language).toBe('ko');
+    expect(result.createdAt).toBe('2026-04-01');
+  });
+
+  it('handles null photo_url', () => {
+    expect(mapUserRow({ ...baseRow, photo_url: null }).photoURL).toBeNull();
+  });
+
+  it('handles undefined language', () => {
+    expect(mapUserRow({ ...baseRow, language: undefined }).language).toBeUndefined();
+  });
+});
+
+describe('mapTagRow', () => {
+  it('maps all fields correctly', () => {
+    const result = mapTagRow({ id: 1, name: 'action', display_name_ko: '액션', display_name_en: 'Action' });
+    expect(result.id).toBe(1);
+    expect(result.name).toBe('action');
+    expect(result.displayNameKo).toBe('액션');
+    expect(result.displayNameEn).toBe('Action');
+  });
+
+  it('handles null display names', () => {
+    const result = mapTagRow({ id: 2, name: 'test', display_name_ko: null, display_name_en: null });
+    expect(result.displayNameKo).toBeNull();
+    expect(result.displayNameEn).toBeNull();
+  });
+});
+
+describe('buildPatchFields', () => {
+  it('builds fields and args for provided camelCase keys', () => {
+    const { fields, args } = buildPatchFields({ title: 'New Title', status: 'completed' });
+    expect(fields).toEqual(['title = ?', 'status = ?']);
+    expect(args).toEqual(['New Title', 'completed']);
+  });
+
+  it('converts isFavorite true to 1', () => {
+    const { fields, args } = buildPatchFields({ isFavorite: true });
+    expect(fields).toEqual(['is_favorite = ?']);
+    expect(args).toEqual([1]);
+  });
+
+  it('converts isFavorite false to 0', () => {
+    const { fields, args } = buildPatchFields({ isFavorite: false });
+    expect(fields).toEqual(['is_favorite = ?']);
+    expect(args).toEqual([0]);
+  });
+
+  it('maps camelCase to snake_case', () => {
+    const { fields } = buildPatchFields({ durationMs: 5000, thumbnailUrl: '/thumb.jpg' });
+    expect(fields).toEqual(['duration_ms = ?', 'thumbnail_url = ?']);
+  });
+
+  it('ignores unknown keys', () => {
+    const { fields, args } = buildPatchFields({ unknownField: 'val', title: 'ok' });
+    expect(fields).toEqual(['title = ?']);
+    expect(args).toEqual(['ok']);
+  });
+
+  it('returns empty when body has no recognized keys', () => {
+    const { fields, args } = buildPatchFields({ foo: 'bar' });
+    expect(fields).toEqual([]);
+    expect(args).toEqual([]);
+  });
+
+  it('skips undefined values', () => {
+    const { fields, args } = buildPatchFields({ title: undefined, status: 'pending' });
+    expect(fields).toEqual(['status = ?']);
+    expect(args).toEqual(['pending']);
+  });
+
+  it('handles all allowed fields', () => {
+    const body = {
+      title: 't', status: 's', progress: 50,
+      durationMs: 1000, persoProjectSeq: 1, persoSpaceSeq: 2,
+      thumbnailUrl: 'a', videoUrl: 'b', audioUrl: 'c',
+      subtitleUrl: 'd', zipUrl: 'e', isFavorite: true,
+    };
+    const { fields } = buildPatchFields(body);
+    expect(fields).toHaveLength(12);
+  });
+
+  it('handles null values', () => {
+    const { args } = buildPatchFields({ videoUrl: null });
+    expect(args).toEqual([null]);
   });
 });
