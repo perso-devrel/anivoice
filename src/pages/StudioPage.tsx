@@ -20,6 +20,7 @@ import { useAuthStore } from '../stores/authStore';
 import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { formatMs } from '../utils/format';
+import { getDownloadUrl, computeDubbingProgress, buildShareUrl } from '../utils/studio';
 
 type Step = 'upload' | 'settings' | 'result';
 
@@ -321,7 +322,7 @@ export default function StudioPage() {
 
       // 5. Poll progress (every 5 seconds)
       await pollProgress(primaryProjectSeq, space.spaceSeq, (p: PersoProgress) => {
-        setProgress(35 + (p.progress * 0.55)); // 35~90%
+        setProgress(computeDubbingProgress(p.progress));
         if (p.expectedRemainingTimeMinutes > 0) {
           setRemainingMinutes(p.expectedRemainingTimeMinutes);
         }
@@ -430,24 +431,7 @@ export default function StudioPage() {
   }
 
   function handleDownload(type: 'video' | 'subtitle' | 'audio' | 'zip') {
-    if (!downloadLinks) return;
-    let path: string | undefined;
-    switch (type) {
-      case 'video':
-        path = downloadLinks.videoFile?.videoDownloadLink;
-        break;
-      case 'subtitle':
-        path = downloadLinks.srtFile?.translatedSubtitleDownloadLink
-          || downloadLinks.srtFile?.originalSubtitleDownloadLink;
-        break;
-      case 'audio':
-        path = downloadLinks.audioFile?.voiceWithBackgroundAudioDownloadLink
-          || downloadLinks.audioFile?.voiceAudioDownloadLink;
-        break;
-      case 'zip':
-        path = downloadLinks.zippedFileDownloadLink;
-        break;
-    }
+    const path = getDownloadUrl(type, downloadLinks);
     if (path) {
       const fullUrl = resolvePersoFileUrl(path);
       if (fullUrl) {
@@ -470,9 +454,7 @@ export default function StudioPage() {
   }
 
   async function handleCopyShareLink() {
-    const url = dbProjectId
-      ? `${window.location.origin}/library/${dbProjectId}`
-      : `${window.location.origin}/library`;
+    const url = buildShareUrl(window.location.origin, dbProjectId);
     try {
       await navigator.clipboard.writeText(url);
       setLinkCopied(true);
