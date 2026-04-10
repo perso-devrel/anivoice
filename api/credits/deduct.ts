@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db, migrate } from '../_lib/db.js';
 import { verifyFirebaseToken, ensureUser, sendAuthAwareError } from '../_lib/auth.js';
+import { computeDeductSeconds } from '../_lib/credits.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -11,7 +12,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await ensureUser(token);
 
     const { projectId, durationMs, languageCount = 1 } = req.body;
-    const seconds = Math.ceil(durationMs / 1000) * Math.max(1, Math.floor(languageCount));
+    const seconds = computeDeductSeconds(durationMs, languageCount);
 
     // Atomic deduct: only succeeds if enough credits
     const result = await db.execute({

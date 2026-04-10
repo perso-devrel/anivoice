@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db, migrate } from '../_lib/db.js';
 import { verifyFirebaseToken, ensureUser, sendAuthAwareError } from '../_lib/auth.js';
+import { clampHistoryDays, mapHistoryRow } from '../_lib/credits.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -10,7 +11,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await migrate();
     await ensureUser(token);
 
-    const days = Math.min(Number(req.query.days) || 30, 90);
+    const days = clampHistoryDays(req.query.days);
 
     const result = await db.execute({
       sql: `SELECT date(created_at) AS day,
@@ -23,11 +24,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       args: [token.sub, `-${days}`],
     });
 
-    const data = result.rows.map((r) => ({
-      day: String(r.day),
-      usedSeconds: Number(r.used_seconds),
-      txCount: Number(r.tx_count),
-    }));
+    const data = result.rows.map(mapHistoryRow);
 
     return res.json({ days, data });
   } catch (e) {
