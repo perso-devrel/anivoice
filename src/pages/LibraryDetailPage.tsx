@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { getLibraryItem, formatSeconds, type LibraryItemDetail } from '../services/anivoiceApi';
 import { resolvePersoFileUrl } from '../services/persoApi';
+import { DownloadIcon, LinkIcon } from '../components/icons';
 
 export default function LibraryDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -142,7 +143,7 @@ export default function LibraryDetailPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl gradient-bg text-white text-sm font-medium hover:opacity-90 transition-opacity"
               >
-                <DownloadIcon />
+                <DownloadIcon className="w-4 h-4" />
                 {t('library.downloadVideo')}
               </a>
             )}
@@ -153,7 +154,7 @@ export default function LibraryDetailPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-700 text-white text-sm font-medium hover:bg-surface-600 transition-colors"
               >
-                <DownloadIcon />
+                <DownloadIcon className="w-4 h-4" />
                 {t('library.downloadAudio')}
               </a>
             )}
@@ -164,7 +165,7 @@ export default function LibraryDetailPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-700 text-white text-sm font-medium hover:bg-surface-600 transition-colors"
               >
-                <DownloadIcon />
+                <DownloadIcon className="w-4 h-4" />
                 {t('library.downloadSubtitle')}
               </a>
             )}
@@ -179,21 +180,5 @@ export default function LibraryDetailPage() {
         </div>
       </div>
     </main>
-  );
-}
-
-function DownloadIcon() {
-  return (
-    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-    </svg>
-  );
-}
-
-function LinkIcon() {
-  return (
-    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m9.86-2.04a4.5 4.5 0 0 0-1.242-7.244l-4.5-4.5a4.5 4.5 0 0 0-6.364 6.364L4.34 8.374" />
-    </svg>
   );
 }

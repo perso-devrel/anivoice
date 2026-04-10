@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { getLibrary, getTags, formatSeconds, type LibraryItem, type Tag } from '../services/anivoiceApi';
 import { resolvePersoFileUrl } from '../services/persoApi';
+import { SearchIcon, PlayIcon, ChevronDownIcon, ClockIcon } from '../components/icons';
 
 const GRADIENT_PALETTES = [
   'from-primary-600 to-accent-600',
@@ -15,38 +16,6 @@ const GRADIENT_PALETTES = [
   'from-primary-500 to-accent-600',
   'from-accent-500 to-primary-500',
 ];
-
-function SearchIcon() {
-  return (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-    </svg>
-  );
-}
-
-function PlayIcon() {
-  return (
-    <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M8 5v14l11-7z" />
-    </svg>
-  );
-}
-
-function ChevronDownIcon() {
-  return (
-    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
-  );
-}
-
-function ClockIcon() {
-  return (
-    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  );
-}
 
 export default function LibraryPage() {
   const { t } = useTranslation();
