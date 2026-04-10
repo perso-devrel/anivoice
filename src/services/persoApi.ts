@@ -50,7 +50,7 @@ export function isTransientError(error: unknown): boolean {
   return false;
 }
 
-async function retryWithBackoff<T>(
+export async function retryWithBackoff<T>(
   fn: () => Promise<T>,
   maxRetries = 3,
   baseDelayMs = 1000,
