@@ -269,7 +269,7 @@ export default function StudioPage() {
       setProgress(5);
       const spaces = await listSpaces();
       if (spaces.length === 0) {
-        throw new Error('No workspace found. Please create a space in Perso.ai first.');
+        throw new Error(t('studio.noWorkspaceError'));
       }
       const space = spaces[0];
       setSpaceSeq(space.spaceSeq);
@@ -280,7 +280,7 @@ export default function StudioPage() {
       if (selectedFile) {
         uploadedFile = await uploadVideoFile(space.spaceSeq, selectedFile);
       } else {
-        throw new Error('No file provided');
+        throw new Error(t('studio.noFileError'));
       }
       setProgress(30);
       uploadedFileRef.current = uploadedFile;
@@ -304,7 +304,7 @@ export default function StudioPage() {
 
       const primaryProjectSeq = projectIds[0];
       if (!primaryProjectSeq) {
-        throw new Error('Perso did not return a project id for this dubbing request.');
+        throw new Error(t('studio.noDubbingProjectId'));
       }
       setProjectSeq(primaryProjectSeq);
 
@@ -412,7 +412,7 @@ export default function StudioPage() {
       const lipSyncIds = await requestLipSync(projectSeq, spaceSeq);
       const lipSyncProjectSeq = lipSyncIds[0];
       if (!lipSyncProjectSeq) {
-        throw new Error('Perso did not return a project id for lip sync.');
+        throw new Error(t('studio.noLipSyncProjectId'));
       }
       // Poll lip sync project progress
       await pollProgress(lipSyncProjectSeq, spaceSeq, (p) => {

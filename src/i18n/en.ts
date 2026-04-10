@@ -156,6 +156,10 @@ export default {
     proBadge: '(Pro)',
     publishTitle: 'Publish',
     publishedTitle: '✅ Published',
+    noWorkspaceError: 'No workspace found. Please create a space in Perso.ai first.',
+    noFileError: 'No file provided',
+    noDubbingProjectId: 'Perso did not return a project id for this dubbing request.',
+    noLipSyncProjectId: 'Perso did not return a project id for lip sync.',
   },
   library: {
     title: 'Dubbing Library',

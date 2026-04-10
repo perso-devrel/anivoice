@@ -156,6 +156,10 @@ export default {
     proBadge: '(Pro)',
     publishTitle: '공개하기',
     publishedTitle: '✅ 공개됨',
+    noWorkspaceError: '워크스페이스를 찾을 수 없습니다. Perso.ai에서 스페이스를 먼저 생성해 주세요.',
+    noFileError: '파일이 선택되지 않았습니다',
+    noDubbingProjectId: 'Perso에서 더빙 프로젝트 ID를 반환하지 않았습니다.',
+    noLipSyncProjectId: 'Perso에서 립싱크 프로젝트 ID를 반환하지 않았습니다.',
   },
   library: {
     title: '더빙 라이브러리',
