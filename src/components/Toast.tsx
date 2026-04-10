@@ -42,6 +42,7 @@ export default function ToastContainer() {
           <span className="text-sm">{toast.message}</span>
           <button
             onClick={() => removeToast(toast.id)}
+            aria-label="Close"
             className="ml-2 opacity-70 hover:opacity-100 transition-opacity"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

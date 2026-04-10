@@ -480,6 +480,7 @@ export default function DashboardPage() {
                     {/* Favorite toggle */}
                     <button
                       onClick={(e) => handleToggleFavorite(e, project.id, project.isFavorite)}
+                      aria-label={project.isFavorite ? t('dashboard.removeFavorite') : t('dashboard.addFavorite')}
                       className="absolute top-2 right-2 p-1 rounded-full bg-surface-900/60 backdrop-blur-sm hover:bg-surface-900/90 transition-colors"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} fill={project.isFavorite ? 'currentColor' : 'none'}>
