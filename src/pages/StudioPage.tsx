@@ -858,6 +858,7 @@ export default function StudioPage() {
                           onChange={(e) =>
                             setEditingValues((prev) => ({ ...prev, [s.seq]: e.target.value }))
                           }
+                          aria-label={t('studio.editTranslation')}
                           className="flex-1 text-sm text-white bg-surface-800 border border-surface-700 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-500 transition-colors"
                         />
                         {isEditing && (
