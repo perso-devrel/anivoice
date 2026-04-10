@@ -328,6 +328,17 @@ export default {
     settings: 'Settings',
     test: 'Dev Tools',
   },
+  pageDesc: {
+    landing: 'AI anime dubbing service — preserve character voices and dub into 6+ languages.',
+    auth: 'Sign in to AniVoice to manage your dubbing projects.',
+    dashboard: 'View your dubbing projects, credits, and usage at a glance.',
+    studio: 'Upload an anime video and dub it into your chosen language with AI.',
+    library: 'Browse and manage all your completed dubbing projects.',
+    libraryDetail: 'View dubbing results, download video, audio, and subtitles.',
+    pricing: 'Choose a plan that fits your dubbing needs.',
+    settings: 'Manage your account, language, and preferences.',
+    test: 'Developer tools for testing AniVoice API integration.',
+  },
   errorBoundary: {
     title: 'Something went wrong',
     description: 'An unexpected error occurred. Please reload the page and try again.',

@@ -328,6 +328,17 @@ export default {
     settings: '설정',
     test: '개발자 도구',
   },
+  pageDesc: {
+    landing: 'AI 애니메이션 더빙 서비스 — 캐릭터 목소리를 보존한 채 6개 이상 언어로 더빙합니다.',
+    auth: 'AniVoice에 로그인하여 더빙 프로젝트를 관리하세요.',
+    dashboard: '더빙 프로젝트, 크레딧, 사용량을 한눈에 확인하세요.',
+    studio: '애니메이션 영상을 업로드하고 원하는 언어로 AI 더빙하세요.',
+    library: '완료된 더빙 프로젝트를 검색하고 관리하세요.',
+    libraryDetail: '더빙 결과를 확인하고 영상, 음성, 자막을 다운로드하세요.',
+    pricing: '더빙 필요에 맞는 요금제를 선택하세요.',
+    settings: '계정, 언어, 환경설정을 관리하세요.',
+    test: 'AniVoice API 연동 테스트를 위한 개발자 도구입니다.',
+  },
   errorBoundary: {
     title: '문제가 발생했습니다',
     description: '예상치 못한 오류가 발생했습니다. 페이지를 새로고침한 후 다시 시도해주세요.',
