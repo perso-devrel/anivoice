@@ -152,6 +152,10 @@ export default {
     publishedMessage: 'Published to the library.',
     copyShareLink: 'Copy share link',
     linkCopied: 'Copied!',
+    autoDetect: 'Auto-detect',
+    proBadge: '(Pro)',
+    publishTitle: 'Publish',
+    publishedTitle: '✅ Published',
   },
   library: {
     title: 'Dubbing Library',

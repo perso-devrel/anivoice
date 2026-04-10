@@ -152,6 +152,10 @@ export default {
     publishedMessage: '라이브러리에 공개되었습니다.',
     copyShareLink: '공유 링크 복사',
     linkCopied: '복사됨!',
+    autoDetect: '자동 감지 (Auto)',
+    proBadge: '(Pro)',
+    publishTitle: '공개하기',
+    publishedTitle: '✅ 공개됨',
   },
   library: {
     title: '더빙 라이브러리',

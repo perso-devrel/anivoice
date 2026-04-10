@@ -543,7 +543,7 @@ export default function StudioPage() {
           >
             {LANGUAGES.map((lang) => (
               <option key={lang} value={lang}>
-                {lang === 'auto' ? '\uC790\uB3D9 \uAC10\uC9C0 (Auto)' : t(`languages.${lang}`)}
+                {lang === 'auto' ? t('studio.autoDetect') : t(`languages.${lang}`)}
               </option>
             ))}
           </select>
@@ -759,14 +759,14 @@ export default function StudioPage() {
             onClick={handleRequestLipSync}
             className="w-full glass rounded-xl px-4 py-3 text-sm text-accent-400 hover:text-white hover:border-accent-500/40 transition-colors"
           >
-            {t('studio.progressLipSync')} (Pro)
+            {t('studio.progressLipSync')} {t('studio.proBadge')}
           </button>
         )}
 
         {/* publish section */}
         <div className="glass rounded-2xl p-5 space-y-4">
           <h3 className="text-base font-semibold text-surface-200/90">
-            {isPublished ? '\u2705 \uACF5\uAC1C\uB428' : '\uACF5\uAC1C\uD558\uAE30'}
+            {isPublished ? t('studio.publishedTitle') : t('studio.publishTitle')}
           </h3>
           {isPublished ? (
             <div className="space-y-3">
