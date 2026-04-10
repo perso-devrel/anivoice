@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db, migrate } from '../_lib/db.js';
+import { buildLibraryQuery } from '../_lib/library.js';
 import { mapLibraryRow } from '../_lib/mappers.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -8,48 +9,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     await migrate();
 
-    const tag = String(req.query.tag || '');
-    const lang = String(req.query.lang || '');
-    const sort = String(req.query.sort || 'latest');
-    const search = String(req.query.search || '');
-    const limit = String(req.query.limit || '20');
-    const offset = String(req.query.offset || '0');
-
-    let sql = `
-      SELECT p.*, u.display_name as author_name, GROUP_CONCAT(t.name) as tag_names
-      FROM projects p
-      JOIN users u ON p.user_id = u.id
-      LEFT JOIN project_tags pt ON p.id = pt.project_id
-      LEFT JOIN tags t ON pt.tag_id = t.id
-      WHERE p.is_public = 1 AND p.status = 'completed'
-    `;
-    const args: (string | number | null)[] = [];
-
-    if (tag && tag !== 'all') {
-      sql += ` AND EXISTS (SELECT 1 FROM project_tags pt2 JOIN tags t2 ON pt2.tag_id = t2.id WHERE pt2.project_id = p.id AND t2.name = ?)`;
-      args.push(tag);
-    }
-
-    if (lang && lang !== 'all') {
-      sql += ` AND p.target_language = ?`;
-      args.push(lang);
-    }
-
-    if (search) {
-      sql += ` AND p.title LIKE ?`;
-      args.push(`%${search}%`);
-    }
-
-    sql += ` GROUP BY p.id`;
-
-    if (sort === 'popular') {
-      sql += ` ORDER BY p.created_at DESC`; // TODO: add view/like count later
-    } else {
-      sql += ` ORDER BY p.created_at DESC`;
-    }
-
-    sql += ` LIMIT ? OFFSET ?`;
-    args.push(Number(limit), Number(offset));
+    const { sql, args } = buildLibraryQuery({
+      tag: String(req.query.tag || ''),
+      lang: String(req.query.lang || ''),
+      sort: String(req.query.sort || 'latest'),
+      search: String(req.query.search || ''),
+      limit: String(req.query.limit || '20'),
+      offset: String(req.query.offset || '0'),
+    });
 
     const result = await db.execute({ sql, args });
 
