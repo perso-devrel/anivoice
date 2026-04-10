@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { markOnboardingDone } from '../utils/onboarding';
@@ -41,6 +41,19 @@ export default function OnboardingModal({ onClose }: Props) {
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
 
+  const handleSkip = useCallback(() => {
+    markOnboardingDone();
+    onClose();
+  }, [onClose]);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleSkip();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [handleSkip]);
+
   function handleNext() {
     if (step < STEPS.length - 1) {
       setStep(step + 1);
@@ -48,11 +61,6 @@ export default function OnboardingModal({ onClose }: Props) {
       markOnboardingDone();
       onClose();
     }
-  }
-
-  function handleSkip() {
-    markOnboardingDone();
-    onClose();
   }
 
   const current = STEPS[step];
