@@ -285,6 +285,16 @@ export default {
     id: '인도네시아어',
     ar: '아랍어',
   },
+  footer: {
+    product: '제품',
+    support: '지원',
+    faq: '자주 묻는 질문',
+    contact: '문의하기',
+    legal: '법적 고지',
+    terms: '이용약관',
+    privacy: '개인정보처리방침',
+    dmca: 'DMCA',
+  },
   errorBoundary: {
     title: '문제가 발생했습니다',
     description: '예상치 못한 오류가 발생했습니다. 페이지를 새로고침한 후 다시 시도해주세요.',
