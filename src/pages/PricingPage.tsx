@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { purchaseCredits, formatSeconds } from '../services/anivoiceApi';
@@ -35,6 +36,7 @@ export default function PricingPage() {
   const { user } = useAuthStore();
 
   const [modal, setModal] = useState<ModalState | null>(null);
+  const modalTrapRef = useFocusTrap<HTMLDivElement>(modal !== null);
   const [cardNumber, setCardNumber] = useState('4242 4242 4242 4242');
   const [cardExpiry, setCardExpiry] = useState('12/28');
   const [cardCvc, setCardCvc] = useState('123');
@@ -356,6 +358,7 @@ export default function PricingPage() {
       {/* Checkout Modal */}
       {modal && (
         <div
+          ref={modalTrapRef}
           className="fixed inset-0 z-50 flex items-center justify-center px-4"
           role="dialog"
           aria-modal="true"

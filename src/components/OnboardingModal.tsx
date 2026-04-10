@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { markOnboardingDone } from '../utils/onboarding';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 const STEPS = [
   {
@@ -40,6 +41,7 @@ interface Props {
 export default function OnboardingModal({ onClose }: Props) {
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
+  const trapRef = useFocusTrap<HTMLDivElement>();
 
   const handleSkip = useCallback(() => {
     markOnboardingDone();
@@ -66,7 +68,7 @@ export default function OnboardingModal({ onClose }: Props) {
   const current = STEPS[step];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4" role="dialog" aria-modal="true" aria-label={t('onboarding.welcome')}>
+    <div ref={trapRef} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4" role="dialog" aria-modal="true" aria-label={t('onboarding.welcome')}>
       <div className="w-full max-w-md glass rounded-2xl p-8 relative animate-in fade-in">
         <button
           onClick={handleSkip}
