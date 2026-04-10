@@ -1,17 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/layout/Layout';
-import LandingPage from './pages/LandingPage';
-import DashboardPage from './pages/DashboardPage';
-import StudioPage from './pages/StudioPage';
-import LibraryPage from './pages/LibraryPage';
-import LibraryDetailPage from './pages/LibraryDetailPage';
-import PricingPage from './pages/PricingPage';
-import SettingsPage from './pages/SettingsPage';
-import TestPage from './pages/TestPage';
-import AuthPage from './pages/AuthPage';
 import { useAuthStore } from './stores/authStore';
 import { initAuthListener } from './services/firebase';
+
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const StudioPage = lazy(() => import('./pages/StudioPage'));
+const LibraryPage = lazy(() => import('./pages/LibraryPage'));
+const LibraryDetailPage = lazy(() => import('./pages/LibraryDetailPage'));
+const PricingPage = lazy(() => import('./pages/PricingPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const TestPage = lazy(() => import('./pages/TestPage'));
+const AuthPage = lazy(() => import('./pages/AuthPage'));
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuthStore();
@@ -38,6 +39,13 @@ export default function App() {
   }, []);
 
   return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-surface-950">
+          <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<LandingPage />} />
@@ -73,5 +81,6 @@ export default function App() {
         />
       </Route>
     </Routes>
+    </Suspense>
   );
 }
