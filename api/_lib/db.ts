@@ -13,7 +13,7 @@ export async function migrate() {
       display_name TEXT NOT NULL DEFAULT '',
       photo_url TEXT,
       plan TEXT NOT NULL DEFAULT 'free',
-      credit_seconds INTEGER NOT NULL DEFAULT 60,
+      credit_seconds INTEGER NOT NULL DEFAULT 360000,
       language TEXT NOT NULL DEFAULT 'ko',
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -81,5 +81,9 @@ export async function migrate() {
       ('sports', '스포츠', 'Sports'),
       ('slice-of-life', '일상', 'Slice of Life'),
       ('mecha', '메카', 'Mecha');
+
+    -- 일회성 시드 마이그레이션: 옛 기본값(60초)으로 시작했던 free 사용자를 100시간으로 보정.
+    -- 한 번이라도 더빙해서 차감된 사용자(60초 != credit_seconds)는 영향 없음. 안전.
+    UPDATE users SET credit_seconds = 360000 WHERE plan = 'free' AND credit_seconds = 60;
   `);
 }

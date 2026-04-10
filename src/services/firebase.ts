@@ -15,7 +15,7 @@ const MOCK_ACCOUNTS: Record<string, { password: string; user: User }> = {
       email: 'dervel@estsoft.com',
       displayName: 'Dervel',
       plan: 'pro',
-      creditSeconds: 7200,
+      creditSeconds: 3600000,
       language: 'ko',
       createdAt: '2026-01-01T00:00:00Z',
     },
@@ -61,7 +61,7 @@ async function mockSignUpWithEmail(email: string, password: string, displayName:
     email,
     displayName,
     plan: 'free',
-    creditSeconds: 60,
+    creditSeconds: 360000,
     language: 'ko',
     createdAt: new Date().toISOString(),
   };

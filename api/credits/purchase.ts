@@ -14,10 +14,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (plan) {
       // Plan change — set credits to plan amount
+      // 시간 단위(초): free=100h, basic=300h, pro=1000h
       const planCredits: Record<string, number> = {
-        free: 60,
-        basic: 1800,
-        pro: 7200,
+        free: 360000,
+        basic: 1080000,
+        pro: 3600000,
       };
       const newCredits = planCredits[plan] ?? 60;
 

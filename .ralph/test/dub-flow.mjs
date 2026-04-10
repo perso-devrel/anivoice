@@ -188,14 +188,14 @@ async function ensureQueue(spaceSeq) {
   return payload;
 }
 
-async function requestTranslation(spaceSeq, mediaSeq) {
-  log(`requestTranslation(spaceSeq=${spaceSeq}, mediaSeq=${mediaSeq}, target=${TARGET_LANGUAGE}) ...`);
+async function requestTranslation(spaceSeq, mediaSeq, targetLang = TARGET_LANGUAGE) {
+  log(`requestTranslation(spaceSeq=${spaceSeq}, mediaSeq=${mediaSeq}, target=${targetLang || '(none)'}) ...`);
   const data = await call('POST', `/video-translator/api/v1/projects/spaces/${spaceSeq}/translate`, {
     body: {
       mediaSeq,
       isVideoProject: true,
       sourceLanguageCode: 'auto',
-      targetLanguageCodes: [TARGET_LANGUAGE],
+      targetLanguageCodes: targetLang ? [targetLang] : [],
       numberOfSpeakers: 1,
       preferredSpeedType: 'GREEN',
     },
@@ -304,11 +304,43 @@ async function dubOne({ id, label, file }, spaceSeq) {
   };
 }
 
+// ────────────── 추가 검증: 비공개 엔드포인트 인증 가드 ──────────────
+async function checkAuthGuards() {
+  log('───── auth-guard checks ─────');
+  const cases = [
+    { method: 'GET',  path: '/api/user/me',   expect: 401 },
+    { method: 'POST', path: '/api/projects',  expect: 401 },
+    { method: 'GET',  path: '/api/tags',      expect: 200 },
+    { method: 'GET',  path: '/api/library',   expect: 200 },
+  ];
+  let allOk = true;
+  for (const c of cases) {
+    const res = await fetch(`${BASE_URL}${c.path}`, { method: c.method });
+    const ok = res.status === c.expect;
+    log(`  ${ok ? '✔' : '✗'} ${c.method} ${c.path} → ${res.status} (expected ${c.expect})`);
+    if (!ok) allOk = false;
+  }
+  if (!allOk) fail('auth-guard checks failed');
+}
+
+// ────────────── 추가 검증: SPA 경로는 index.html ──────────────
+async function checkSpaFallback() {
+  log('───── spa-fallback check ─────');
+  const res = await fetch(`${BASE_URL}/dashboard`);
+  const text = await res.text();
+  const isHtml = res.status === 200 && /<!doctype html/i.test(text);
+  log(`  ${isHtml ? '✔' : '✗'} GET /dashboard → ${res.status} ${isHtml ? '(html ok)' : '(not html!)'}`);
+  if (!isHtml) fail('SPA fallback broken');
+}
+
 // ────────────── main ──────────────
 async function main() {
   log(`BASE_URL=${BASE_URL}`);
   log(`TARGET_LANGUAGE=${TARGET_LANGUAGE}`);
   log(`MAX_POLL_MINUTES=${MAX_POLL_MINUTES}`);
+
+  await checkAuthGuards();
+  await checkSpaFallback();
 
   const spaceSeq = await getFirstSpace();
 

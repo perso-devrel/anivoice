@@ -18,7 +18,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (existing.rows.length === 0) {
       await db.execute({
         sql: `INSERT INTO users (id, email, display_name, photo_url, plan, credit_seconds)
-              VALUES (?, ?, ?, ?, 'free', 60)`,
+              VALUES (?, ?, ?, ?, 'free', 360000)`,
         args: [token.sub, token.email || '', token.name || '', token.picture || null],
       });
     }

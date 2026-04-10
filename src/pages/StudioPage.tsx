@@ -554,9 +554,15 @@ export default function StudioPage() {
 
         {/* target language (single select) */}
         <div className="glass rounded-2xl p-5 space-y-3">
-          <label className="block text-sm font-medium text-surface-200/80">
-            {t('studio.targetLanguage')}
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-medium text-surface-200/80">
+              {t('studio.targetLanguage')}
+              <span className="ml-1 text-red-400" aria-hidden="true">*</span>
+            </label>
+            {!targetLanguage && (
+              <span className="text-xs text-yellow-400/90">{t('studio.selectTargetLanguage')}</span>
+            )}
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {LANGUAGES.filter((l) => l !== 'auto' && l !== sourceLanguage).map((lang) => {
               const checked = targetLanguage === lang;
@@ -601,9 +607,11 @@ export default function StudioPage() {
           type="button"
           onClick={handleStartDubbing}
           disabled={!targetLanguage}
-          className="w-full gradient-bg py-3 rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity disabled:opacity-40"
+          aria-disabled={!targetLanguage}
+          title={!targetLanguage ? t('studio.selectTargetLanguage') : undefined}
+          className="w-full gradient-bg py-3 rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {t('studio.startDubbing')}
+          {targetLanguage ? t('studio.startDubbing') : t('studio.selectTargetLanguage')}
         </button>
       </div>
     );
