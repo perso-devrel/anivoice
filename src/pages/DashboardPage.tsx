@@ -455,45 +455,66 @@ export default function DashboardPage() {
         )}
 
         {/* Projects Grid / Empty State */}
-        {!loading && !error && filteredProjects.length === 0 && (
-          <div className="glass rounded-2xl p-16 flex flex-col items-center justify-center text-center">
-            <div className="w-24 h-24 mb-6 rounded-2xl bg-surface-800 flex items-center justify-center">
-              <svg
-                className="w-12 h-12 text-gray-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-2.625 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0118 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 5.004 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 5.004 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 7.746 6 7.125v-1.5M4.875 8.25C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0118 7.125v-1.5m1.125 2.625c-.621 0-1.125.504-1.125 1.125v1.5m2.625-2.625c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125M18 5.625v5.25M7.125 12h9.75m-9.75 0A1.125 1.125 0 016 10.875M7.125 12C6.504 12 6 12.504 6 13.125m0-2.25C6 11.496 5.496 12 4.875 12M18 10.875c0 .621-.504 1.125-1.125 1.125M18 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m-12 5.25v-5.25m0 5.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125m-12 0v-1.5c0-.621-.504-1.125-1.125-1.125M18 18.375v-5.25m0 5.25v-1.5c0-.621.504-1.125 1.125-1.125M18 13.125v1.5c0 .621.504 1.125 1.125 1.125M18 13.125c0-.621.504-1.125 1.125-1.125M6 13.125v1.5c0 .621-.504 1.125-1.125 1.125M6 13.125C6 12.504 5.496 12 4.875 12m-1.5 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125M19.125 12h1.5m0 0c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h1.5m14.25 0h1.5"
-                />
-              </svg>
+        {!loading && !error && filteredProjects.length === 0 && projects.length === 0 && (
+          <div className="glass rounded-2xl p-12 sm:p-16 flex flex-col items-center justify-center text-center">
+            <div className="w-32 h-32 mb-8 relative">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-500/20 to-accent-500/20 blur-xl" />
+              <div className="relative w-full h-full rounded-2xl bg-surface-800/80 flex items-center justify-center">
+                <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
+                  <rect x="8" y="14" width="48" height="36" rx="4" stroke="url(#emptyGrad)" strokeWidth="2.5" />
+                  <path d="M8 22h48" stroke="url(#emptyGrad)" strokeWidth="2" opacity="0.5" />
+                  <circle cx="32" cy="36" r="8" stroke="url(#emptyGrad)" strokeWidth="2.5" />
+                  <polygon points="30,33 30,39 36,36" fill="url(#emptyGrad)" />
+                  <path d="M44 10l4-4m0 0l4 4m-4-4v8" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
+                  <circle cx="14" cy="10" r="2" fill="#ec4899" opacity="0.5" />
+                  <circle cx="52" cy="54" r="1.5" fill="#8b5cf6" opacity="0.5" />
+                  <defs>
+                    <linearGradient id="emptyGrad" x1="8" y1="14" x2="56" y2="50">
+                      <stop stopColor="#ec4899" />
+                      <stop offset="1" stopColor="#8b5cf6" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
             </div>
-            <p className="text-gray-400 text-base max-w-sm">
-              {t('dashboard.noProjects')}
+            <h3 className="text-xl font-bold gradient-text mb-2">
+              {t('dashboard.noProjectsTitle')}
+            </h3>
+            <p className="text-gray-400 text-sm max-w-sm mb-8">
+              {t('dashboard.noProjectsDesc')}
             </p>
             <Link
               to="/studio"
-              className="mt-6 inline-flex items-center gap-2 px-6 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary-500/20"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
               {t('dashboard.newProject')}
             </Link>
+          </div>
+        )}
+
+        {/* Filter/Search — no results */}
+        {!loading && !error && filteredProjects.length === 0 && projects.length > 0 && (
+          <div className="glass rounded-2xl p-12 flex flex-col items-center justify-center text-center">
+            <div className="w-20 h-20 mb-6 rounded-2xl bg-surface-800/80 flex items-center justify-center">
+              <svg className="w-10 h-10 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+              </svg>
+            </div>
+            <p className="text-gray-300 text-base font-medium mb-1">
+              {t('dashboard.noFilterResults')}
+            </p>
+            <p className="text-gray-500 text-sm max-w-sm mb-6">
+              {t('dashboard.noFilterResultsDesc')}
+            </p>
+            <button
+              onClick={() => { setSearchQuery(''); setLanguageFilter(''); setActiveTab('all'); }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-surface-800 text-white text-sm font-medium hover:bg-surface-700 transition-colors"
+            >
+              {t('dashboard.clearFilters')}
+            </button>
           </div>
         )}
 
