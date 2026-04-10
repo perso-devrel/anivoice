@@ -19,6 +19,7 @@ import { createProject, updateProject, deductCredits, getTags, publishProject } 
 import { useAuthStore } from '../stores/authStore';
 import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
+import { formatMs } from '../utils/format';
 
 type Step = 'upload' | 'settings' | 'result';
 
@@ -937,9 +938,3 @@ export default function StudioPage() {
   );
 }
 
-function formatMs(ms: number): string {
-  const totalSec = Math.floor(ms / 1000);
-  const m = Math.floor(totalSec / 60);
-  const s = totalSec % 60;
-  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-}
