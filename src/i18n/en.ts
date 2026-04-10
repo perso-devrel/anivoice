@@ -115,6 +115,9 @@ export default {
     selectTargetLanguage: 'Select a target language',
     loadingProject: 'Loading project...',
     remainingTime: '~{{minutes}}min remaining',
+    publishedMessage: 'Published to the library.',
+    copyShareLink: 'Copy share link',
+    linkCopied: 'Copied!',
   },
   library: {
     title: 'Dubbing Library',
