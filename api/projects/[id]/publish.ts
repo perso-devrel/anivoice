@@ -1,11 +1,18 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db, migrate } from '../../_lib/db.js';
 import { verifyFirebaseToken, sendAuthAwareError } from '../../_lib/auth.js';
+import {
+  buildOwnershipQuery,
+  buildPublishUpdateQuery,
+  buildTagDeleteQuery,
+  buildTagInsertQueries,
+} from '../../_lib/publish.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { id } = req.query;
+  const projectId = Number(id);
 
   try {
     const token = await verifyFirebaseToken(req);
@@ -13,27 +20,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const { tagIds = [], isPublic = true } = req.body;
 
-    // Verify ownership
-    const project = await db.execute({
-      sql: 'SELECT id FROM projects WHERE id = ? AND user_id = ?',
-      args: [Number(id), token.sub],
-    });
+    const project = await db.execute(buildOwnershipQuery(projectId, token.sub));
     if (project.rows.length === 0) return res.status(404).json({ error: 'Project not found' });
 
-    // Update public status
-    await db.execute({
-      sql: "UPDATE projects SET is_public = ?, updated_at = datetime('now') WHERE id = ?",
-      args: [isPublic ? 1 : 0, Number(id)],
-    });
+    await db.execute(buildPublishUpdateQuery(projectId, isPublic));
+    await db.execute(buildTagDeleteQuery(projectId));
 
-    // Replace tags
-    await db.execute({ sql: 'DELETE FROM project_tags WHERE project_id = ?', args: [Number(id)] });
-
-    for (const tagId of tagIds) {
-      await db.execute({
-        sql: 'INSERT OR IGNORE INTO project_tags (project_id, tag_id) VALUES (?, ?)',
-        args: [Number(id), tagId],
-      });
+    for (const q of buildTagInsertQueries(projectId, tagIds)) {
+      await db.execute(q);
     }
 
     return res.json({ ok: true });
