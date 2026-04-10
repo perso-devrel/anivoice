@@ -225,14 +225,14 @@ export default function LibraryPage() {
         {/* Empty state */}
         {!loading && !error && items.length === 0 && (
           <div className="text-center py-20 text-gray-500">
-            <p className="text-lg">아직 공개된 더빙 영상이 없습니다</p>
+            <p className="text-lg">{t('library.emptyState')}</p>
           </div>
         )}
 
         {/* Card Grid */}
         {!loading && !error && items.length > 0 && (
           <>
-            <p className="text-sm text-gray-500 mb-4">{total}개의 영상</p>
+            <p className="text-sm text-gray-500 mb-4">{t('library.totalCount', { count: total })}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {items.map((item, index) => {
                 const thumbnailSrc = resolvePersoFileUrl(item.thumbnailUrl);

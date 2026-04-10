@@ -44,10 +44,10 @@ export default function PricingPage() {
       priceKey: 'free',
       planType: 'free',
       price: '$0',
-      timeLabel: '100시간',
+      timeLabel: t('pricing.freeTimeLabel'),
       creditSeconds: 360000,
       features: [
-        '매월 100시간 무료 더빙',
+        t('pricing.freeFeatureMain'),
         t('pricing.freeFeature2'),
         t('pricing.freeFeature3'),
       ],
@@ -58,10 +58,10 @@ export default function PricingPage() {
       planType: 'basic',
       price: '$4.99',
       period: t('pricing.perMonth'),
-      timeLabel: '300시간',
+      timeLabel: t('pricing.basicTimeLabel'),
       creditSeconds: 1080000,
       features: [
-        '매월 300시간 더빙 시간',
+        t('pricing.basicFeatureMain'),
         t('pricing.basicFeature2'),
         t('pricing.basicFeature3'),
         t('pricing.basicFeature4'),
@@ -74,10 +74,10 @@ export default function PricingPage() {
       price: '$14.99',
       period: t('pricing.perMonth'),
       highlighted: true,
-      timeLabel: '1000시간',
+      timeLabel: t('pricing.proTimeLabel'),
       creditSeconds: 3600000,
       features: [
-        '매월 1000시간 더빙 시간',
+        t('pricing.proFeatureMain'),
         t('pricing.proFeature2'),
         t('pricing.proFeature3'),
         t('pricing.proFeature4'),
@@ -90,10 +90,10 @@ export default function PricingPage() {
       planType: 'pay-per-use',
       price: '$1.5',
       period: t('pricing.perMinute'),
-      timeLabel: '종량제',
+      timeLabel: t('pricing.payPerUseTimeLabel'),
       creditSeconds: 0,
       features: [
-        '사용한 만큼만 결제',
+        t('pricing.payPerUseFeatureMain'),
         t('pricing.payPerUseFeature2'),
         t('pricing.payPerUseFeature3'),
       ],
@@ -101,9 +101,9 @@ export default function PricingPage() {
   ];
 
   const timePackages = [
-    { seconds: 600, label: '10분', price: '$12', priceNum: 12, savings: '' },
-    { seconds: 3000, label: '50분', price: '$50', priceNum: 50, savings: t('pricing.save17') },
-    { seconds: 6000, label: '100분', price: '$90', priceNum: 90, savings: t('pricing.save40') },
+    { seconds: 600, label: t('pricing.timePack10'), price: '$12', priceNum: 12, savings: '' },
+    { seconds: 3000, label: t('pricing.timePack50'), price: '$50', priceNum: 50, savings: t('pricing.save17') },
+    { seconds: 6000, label: t('pricing.timePack100'), price: '$90', priceNum: 90, savings: t('pricing.save40') },
   ];
 
   const handleSelectPlan = (plan: Plan) => {
