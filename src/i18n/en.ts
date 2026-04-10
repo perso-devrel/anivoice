@@ -141,6 +141,7 @@ export default {
     downloadVideo: 'Download video (MP4)',
     downloadSubtitle: 'Download subtitles (SRT)',
     downloadAudio: 'Download audio (WAV)',
+    downloadZip: 'ZIP (All)',
     editTranslation: 'Edit translation',
     excludeSegment: 'Exclude segment',
     lockTranslation: 'Lock translation',

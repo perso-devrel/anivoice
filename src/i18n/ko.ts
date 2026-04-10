@@ -141,6 +141,7 @@ export default {
     downloadVideo: '영상 다운로드 (MP4)',
     downloadSubtitle: '자막 다운로드 (SRT)',
     downloadAudio: '오디오 다운로드 (WAV)',
+    downloadZip: 'ZIP (전체)',
     editTranslation: '번역 수정',
     excludeSegment: '이 구간 제외',
     lockTranslation: '번역 잠금',
