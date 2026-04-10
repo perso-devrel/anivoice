@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
@@ -10,6 +11,11 @@ export default defineConfig(({ mode }) => {
   const persoApiKey = env.XP_API_KEY || env.VITE_PERSO_API_KEY;
 
   return {
+    test: {
+      globals: true,
+      environment: 'node',
+      include: ['src/**/*.test.ts'],
+    },
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

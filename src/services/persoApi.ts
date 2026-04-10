@@ -38,7 +38,7 @@ type QueueStatus = {
   redZoneQueueCount: number;
 };
 
-function isTransientError(error: unknown): boolean {
+export function isTransientError(error: unknown): boolean {
   if (axios.isAxiosError(error)) {
     const status = error.response?.status;
     if (!status) return true; // network error
@@ -72,18 +72,18 @@ async function retryWithBackoff<T>(
   throw lastError;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
+export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function unwrapResult<T>(payload: T | ResultEnvelope<T>): T {
+export function unwrapResult<T>(payload: T | ResultEnvelope<T>): T {
   if (isRecord(payload) && 'result' in payload) {
     return payload.result as T;
   }
   return payload as T;
 }
 
-function findApiMessage(payload: unknown): string | undefined {
+export function findApiMessage(payload: unknown): string | undefined {
   if (typeof payload === 'string' && payload.trim()) {
     return payload.trim();
   }
@@ -289,11 +289,12 @@ export async function requestTranslation(
  * `{ startGenerateProjectIdList }`, `{ projectSeqList }`, 단일 객체 등)로
  * 올 수 있어 알려진 모든 케이스를 시도한다.
  */
-function extractProjectIds(payload: unknown): number[] {
+export function extractProjectIds(payload: unknown): number[] {
   const candidates: unknown[] = [];
 
   const root = isRecord(payload) ? payload : {};
-  const result = isRecord(root.result) ? root.result : root;
+  const innerResult = root.result;
+  const result = isRecord(innerResult) ? innerResult : root;
 
   // 알려진 키들
   const keys = [
@@ -317,8 +318,9 @@ function extractProjectIds(payload: unknown): number[] {
     }
   }
 
-  // result 자체가 배열인 경우
-  if (Array.isArray(result)) candidates.push(result);
+  // result 자체가 배열인 경우 (root.result가 [id, id, ...] 형태)
+  if (Array.isArray(innerResult)) candidates.push(innerResult);
+  if (Array.isArray(result) && result !== innerResult) candidates.push(result);
 
   for (const candidate of candidates) {
     if (Array.isArray(candidate)) {
