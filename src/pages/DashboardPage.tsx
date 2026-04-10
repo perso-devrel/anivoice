@@ -7,8 +7,7 @@ const UsageChart = lazy(() => import('../components/UsageChart'));
 import { useAuthStore } from '../stores/authStore';
 import OnboardingModal from '../components/OnboardingModal';
 import { shouldShowOnboarding } from '../utils/onboarding';
-import { mapDbStatus, formatDuration } from '../utils/dashboard';
-import type { ProjectStatus } from '../types';
+import { mapDbStatus, formatDuration, getProgressBarColor } from '../utils/dashboard';
 
 type FilterTab = 'all' | 'favorites' | 'in-progress' | 'completed';
 
@@ -53,23 +52,6 @@ const STATUS_CONFIG: Record<
     badgeText: 'text-red-400',
   },
 };
-
-function getProgressBarColor(status: ProjectStatus): string {
-  switch (status) {
-    case 'analyzing':
-    case 'uploading':
-      return 'bg-yellow-400';
-    case 'dubbing':
-    case 'lip-syncing':
-      return 'bg-blue-400';
-    case 'completed':
-      return 'bg-green-400';
-    case 'failed':
-      return 'bg-red-400';
-    default:
-      return 'bg-primary-400';
-  }
-}
 
 const GRADIENT_PLACEHOLDERS = [
   'from-purple-600/30 to-blue-600/30',

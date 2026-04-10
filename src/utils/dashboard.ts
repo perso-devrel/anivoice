@@ -13,6 +13,23 @@ export function mapDbStatus(project: DbProject): ProjectStatus {
   return 'analyzing';
 }
 
+export function getProgressBarColor(status: ProjectStatus): string {
+  switch (status) {
+    case 'analyzing':
+    case 'uploading':
+      return 'bg-yellow-400';
+    case 'dubbing':
+    case 'lip-syncing':
+      return 'bg-blue-400';
+    case 'completed':
+      return 'bg-green-400';
+    case 'failed':
+      return 'bg-red-400';
+    default:
+      return 'bg-primary-400';
+  }
+}
+
 export function formatDuration(ms: number): string {
   const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
