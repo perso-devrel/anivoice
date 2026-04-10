@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { listMyProjects, toggleFavorite, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
 import { formatSeconds } from '../utils/format';
+import { PlusIcon, AlertCircleIcon } from '../components/icons';
 
 const UsageChart = lazy(() => import('../components/UsageChart'));
 import { useAuthStore } from '../stores/authStore';
@@ -171,19 +172,7 @@ export default function DashboardPage() {
             to="/studio"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity"
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
-            </svg>
+            <PlusIcon className="w-4 h-4" />
             {t('dashboard.newProject')}
           </Link>
         </div>
@@ -359,9 +348,7 @@ export default function DashboardPage() {
         {!loading && error && (
           <div className="glass rounded-2xl p-16 flex flex-col items-center justify-center text-center">
             <div className="w-12 h-12 mb-4 rounded-full bg-red-500/15 flex items-center justify-center">
-              <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-              </svg>
+              <AlertCircleIcon className="w-6 h-6 text-red-400" />
             </div>
             <p className="text-red-400 text-base mb-2">{t('common.error')}</p>
             <p className="text-gray-500 text-sm max-w-md mb-4">{error}</p>
@@ -407,9 +394,7 @@ export default function DashboardPage() {
               to="/studio"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary-500/20"
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
+              <PlusIcon className="w-4 h-4" />
               {t('dashboard.newProject')}
             </Link>
           </div>
