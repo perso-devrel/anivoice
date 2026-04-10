@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { getLibrary, getTags, formatSeconds, type LibraryItem, type Tag } from '../services/anivoiceApi';
 import { resolvePersoFileUrl } from '../services/persoApi';
-import { SearchIcon, PlayIcon, ChevronDownIcon, ClockIcon } from '../components/icons';
+import { SearchIcon, PlayIcon, ChevronDownIcon, ClockIcon, SpinnerIcon } from '../components/icons';
 
 const GRADIENT_PALETTES = [
   'from-primary-600 to-accent-600',
@@ -179,10 +179,7 @@ export default function LibraryPage() {
         {/* Loading */}
         {loading && (
           <div className="text-center py-20">
-            <svg className="w-8 h-8 animate-spin text-primary-400 mx-auto mb-4" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
+            <SpinnerIcon className="w-8 h-8 text-primary-400 mx-auto mb-4" />
             <p className="text-gray-500">{t('common.loading')}</p>
           </div>
         )}

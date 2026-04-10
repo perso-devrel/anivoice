@@ -6,6 +6,7 @@ import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../services/
 import { useAuthStore } from '../stores/authStore';
 import { showToast } from '../stores/toastStore';
 import { mapAuthError } from '../utils/auth';
+import { SpinnerIcon } from '../components/icons';
 import type { User } from '../types';
 
 type Mode = 'login' | 'signup';
@@ -161,12 +162,7 @@ export default function AuthPage() {
             disabled={loading}
             className="w-full gradient-bg rounded-lg py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            {loading && (
-              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-              </svg>
-            )}
+            {loading && <SpinnerIcon className="h-4 w-4" />}
             {isLogin ? t('common.login') : t('common.signup')}
           </button>
         </form>

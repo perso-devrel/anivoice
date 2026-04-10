@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { purchaseCredits, formatSeconds } from '../services/anivoiceApi';
 import { showToast } from '../stores/toastStore';
+import { SpinnerIcon } from '../components/icons';
 import type { PlanType } from '../types';
 
 interface Plan {
@@ -427,10 +428,7 @@ export default function PricingPage() {
               >
                 {isProcessing ? (
                   <>
-                    <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
+                    <SpinnerIcon className="w-5 h-5" />
                     {t('pricing.processing')}
                   </>
                 ) : (
