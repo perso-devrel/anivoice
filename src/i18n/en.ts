@@ -31,6 +31,7 @@ export default {
     buy: 'Buy',
     close: 'Close',
     menu: 'Menu',
+    skipToContent: 'Skip to content',
     hours: 'hr',
     minutes: 'min',
     seconds: 'sec',
