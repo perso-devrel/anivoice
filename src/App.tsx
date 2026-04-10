@@ -1,6 +1,7 @@
 import { useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/layout/Layout';
+import ErrorBoundary from './components/ErrorBoundary';
 import { useAuthStore } from './stores/authStore';
 import { initAuthListener } from './services/firebase';
 
@@ -39,6 +40,7 @@ export default function App() {
   }, []);
 
   return (
+    <ErrorBoundary>
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center bg-surface-950">
@@ -82,5 +84,6 @@ export default function App() {
       </Route>
     </Routes>
     </Suspense>
+    </ErrorBoundary>
   );
 }

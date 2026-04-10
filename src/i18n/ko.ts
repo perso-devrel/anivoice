@@ -285,4 +285,9 @@ export default {
     id: '인도네시아어',
     ar: '아랍어',
   },
+  errorBoundary: {
+    title: '문제가 발생했습니다',
+    description: '예상치 못한 오류가 발생했습니다. 페이지를 새로고침한 후 다시 시도해주세요.',
+    reload: '페이지 새로고침',
+  },
 };
