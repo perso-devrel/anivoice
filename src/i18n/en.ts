@@ -144,6 +144,7 @@ export default {
     excludeSegment: 'Exclude segment',
     lockTranslation: 'Lock translation',
     lipSyncProRequired: 'Pro plan required',
+    speakerLabel: 'Speaker {{index}}',
     selectTargetLanguage: 'Select a target language',
     languagesSelected: '{{count}} language(s) selected',
     loadingProject: 'Loading project...',

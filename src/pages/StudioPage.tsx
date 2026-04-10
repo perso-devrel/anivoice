@@ -604,7 +604,7 @@ export default function StudioPage() {
             </button>
             <div>
               <span className="text-sm font-medium text-surface-200/80">{t('studio.progressLipSync')}</span>
-              <p className="text-xs text-surface-200/40 mt-0.5">Pro plan required</p>
+              <p className="text-xs text-surface-200/40 mt-0.5">{t('studio.lipSyncProRequired')}</p>
             </div>
           </label>
         </div>
@@ -835,7 +835,7 @@ export default function StudioPage() {
                   <div key={s.seq} className="bg-surface-900/60 rounded-xl p-4 space-y-2">
                     <div className="flex items-center gap-2 text-xs text-surface-200/50">
                       <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: color }} />
-                      <span>Speaker {s.speakerOrderIndex + 1}</span>
+                      <span>{t('studio.speakerLabel', { index: s.speakerOrderIndex + 1 })}</span>
                       <span className="ml-auto">{formatMs(s.offsetMs)} - {formatMs(s.offsetMs + s.durationMs)}</span>
                       {s.matchingRate && (
                         <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
