@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUIStore } from '../stores/uiStore';
 import { useAuthStore } from '../stores/authStore';
 import { signOut, updateProfile as updateUserProfile } from '../services/firebase';
-import { formatSeconds } from '../services/anivoiceApi';
+import { formatSeconds } from '../utils/format';
 
 type Tab = 'profile' | 'subscription' | 'billing' | 'language';
 

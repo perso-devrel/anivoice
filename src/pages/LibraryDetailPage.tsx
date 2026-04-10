@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
-import { getLibraryItem, formatSeconds, type LibraryItemDetail } from '../services/anivoiceApi';
+import { getLibraryItem, type LibraryItemDetail } from '../services/anivoiceApi';
+import { formatSeconds } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
 import { DownloadIcon, LinkIcon } from '../components/icons';
 
