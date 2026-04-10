@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-let effectFn: ((active: boolean) => (() => void) | void) | null = null;
 let effectDep: boolean | undefined;
 
 vi.mock('react', async () => {
@@ -15,8 +14,7 @@ vi.mock('react', async () => {
       }
       return init === null ? refObj : prevFocusObj;
     },
-    useEffect: (fn: () => void, deps: unknown[]) => {
-      effectFn = fn as unknown as typeof effectFn;
+    useEffect: (_fn: () => void, deps: unknown[]) => {
       effectDep = deps[0] as boolean;
     },
   };
@@ -26,7 +24,6 @@ import { useFocusTrap } from './useFocusTrap';
 
 describe('useFocusTrap', () => {
   beforeEach(() => {
-    effectFn = null;
     effectDep = undefined;
   });
 
