@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { listMyProjects, toggleFavorite, formatSeconds, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
 import { useAuthStore } from '../stores/authStore';
-import OnboardingModal, { shouldShowOnboarding } from '../components/OnboardingModal';
+import OnboardingModal from '../components/OnboardingModal';
+import { shouldShowOnboarding } from '../utils/onboarding';
 import type { ProjectStatus } from '../types';
 
 type FilterTab = 'all' | 'favorites' | 'in-progress' | 'completed';

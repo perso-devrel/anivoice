@@ -14,12 +14,22 @@ export default function LibraryDetailPage() {
 
   useEffect(() => {
     if (!id) return;
-    setLoading(true);
-    setError(false);
+    let cancelled = false;
     getLibraryItem(Number(id))
-      .then(setItem)
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (!cancelled) {
+          setError(false);
+          setItem(data);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError(true);
+          setLoading(false);
+        }
+      });
+    return () => { cancelled = true; };
   }, [id]);
 
   async function handleCopyLink() {
