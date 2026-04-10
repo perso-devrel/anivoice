@@ -5,16 +5,7 @@
     }
   },
   "rewrites": [
-    { "source": "/api/perso/:path*", "destination": "https://api.perso.ai/:path*" },
     { "source": "/api/:path*", "destination": "/api/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "headers": [
-    {
-      "source": "/api/perso/:path*",
-      "headers": [
-        { "key": "XP-API-KEY", "value": "$XP_API_KEY" }
-      ]
-    }
   ]
 }
