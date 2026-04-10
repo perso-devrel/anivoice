@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
-import { getLibrary, getTags, formatSeconds, type LibraryItem, type Tag } from '../services/anivoiceApi';
+import { getLibrary, getTags, type LibraryItem, type Tag } from '../services/anivoiceApi';
+import { formatSeconds } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
 import { SearchIcon, PlayIcon, ChevronDownIcon, ClockIcon, SpinnerIcon } from '../components/icons';
 

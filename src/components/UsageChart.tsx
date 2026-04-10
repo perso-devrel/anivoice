@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import type { CreditHistoryDay } from '../services/anivoiceApi';
+import { formatChartDay } from '../utils/format';
 
 export default function UsageChart({ data }: { data: CreditHistoryDay[] }) {
   const { t } = useTranslation();
@@ -19,7 +20,7 @@ export default function UsageChart({ data }: { data: CreditHistoryDay[] }) {
         <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3a" vertical={false} />
         <XAxis
           dataKey="day"
-          tickFormatter={(d: string) => d.slice(5)}
+          tickFormatter={formatChartDay}
           tick={{ fill: '#6b7280', fontSize: 11 }}
           axisLine={false}
           tickLine={false}
