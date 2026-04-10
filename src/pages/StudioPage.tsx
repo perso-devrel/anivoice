@@ -110,6 +110,7 @@ export default function StudioPage() {
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -467,6 +468,13 @@ export default function StudioPage() {
     }
   }
 
+  async function handleCopyShareLink() {
+    const url = `${window.location.origin}/library`;
+    await navigator.clipboard.writeText(url);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
+  }
+
   /* ── step: upload ── */
 
   function UploadStep() {
@@ -763,7 +771,19 @@ export default function StudioPage() {
             {isPublished ? '\u2705 \uACF5\uAC1C\uB428' : '\uACF5\uAC1C\uD558\uAE30'}
           </h3>
           {isPublished ? (
-            <p className="text-sm text-green-400">{t('studio.publishedMessage') || '\uB77C\uC774\uBE0C\uB7EC\uB9AC\uC5D0 \uACF5\uAC1C\uB418\uC5C8\uC2B5\uB2C8\uB2E4.'}</p>
+            <div className="space-y-3">
+              <p className="text-sm text-green-400">{t('studio.publishedMessage')}</p>
+              <button
+                type="button"
+                onClick={handleCopyShareLink}
+                className="w-full glass rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 text-sm text-surface-200/80 hover:text-white hover:border-primary-500/40 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-2.514a4.5 4.5 0 00-1.242-7.244l-4.5-4.5a4.5 4.5 0 00-6.364 6.364L4.34 8.374" />
+                </svg>
+                {linkCopied ? t('studio.linkCopied') : t('studio.copyShareLink')}
+              </button>
+            </div>
           ) : (
             <>
               {tags.length > 0 && (

@@ -115,6 +115,9 @@ export default {
     selectTargetLanguage: '대상 언어를 선택하세요',
     loadingProject: '프로젝트를 불러오는 중...',
     remainingTime: '약 {{minutes}}분 남음',
+    publishedMessage: '라이브러리에 공개되었습니다.',
+    copyShareLink: '공유 링크 복사',
+    linkCopied: '복사됨!',
   },
   library: {
     title: '더빙 라이브러리',
