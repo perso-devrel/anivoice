@@ -219,6 +219,7 @@ export default {
     pay: '결제하기',
     planChanged: '플랜이 변경되었습니다!',
     creditsAdded: '{{amount}} 크레딧이 추가되었습니다!',
+    paymentError: '결제 처리 중 오류가 발생했습니다',
     // Nested plan objects for LandingPage pricing section
     'free.name': 'Free',
     'free.price': '$0',

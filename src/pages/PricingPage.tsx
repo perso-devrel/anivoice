@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { purchaseCredits, formatSeconds } from '../services/anivoiceApi';
+import { showToast } from '../stores/toastStore';
 import type { PlanType } from '../types';
 
 interface Plan {
@@ -36,7 +37,6 @@ export default function PricingPage() {
   const [cardExpiry, setCardExpiry] = useState('12/28');
   const [cardCvc, setCardCvc] = useState('123');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
 
   const plans: Plan[] = [
     {
@@ -155,17 +155,15 @@ export default function PricingPage() {
 
       setIsProcessing(false);
       setModal(null);
-      setSuccessMessage(
+      showToast(
         modal.type === 'plan'
           ? t('pricing.planChanged')
-          : t('pricing.creditsAdded', { amount: modal.label })
+          : t('pricing.creditsAdded', { amount: modal.label }),
+        'success'
       );
-
-      setTimeout(() => setSuccessMessage(''), 3000);
     } catch {
       setIsProcessing(false);
-      setSuccessMessage('결제 처리 중 오류가 발생했습니다');
-      setTimeout(() => setSuccessMessage(''), 3000);
+      showToast(t('pricing.paymentError'));
     }
   };
 
@@ -173,13 +171,6 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-surface-950 pt-24 pb-16 px-4">
-      {/* Success Toast */}
-      {successMessage && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-xl bg-green-500/90 text-white font-medium shadow-lg backdrop-blur-sm animate-fade-in">
-          {successMessage}
-        </div>
-      )}
-
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">

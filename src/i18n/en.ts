@@ -219,6 +219,7 @@ export default {
     pay: 'Pay',
     planChanged: 'Plan changed successfully!',
     creditsAdded: '{{amount}} credits added!',
+    paymentError: 'An error occurred during payment',
     // Nested plan objects for LandingPage pricing section
     'free.name': 'Free',
     'free.price': '$0',

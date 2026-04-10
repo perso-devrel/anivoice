@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../services/firebase';
 import { useAuthStore } from '../stores/authStore';
+import { showToast } from '../stores/toastStore';
 import type { User } from '../types';
 
 type Mode = 'login' | 'signup';
@@ -19,7 +20,6 @@ export default function AuthPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   // Redirect to dashboard if already logged in
@@ -33,7 +33,6 @@ export default function AuthPage() {
   useEffect(() => {
     const newMode: Mode = location.pathname === '/signup' ? 'signup' : 'login';
     setMode(newMode);
-    setError('');
   }, [location.pathname]);
 
   const handleSuccess = (u: User) => {
@@ -44,7 +43,6 @@ export default function AuthPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
     try {
       const u =
@@ -53,27 +51,25 @@ export default function AuthPage() {
           : await signUpWithEmail(email, password, displayName);
       handleSuccess(u);
     } catch (err: unknown) {
-      setError(mapAuthError(err, t));
+      showToast(mapAuthError(err, t));
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogle = async () => {
-    setError('');
     setLoading(true);
     try {
       const u = await signInWithGoogle();
       handleSuccess(u);
     } catch (err: unknown) {
-      setError(mapAuthError(err, t));
+      showToast(mapAuthError(err, t));
     } finally {
       setLoading(false);
     }
   };
 
   const switchMode = (newMode: Mode) => {
-    setError('');
     navigate(newMode === 'login' ? '/login' : '/signup', { replace: true });
   };
 
@@ -115,13 +111,6 @@ export default function AuthPage() {
             {t('common.signup')}
           </button>
         </div>
-
-        {/* Error */}
-        {error && (
-          <div className="mb-4 rounded-lg bg-red-500/10 border border-red-500/30 px-4 py-3 text-sm text-red-400">
-            {error}
-          </div>
-        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
