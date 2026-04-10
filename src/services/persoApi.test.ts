@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   unwrapResult,
   extractProjectIds,
@@ -7,6 +7,7 @@ import {
   isRecord,
   resolvePersoFileUrl,
   extractApiErrorMessage,
+  retryWithBackoff,
 } from './persoApi';
 
 describe('isRecord', () => {
@@ -327,5 +328,83 @@ describe('extractApiErrorMessage', () => {
       toJSON: () => ({}),
     });
     expect(extractApiErrorMessage(err)).toBe('Perso API request failed (401): fail');
+  });
+});
+
+describe('retryWithBackoff', () => {
+  beforeEach(() => { vi.useFakeTimers(); });
+  afterEach(() => { vi.useRealTimers(); });
+
+  it('returns immediately on first success', async () => {
+    const fn = vi.fn().mockResolvedValue('ok');
+    const result = await retryWithBackoff(fn, 3, 100);
+    expect(result).toBe('ok');
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it('retries transient errors up to maxRetries', async () => {
+    const transientErr = new Error('ECONNRESET');
+    const fn = vi.fn()
+      .mockRejectedValueOnce(transientErr)
+      .mockRejectedValueOnce(transientErr)
+      .mockResolvedValue('recovered');
+
+    const promise = retryWithBackoff(fn, 3, 100);
+    await vi.advanceTimersByTimeAsync(100);
+    await vi.advanceTimersByTimeAsync(200);
+    const result = await promise;
+    expect(result).toBe('recovered');
+    expect(fn).toHaveBeenCalledTimes(3);
+  });
+
+  it('throws after exhausting retries on transient errors', async () => {
+    vi.useRealTimers();
+    const transientErr = new Error('ETIMEDOUT');
+    const fn = vi.fn().mockRejectedValue(transientErr);
+
+    await expect(retryWithBackoff(fn, 2, 0)).rejects.toThrow('ETIMEDOUT');
+    expect(fn).toHaveBeenCalledTimes(3);
+    vi.useFakeTimers();
+  });
+
+  it('throws immediately on non-transient errors', async () => {
+    const err = Object.assign(new Error('Bad request'), {
+      isAxiosError: true as const,
+      response: { status: 400, data: null },
+      config: {},
+      toJSON: () => ({}),
+    });
+    const fn = vi.fn().mockRejectedValue(err);
+
+    await expect(retryWithBackoff(fn, 3, 100)).rejects.toThrow('Bad request');
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it('uses exponential backoff delays', async () => {
+    const transientErr = new Error('ECONNRESET');
+    const fn = vi.fn()
+      .mockRejectedValueOnce(transientErr)
+      .mockRejectedValueOnce(transientErr)
+      .mockRejectedValueOnce(transientErr)
+      .mockResolvedValue('ok');
+
+    const promise = retryWithBackoff(fn, 3, 1000);
+
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(fn).toHaveBeenCalledTimes(2);
+
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(fn).toHaveBeenCalledTimes(3);
+
+    await vi.advanceTimersByTimeAsync(4000);
+    const result = await promise;
+    expect(result).toBe('ok');
+    expect(fn).toHaveBeenCalledTimes(4);
+  });
+
+  it('works with zero retries (single attempt)', async () => {
+    const fn = vi.fn().mockRejectedValue(new Error('ECONNRESET'));
+    await expect(retryWithBackoff(fn, 0, 100)).rejects.toThrow('ECONNRESET');
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 });
