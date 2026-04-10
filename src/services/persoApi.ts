@@ -133,7 +133,12 @@ export async function getSasToken(fileName: string) {
   const { data } = await api.get('/file/api/upload/sas-token', {
     params: { fileName },
   });
-  return data as { blobSasUrl: string; expirationDatetime: string };
+  // API may wrap in { result: ... } or return directly
+  const payload = (data?.result ?? data) as { blobSasUrl: string; expirationDatetime: string };
+  if (!payload?.blobSasUrl) {
+    throw new Error('SAS 토큰 발급 실패: blobSasUrl이 비어있습니다.');
+  }
+  return payload;
 }
 
 export async function uploadToAzure(blobSasUrl: string, file: File) {
@@ -155,7 +160,7 @@ export async function registerVideo(
     fileUrl,
     fileName,
   });
-  return data;
+  return (data?.result ?? data) as PersoUploadedFile;
 }
 
 export async function uploadVideoFile(
