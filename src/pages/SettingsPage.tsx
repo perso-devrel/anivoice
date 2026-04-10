@@ -173,7 +173,7 @@ export default function SettingsPage() {
                 <div>
                   <p className="text-lg font-bold text-white capitalize">{user?.plan || 'Free'}</p>
                   <p className="text-sm text-gray-400">
-                    {t('common.credits')}: {formatSeconds(user?.creditSeconds || 0)}
+                    {t('common.credits')}: {formatSeconds(user?.creditSeconds || 0, { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') })}
                   </p>
                 </div>
                 <span className="px-3 py-1 rounded-full text-xs font-medium bg-primary-500/20 text-primary-400">

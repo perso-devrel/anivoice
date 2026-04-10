@@ -113,7 +113,7 @@ export default function LibraryDetailPage() {
               {item.sourceLanguage} → {item.targetLanguage}
             </span>
             <span className="px-3 py-1 rounded-full bg-surface-800 text-xs text-gray-300">
-              {formatSeconds(Math.floor(item.durationMs / 1000))}
+              {formatSeconds(Math.floor(item.durationMs / 1000), { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') })}
             </span>
           </div>
 

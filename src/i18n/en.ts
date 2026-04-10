@@ -31,6 +31,9 @@ export default {
     buy: 'Buy',
     close: 'Close',
     menu: 'Menu',
+    hours: 'hr',
+    minutes: 'min',
+    seconds: 'sec',
   },
   auth: {
     name: 'Name',
