@@ -285,4 +285,9 @@ export default {
     id: 'Indonesian',
     ar: 'Arabic',
   },
+  errorBoundary: {
+    title: 'Something went wrong',
+    description: 'An unexpected error occurred. Please reload the page and try again.',
+    reload: 'Reload page',
+  },
 };
