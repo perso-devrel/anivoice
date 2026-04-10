@@ -472,9 +472,13 @@ export default function StudioPage() {
     const url = dbProjectId
       ? `${window.location.origin}/library/${dbProjectId}`
       : `${window.location.origin}/library`;
-    await navigator.clipboard.writeText(url);
-    setLinkCopied(true);
-    setTimeout(() => setLinkCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(url);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    } catch {
+      setError('Failed to copy link to clipboard');
+    }
   }
 
   /* ── step: upload ── */
