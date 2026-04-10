@@ -31,6 +31,9 @@ export default {
     buy: '구매하기',
     close: '닫기',
     menu: '메뉴',
+    hours: '시간',
+    minutes: '분',
+    seconds: '초',
   },
   auth: {
     name: '이름',

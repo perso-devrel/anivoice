@@ -182,7 +182,7 @@ export default function PricingPage() {
           </p>
           {user && (
             <p className="mt-4 text-sm text-gray-500">
-              {t('pricing.remainingTime')} <span className="text-primary-400 font-medium">{formatSeconds(user.creditSeconds)}</span>
+              {t('pricing.remainingTime')} <span className="text-primary-400 font-medium">{formatSeconds(user.creditSeconds, { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') })}</span>
             </p>
           )}
         </div>

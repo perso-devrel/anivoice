@@ -210,7 +210,7 @@ export default function DashboardPage() {
                 {user?.plan && <span className="ml-1 text-gray-500">({user.plan})</span>}
               </p>
               <p className="text-2xl font-bold text-white">
-                {loading ? '...' : user ? formatSeconds(user.creditSeconds) : '--'}
+                {loading ? '...' : user ? formatSeconds(user.creditSeconds, { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') }) : '--'}
               </p>
             </div>
           </div>

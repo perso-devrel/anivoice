@@ -278,7 +278,7 @@ export default function LibraryPage() {
                       <div className="flex items-center gap-2">
                         <span className="flex items-center gap-1 text-gray-500 text-xs">
                           <ClockIcon />
-                          {formatSeconds(Math.floor(item.durationMs / 1000))}
+                          {formatSeconds(Math.floor(item.durationMs / 1000), { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') })}
                         </span>
                         <span className="text-gray-600 text-xs">|</span>
                         <span className="text-xs text-gray-400 uppercase">

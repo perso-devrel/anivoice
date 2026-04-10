@@ -204,13 +204,15 @@ export async function getTags(): Promise<Tag[]> {
 
 // ── Helper ──
 
-export function formatSeconds(seconds: number): string {
+export interface TimeLabels { hours: string; minutes: string; seconds: string }
+
+export function formatSeconds(seconds: number, labels: TimeLabels): string {
   if (seconds >= 3600) {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
-    return `${h}시간 ${m}분`;
+    return `${h}${labels.hours} ${m}${labels.minutes}`;
   }
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
-  return m > 0 ? `${m}분 ${s}초` : `${s}초`;
+  return m > 0 ? `${m}${labels.minutes} ${s}${labels.seconds}` : `${s}${labels.seconds}`;
 }
