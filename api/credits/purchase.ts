@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db, migrate } from '../_lib/db.js';
 import { verifyFirebaseToken, ensureUser, sendAuthAwareError } from '../_lib/auth.js';
+import { getPlanCredits } from '../_lib/credits.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -13,14 +14,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { seconds, plan, description } = req.body;
 
     if (plan) {
-      // Plan change — set credits to plan amount
-      // 시간 단위(초): free=100h, basic=300h, pro=1000h
-      const planCredits: Record<string, number> = {
-        free: 360000,
-        basic: 1080000,
-        pro: 3600000,
-      };
-      const newCredits = planCredits[plan] ?? 60;
+      const newCredits = getPlanCredits(plan);
 
       await db.execute({
         sql: "UPDATE users SET plan = ?, credit_seconds = ?, updated_at = datetime('now') WHERE id = ?",

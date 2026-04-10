@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db, migrate } from '../_lib/db.js';
 import { verifyFirebaseToken, ensureUser, sendAuthAwareError } from '../_lib/auth.js';
+import { mapProjectRow } from '../_lib/mappers.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -28,7 +29,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
 
       return res.json({
-        projects: projects.rows.map(mapProject),
+        projects: projects.rows.map(mapProjectRow),
         total: total.rows[0].count,
       });
     }
@@ -55,26 +56,3 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 }
 
-function mapProject(row: Record<string, unknown>) {
-  return {
-    id: row.id,
-    title: row.title,
-    originalFileName: row.original_file_name,
-    sourceLanguage: row.source_language,
-    targetLanguage: row.target_language,
-    status: row.status,
-    progress: row.progress,
-    durationMs: row.duration_ms,
-    persoProjectSeq: row.perso_project_seq,
-    persoSpaceSeq: row.perso_space_seq,
-    thumbnailUrl: row.thumbnail_url,
-    videoUrl: row.video_url,
-    audioUrl: row.audio_url,
-    zipUrl: row.zip_url,
-    isPublic: row.is_public === 1,
-    isFavorite: row.is_favorite === 1,
-    tags: typeof row.tag_names === 'string' ? row.tag_names.split(',') : [],
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-  };
-}

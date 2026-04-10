@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db, migrate } from '../_lib/db.js';
+import { mapLibraryRow } from '../_lib/mappers.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -58,18 +59,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     return res.json({
-      items: result.rows.map((row: Record<string, unknown>) => ({
-        id: row.id,
-        title: row.title,
-        authorName: row.author_name,
-        sourceLanguage: row.source_language,
-        targetLanguage: row.target_language,
-        durationMs: row.duration_ms,
-        thumbnailUrl: row.thumbnail_url,
-        videoUrl: row.video_url,
-        tags: typeof row.tag_names === 'string' ? row.tag_names.split(',') : [],
-        createdAt: row.created_at,
-      })),
+      items: result.rows.map(mapLibraryRow),
       total: total.rows[0].count,
     });
   } catch (e) {
