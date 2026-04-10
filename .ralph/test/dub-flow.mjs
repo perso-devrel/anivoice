@@ -50,6 +50,9 @@ const fail = (msg, extra) => {
   throw new Error(`${msg}${detail}`);
 };
 
+const MAX_RETRIES = 3;
+const RETRY_BASE_MS = 5000;
+
 // ────────────── 헬퍼 ──────────────
 async function call(method, path_, { query, body, headers } = {}) {
   let url = `${PROXY}${path_}`;
@@ -76,12 +79,25 @@ async function call(method, path_, { query, body, headers } = {}) {
     }
   }
 
-  const res = await fetch(url, init);
-  const text = await res.text();
-  let parsed = text;
-  try { parsed = JSON.parse(text); } catch { /* leave as text */ }
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    let res, text, parsed;
+    try {
+      res = await fetch(url, init);
+      text = await res.text();
+      parsed = text;
+      try { parsed = JSON.parse(text); } catch { /* leave as text */ }
+    } catch (fetchErr) {
+      if (attempt < MAX_RETRIES) {
+        const delay = RETRY_BASE_MS * 2 ** attempt;
+        warn(`fetch error on ${method} ${path_} (attempt ${attempt + 1}/${MAX_RETRIES + 1}): ${fetchErr.message} — retrying in ${delay}ms`);
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
+      throw fetchErr;
+    }
 
-  if (!res.ok) {
+    if (res.ok) return parsed;
+
     if (res.status === 402 || (parsed?.detailCode ?? parsed?.code ?? '').toString().includes('QUOTA')) {
       log(`⚠ QUOTA EXCEEDED — ${method} ${path_} → HTTP ${res.status}`);
       log('  This is an external API quota limit, not a code regression.');
@@ -89,9 +105,24 @@ async function call(method, path_, { query, body, headers } = {}) {
       saveState({ ts: new Date().toISOString(), status: 'quota', exitCode: 78, endpoint: `${method} ${path_}` });
       process.exit(78);
     }
+
+    if (res.status >= 500 && attempt < MAX_RETRIES) {
+      const delay = RETRY_BASE_MS * 2 ** attempt;
+      warn(`HTTP ${res.status} on ${method} ${path_} (attempt ${attempt + 1}/${MAX_RETRIES + 1}) — retrying in ${delay}ms`);
+      await new Promise((r) => setTimeout(r, delay));
+      continue;
+    }
+
+    if (res.status >= 500) {
+      log(`⚠ PERSISTENT 5xx — ${method} ${path_} → HTTP ${res.status} after ${MAX_RETRIES + 1} attempts`);
+      log('  This is an upstream Perso API server error, not a code regression.');
+      log('  Exiting with code 77 (upstream-down). Re-run when Perso API recovers.');
+      saveState({ ts: new Date().toISOString(), status: 'upstream-down', exitCode: 77, endpoint: `${method} ${path_}` });
+      process.exit(77);
+    }
+
     fail(`${method} ${path_} -> HTTP ${res.status}`, parsed);
   }
-  return parsed;
 }
 
 function unwrap(payload) {
