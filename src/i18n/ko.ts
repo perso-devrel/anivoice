@@ -31,6 +31,7 @@ export default {
     buy: '구매하기',
     close: '닫기',
     menu: '메뉴',
+    skipToContent: '본문으로 건너뛰기',
     hours: '시간',
     minutes: '분',
     seconds: '초',
