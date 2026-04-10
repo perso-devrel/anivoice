@@ -3,15 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { markOnboardingDone } from '../utils/onboarding';
 import { useFocusTrap } from '../hooks/useFocusTrap';
-import { XIcon } from './icons';
+import { XIcon, UploadIcon, CheckCircleIcon, ArrowRightIcon } from './icons';
 
 const STEPS = [
   {
-    icon: (
-      <svg className="w-10 h-10 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-      </svg>
-    ),
+    icon: <UploadIcon className="w-10 h-10 text-primary-400" />,
     titleKey: 'onboarding.step1Title',
     descKey: 'onboarding.step1Desc',
   },
@@ -25,11 +21,7 @@ const STEPS = [
     descKey: 'onboarding.step2Desc',
   },
   {
-    icon: (
-      <svg className="w-10 h-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
+    icon: <CheckCircleIcon className="w-10 h-10 text-green-400" />,
     titleKey: 'onboarding.step3Title',
     descKey: 'onboarding.step3Desc',
   },
@@ -127,9 +119,7 @@ export default function OnboardingModal({ onClose }: Props) {
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity"
             >
               {t('onboarding.startNow')}
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
+              <ArrowRightIcon />
             </Link>
           ) : (
             <button
@@ -137,9 +127,7 @@ export default function OnboardingModal({ onClose }: Props) {
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity"
             >
               {t('onboarding.next')}
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
+              <ArrowRightIcon />
             </button>
           )}
         </div>

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { listMyProjects, toggleFavorite, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
 import { formatSeconds } from '../utils/format';
-import { PlusIcon, AlertCircleIcon } from '../components/icons';
+import { PlusIcon, AlertCircleIcon, CheckCircleIcon } from '../components/icons';
 
 const UsageChart = lazy(() => import('../components/UsageChart'));
 import { useAuthStore } from '../stores/authStore';
@@ -237,19 +237,7 @@ export default function DashboardPage() {
           {/* Completed */}
           <div className="glass rounded-xl p-5 flex items-center gap-4">
             <div className="flex-shrink-0 w-11 h-11 rounded-lg bg-green-500/15 flex items-center justify-center">
-              <svg
-                className="w-5 h-5 text-green-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.8}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <CheckCircleIcon className="w-5 h-5 text-green-400" />
             </div>
             <div>
               <p className="text-sm text-gray-400">
