@@ -6,6 +6,7 @@ import {
   isTransientError,
   isRecord,
   resolvePersoFileUrl,
+  extractApiErrorMessage,
 } from './persoApi';
 
 describe('isRecord', () => {
@@ -224,5 +225,107 @@ describe('resolvePersoFileUrl', () => {
 
   it('prepends base URL for relative paths', () => {
     expect(resolvePersoFileUrl('/files/video.mp4')).toBe('https://perso.ai/files/video.mp4');
+  });
+});
+
+function makeAxiosError(overrides: {
+  status?: number;
+  url?: string;
+  method?: string;
+  data?: unknown;
+  message?: string;
+}) {
+  return Object.assign(new Error(overrides.message || 'request failed'), {
+    isAxiosError: true as const,
+    response: overrides.status != null
+      ? { status: overrides.status, data: overrides.data }
+      : undefined,
+    config: {
+      url: overrides.url || '/portal/api/v1/spaces',
+      method: overrides.method || 'get',
+    },
+    toJSON: () => ({}),
+  });
+}
+
+describe('extractApiErrorMessage', () => {
+  it('formats generic axios error with status', () => {
+    const err = makeAxiosError({ status: 404, data: { message: 'Not found' } });
+    expect(extractApiErrorMessage(err)).toBe('Perso API request failed (404): Not found');
+  });
+
+  it('falls back to error.message when no API message in data', () => {
+    const err = makeAxiosError({ status: 500, data: null, message: 'Internal Server Error' });
+    expect(extractApiErrorMessage(err)).toBe('Perso API request failed (500): Internal Server Error');
+  });
+
+  it('returns detail without status prefix for network errors', () => {
+    const err = makeAxiosError({ message: 'Network Error' });
+    expect(extractApiErrorMessage(err)).toBe('Network Error');
+  });
+
+  it('returns special message for 401 on file upload endpoint', () => {
+    const err = makeAxiosError({
+      status: 401,
+      url: '/file/api/v1/upload',
+      method: 'post',
+      data: { message: 'Unauthorized' },
+    });
+    expect(extractApiErrorMessage(err)).toContain('Perso File API rejected this upload request');
+  });
+
+  it('returns special message for 403 on file upload endpoint', () => {
+    const err = makeAxiosError({
+      status: 403,
+      url: '/file/api/v1/upload',
+      method: 'PUT',
+      data: { error: 'Forbidden' },
+    });
+    expect(extractApiErrorMessage(err)).toContain('file upload/write endpoints are not authorized');
+  });
+
+  it('does NOT trigger file upload message for GET requests', () => {
+    const err = makeAxiosError({
+      status: 401,
+      url: '/file/api/v1/upload',
+      method: 'get',
+      data: { message: 'Unauthorized' },
+    });
+    expect(extractApiErrorMessage(err)).toBe('Perso API request failed (401): Unauthorized');
+  });
+
+  it('does NOT trigger file upload message for non-file URLs', () => {
+    const err = makeAxiosError({
+      status: 401,
+      url: '/portal/api/v1/spaces',
+      method: 'post',
+      data: { message: 'Unauthorized' },
+    });
+    expect(extractApiErrorMessage(err)).toBe('Perso API request failed (401): Unauthorized');
+  });
+
+  it('extracts message from plain Error', () => {
+    expect(extractApiErrorMessage(new Error('something broke'))).toBe('something broke');
+  });
+
+  it('stringifies non-Error values', () => {
+    expect(extractApiErrorMessage('raw string')).toBe('raw string');
+    expect(extractApiErrorMessage(42)).toBe('42');
+    expect(extractApiErrorMessage(null)).toBe('null');
+  });
+
+  it('handles axios error with detail in response data', () => {
+    const err = makeAxiosError({ status: 422, data: { detail: 'Validation error' } });
+    expect(extractApiErrorMessage(err)).toBe('Perso API request failed (422): Validation error');
+  });
+
+  it('defaults method to GET when config has no method', () => {
+    const err = Object.assign(new Error('fail'), {
+      isAxiosError: true as const,
+      response: { status: 401, data: null },
+      config: { url: '/file/api/v1/upload' },
+      toJSON: () => ({}),
+    });
+    expect(extractApiErrorMessage(err)).toBe('Perso API request failed (401): fail');
   });
 });

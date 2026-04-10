@@ -117,7 +117,7 @@ export function findApiMessage(payload: unknown): string | undefined {
   return undefined;
 }
 
-function extractApiErrorMessage(error: unknown) {
+export function extractApiErrorMessage(error: unknown) {
   if (axios.isAxiosError(error)) {
     const status = error.response?.status;
     const url = error.config?.url || '';
