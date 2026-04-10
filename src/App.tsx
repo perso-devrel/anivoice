@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import { useAuthStore } from './stores/authStore';
+import { useUIStore } from './stores/uiStore';
 import { initAuthListener } from './services/firebase';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
@@ -35,9 +36,15 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const language = useUIStore((s) => s.language);
+
   useEffect(() => {
     initAuthListener();
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   return (
     <ErrorBoundary>
