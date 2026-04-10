@@ -1,0 +1,10 @@
+{
+  "runs": [
+    {
+      "ts": "2026-04-10T14:26:07.543Z",
+      "status": "quota",
+      "exitCode": 78,
+      "endpoint": "POST /video-translator/api/v1/projects/spaces/501071/translate"
+    }
+  ]
+}
