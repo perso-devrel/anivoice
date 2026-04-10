@@ -280,10 +280,10 @@ export async function requestTranslation(
 }
 
 /**
- * Perso translate / lip-sync 응답에서 project id 배열을 추출.
- * 응답 구조가 여러 형태(`{ result: { startGenerateProjectIdList } }`,
- * `{ startGenerateProjectIdList }`, `{ projectSeqList }`, 단일 객체 등)로
- * 올 수 있어 알려진 모든 케이스를 시도한다.
+ * Extract project ID array from Perso translate / lip-sync responses.
+ * Response shapes vary (`{ result: { startGenerateProjectIdList } }`,
+ * `{ startGenerateProjectIdList }`, `{ projectSeqList }`, single object, etc.)
+ * so we try all known variants.
  */
 export function extractProjectIds(payload: unknown): number[] {
   const candidates: unknown[] = [];
@@ -292,7 +292,7 @@ export function extractProjectIds(payload: unknown): number[] {
   const innerResult = root.result;
   const result = isRecord(innerResult) ? innerResult : root;
 
-  // 알려진 키들
+  // Known key names
   const keys = [
     'startGenerateProjectIdList',
     'projectSeqList',
@@ -307,14 +307,14 @@ export function extractProjectIds(payload: unknown): number[] {
       const v = obj[key];
       if (v !== undefined) candidates.push(v);
     }
-    // 단일 id 필드 (projectSeq, projectId, project_seq, ...)
+    // Single id field (projectSeq, projectId, project_seq, ...)
     for (const singleKey of ['projectSeq', 'projectId', 'project_seq', 'project_id']) {
       const v = obj[singleKey];
       if (typeof v === 'number') candidates.push([v]);
     }
   }
 
-  // result 자체가 배열인 경우 (root.result가 [id, id, ...] 형태)
+  // result itself is an array (root.result is [id, id, ...] shape)
   if (Array.isArray(innerResult)) candidates.push(innerResult);
   if (Array.isArray(result) && result !== innerResult) candidates.push(result);
 
@@ -364,9 +364,9 @@ export async function pollProgress(
   onProgress: (p: PersoProgress) => void,
   intervalMs = 5000
 ): Promise<PersoProgress> {
-  // 일시적 네트워크 오류로 더빙이 중단되지 않도록, 연속 실패 임계치(MAX_CONSECUTIVE_ERRORS)
-  // 까지는 다음 인터벌에서 재시도한다. (실측: 더빙 중간에 5분간 25번 fetch failed 가 발생해도
-  // 이후 회복되어 정상 완료된 사례가 있음)
+  // Tolerate transient network errors up to MAX_CONSECUTIVE_ERRORS before aborting.
+  // Observed: 25 consecutive fetch failures over 5 min during dubbing, followed by
+  // full recovery and successful completion.
   const MAX_CONSECUTIVE_ERRORS = 30;
 
   return new Promise((resolve, reject) => {
@@ -403,7 +403,7 @@ export async function pollProgress(
           reject(error);
           return;
         }
-        // 일시적 오류로 간주하고 다음 폴링 인터벌에서 재시도
+        // Treat as transient error; retry on next polling interval
         if (typeof console !== 'undefined') {
           console.warn(
             `[pollProgress] transient error (#${consecutiveErrors}/${MAX_CONSECUTIVE_ERRORS}):`,

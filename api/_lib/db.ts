@@ -82,8 +82,8 @@ export async function migrate() {
       ('slice-of-life', '일상', 'Slice of Life'),
       ('mecha', '메카', 'Mecha');
 
-    -- 일회성 시드 마이그레이션: 옛 기본값(60초)으로 시작했던 free 사용자를 100시간으로 보정.
-    -- 한 번이라도 더빙해서 차감된 사용자(60초 != credit_seconds)는 영향 없음. 안전.
+    -- One-time seed migration: bump free users still at old default (60s) to 100 hours.
+    -- Users who already dubbed (credit_seconds != 60) are unaffected.
     UPDATE users SET credit_seconds = 360000 WHERE plan = 'free' AND credit_seconds = 60;
   `);
 

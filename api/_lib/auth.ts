@@ -9,9 +9,9 @@ interface FirebaseTokenPayload {
 }
 
 /**
- * Turso users 테이블에 해당 토큰의 사용자가 없으면 생성한다.
- * project 등 FK가 users(id) 를 참조하는 INSERT 직전에 호출해
- * "/api/user/me 를 한 번도 안 거친 새 사용자" 의 FK 위반을 방지.
+ * Upsert the token's user into the Turso users table (no-op if exists).
+ * Call before any INSERT that has an FK to users(id) to prevent
+ * FK violations for users who haven't hit /api/user/me yet.
  */
 export async function ensureUser(token: FirebaseTokenPayload): Promise<void> {
   await db.execute({
@@ -23,7 +23,7 @@ export async function ensureUser(token: FirebaseTokenPayload): Promise<void> {
 }
 
 /**
- * 인증 관련 에러는 401, 그 외는 500 으로 통일된 에러 응답.
+ * Send 401 for auth-related errors, 500 for everything else.
  */
 export function sendAuthAwareError(res: VercelResponse, e: unknown): void {
   const msg = e instanceof Error ? e.message : String(e);
