@@ -150,6 +150,11 @@ export interface LibraryItem {
   createdAt: string;
 }
 
+export interface LibraryItemDetail extends LibraryItem {
+  audioUrl: string | null;
+  subtitleUrl: string | null;
+}
+
 export async function getLibrary(params: {
   tag?: string;
   lang?: string;
@@ -159,6 +164,11 @@ export async function getLibrary(params: {
   offset?: number;
 } = {}): Promise<{ items: LibraryItem[]; total: number }> {
   const { data } = await api.get('/library', { params });
+  return data;
+}
+
+export async function getLibraryItem(id: number): Promise<LibraryItemDetail> {
+  const { data } = await api.get(`/library/${id}`);
   return data;
 }
 

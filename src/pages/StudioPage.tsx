@@ -469,7 +469,9 @@ export default function StudioPage() {
   }
 
   async function handleCopyShareLink() {
-    const url = `${window.location.origin}/library`;
+    const url = dbProjectId
+      ? `${window.location.origin}/library/${dbProjectId}`
+      : `${window.location.origin}/library`;
     await navigator.clipboard.writeText(url);
     setLinkCopied(true);
     setTimeout(() => setLinkCopied(false), 2000);

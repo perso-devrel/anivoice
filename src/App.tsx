@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage';
 import DashboardPage from './pages/DashboardPage';
 import StudioPage from './pages/StudioPage';
 import LibraryPage from './pages/LibraryPage';
+import LibraryDetailPage from './pages/LibraryDetailPage';
 import PricingPage from './pages/PricingPage';
 import SettingsPage from './pages/SettingsPage';
 import TestPage from './pages/TestPage';
@@ -43,6 +44,7 @@ export default function App() {
         <Route path="/login" element={<AuthPage />} />
         <Route path="/signup" element={<AuthPage />} />
         <Route path="/library" element={<LibraryPage />} />
+        <Route path="/library/:id" element={<LibraryDetailPage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/test" element={<TestPage />} />
         <Route

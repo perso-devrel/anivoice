@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getLibrary, getTags, formatSeconds, type LibraryItem, type Tag } from '../services/anivoiceApi';
 import { resolvePersoFileUrl } from '../services/persoApi';
@@ -236,8 +237,9 @@ export default function LibraryPage() {
               {items.map((item, index) => {
                 const thumbnailSrc = resolvePersoFileUrl(item.thumbnailUrl);
                 return (
-                  <div
+                  <Link
                     key={item.id}
+                    to={`/library/${item.id}`}
                     className="group glass rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary-500/10 hover:border-primary-500/30"
                   >
                     {/* Thumbnail */}
@@ -298,7 +300,7 @@ export default function LibraryPage() {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>
