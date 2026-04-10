@@ -23,7 +23,6 @@ vi.mock('react', async () => {
   };
 });
 
-const titleDescriptor = { value: 'AniVoice', writable: true };
 Object.defineProperty(globalThis, 'document', {
   value: { title: 'AniVoice' },
   writable: true,
