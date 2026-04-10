@@ -329,6 +329,7 @@ export default {
     pricing: '요금제',
     settings: '설정',
     test: '개발자 도구',
+    notFound: '페이지를 찾을 수 없습니다',
   },
   pageDesc: {
     landing: 'AI 애니메이션 더빙 서비스 — 캐릭터 목소리를 보존한 채 6개 이상 언어로 더빙합니다.',
@@ -340,6 +341,12 @@ export default {
     pricing: '더빙 필요에 맞는 요금제를 선택하세요.',
     settings: '계정, 언어, 환경설정을 관리하세요.',
     test: 'AniVoice API 연동 테스트를 위한 개발자 도구입니다.',
+    notFound: '요청하신 페이지를 찾을 수 없습니다.',
+  },
+  notFound: {
+    title: '페이지를 찾을 수 없습니다',
+    description: '요청하신 페이지가 존재하지 않거나 이동되었습니다.',
+    goHome: '홈으로 돌아가기',
   },
   errorBoundary: {
     title: '문제가 발생했습니다',

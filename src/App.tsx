@@ -15,6 +15,7 @@ const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const TestPage = lazy(() => import('./pages/TestPage'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuthStore();
@@ -88,6 +89,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
     </Suspense>
