@@ -322,28 +322,53 @@ export async function pollProgress(
   onProgress: (p: PersoProgress) => void,
   intervalMs = 5000
 ): Promise<PersoProgress> {
+  // 일시적 네트워크 오류로 더빙이 중단되지 않도록, 연속 실패 임계치(MAX_CONSECUTIVE_ERRORS)
+  // 까지는 다음 인터벌에서 재시도한다. (실측: 더빙 중간에 5분간 25번 fetch failed 가 발생해도
+  // 이후 회복되어 정상 완료된 사례가 있음)
+  const MAX_CONSECUTIVE_ERRORS = 30;
+
   return new Promise((resolve, reject) => {
+    let consecutiveErrors = 0;
+
     const poll = async () => {
       try {
         const progress = await getProgress(projectSeq, spaceSeq);
+        consecutiveErrors = 0;
         onProgress(progress);
 
         const reason = (progress.progressReason || '').toUpperCase();
 
         if (reason === 'COMPLETED' || progress.progress >= 100) {
           resolve(progress);
-        } else if (progress.hasFailed || reason === 'FAILED') {
-          reject(new Error(`Translation failed: ${progress.progressReason}`));
-        } else if (reason === 'CANCELED') {
-          reject(new Error('Translation was canceled'));
-        } else {
-          // Adapt interval: poll less often when ETA is long
-          const eta = progress.expectedRemainingTimeMinutes ?? 0;
-          const nextInterval = eta > 3 ? 10000 : eta > 1 ? 7000 : intervalMs;
-          setTimeout(poll, nextInterval);
+          return;
         }
+        if (progress.hasFailed || reason === 'FAILED') {
+          reject(new Error(`Translation failed: ${progress.progressReason}`));
+          return;
+        }
+        if (reason === 'CANCELED') {
+          reject(new Error('Translation was canceled'));
+          return;
+        }
+
+        // Adapt interval: poll less often when ETA is long
+        const eta = progress.expectedRemainingTimeMinutes ?? 0;
+        const nextInterval = eta > 3 ? 10000 : eta > 1 ? 7000 : intervalMs;
+        setTimeout(poll, nextInterval);
       } catch (error) {
-        reject(error);
+        consecutiveErrors += 1;
+        if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) {
+          reject(error);
+          return;
+        }
+        // 일시적 오류로 간주하고 다음 폴링 인터벌에서 재시도
+        if (typeof console !== 'undefined') {
+          console.warn(
+            `[pollProgress] transient error (#${consecutiveErrors}/${MAX_CONSECUTIVE_ERRORS}):`,
+            error instanceof Error ? error.message : error,
+          );
+        }
+        setTimeout(poll, intervalMs);
       }
     };
 

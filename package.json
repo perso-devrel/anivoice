@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dub:test": "node .ralph/test/dub-flow.mjs",
+    "ralph:run": "bash .ralph/run.sh",
+    "ralph:summary": "bash .ralph/summary.sh"
   },
   "dependencies": {
     "@libsql/client": "^0.17.2",

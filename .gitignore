@@ -30,3 +30,10 @@ dist-ssr
 
 # Ralph loop logs
 ralph-logs/
+.ralph/logs/
+.ralph/heartbeat
+.ralph/state.json
+
+# Test fixtures (large binary files, kept locally only)
+# 루트 한정 — .ralph/test/ 같은 다른 경로의 test 디렉토리는 제외하지 않음
+/test/
