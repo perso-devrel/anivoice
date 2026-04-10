@@ -38,6 +38,40 @@ type QueueStatus = {
   redZoneQueueCount: number;
 };
 
+function isTransientError(error: unknown): boolean {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status;
+    if (!status) return true; // network error
+    return status >= 500 || status === 408 || status === 429;
+  }
+  if (error instanceof Error && /fetch|network|ECONNRESET|ETIMEDOUT|socket/i.test(error.message)) {
+    return true;
+  }
+  return false;
+}
+
+async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries = 3,
+  baseDelayMs = 1000,
+): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastError = err;
+      if (attempt < maxRetries && isTransientError(err)) {
+        const delay = baseDelayMs * Math.pow(2, attempt);
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw lastError;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -117,8 +151,10 @@ export function resolvePersoFileUrl(path?: string | null) {
 }
 
 export async function listSpaces(): Promise<PersoSpaceBanner[]> {
-  const { data } = await api.get('/portal/api/v1/spaces');
-  return unwrapResult(data);
+  return retryWithBackoff(async () => {
+    const { data } = await api.get('/portal/api/v1/spaces');
+    return unwrapResult(data);
+  });
 }
 
 export async function getSpace(spaceSeq: number): Promise<PersoSpaceBanner> {
@@ -127,25 +163,30 @@ export async function getSpace(spaceSeq: number): Promise<PersoSpaceBanner> {
 }
 
 export async function getSasToken(fileName: string) {
-  // 문서: GET /file/api/upload/sas-token?fileName={URL-encoded}
-  // 응답: { blobSasUrl, expirationDatetime } (result 래핑 없음)
-  const { data } = await api.get('/file/api/upload/sas-token', {
-    params: { fileName },
+  return retryWithBackoff(async () => {
+    const { data } = await api.get('/file/api/upload/sas-token', {
+      params: { fileName },
+    });
+    const payload = (data?.result ?? data) as { blobSasUrl: string; expirationDatetime: string };
+    if (!payload?.blobSasUrl) {
+      throw new Error(`SAS 토큰 발급 실패: 응답에 blobSasUrl이 없습니다. 응답: ${JSON.stringify(data).slice(0, 200)}`);
+    }
+    return payload;
   });
-  const payload = (data?.result ?? data) as { blobSasUrl: string; expirationDatetime: string };
-  if (!payload?.blobSasUrl) {
-    throw new Error(`SAS 토큰 발급 실패: 응답에 blobSasUrl이 없습니다. 응답: ${JSON.stringify(data).slice(0, 200)}`);
-  }
-  return payload;
 }
 
 export async function uploadToAzure(blobSasUrl: string, file: File) {
-  await axios.put(blobSasUrl, file, {
-    headers: {
-      'x-ms-blob-type': 'BlockBlob',
-      'Content-Type': 'application/octet-stream',
-    },
-  });
+  await retryWithBackoff(
+    () =>
+      axios.put(blobSasUrl, file, {
+        headers: {
+          'x-ms-blob-type': 'BlockBlob',
+          'Content-Type': 'application/octet-stream',
+        },
+      }),
+    3,
+    2000,
+  );
 }
 
 export async function registerVideo(
@@ -153,12 +194,14 @@ export async function registerVideo(
   fileUrl: string,
   fileName: string
 ): Promise<PersoUploadedFile> {
-  const { data } = await api.put('/file/api/upload/video', {
-    spaceSeq,
-    fileUrl,
-    fileName,
+  return retryWithBackoff(async () => {
+    const { data } = await api.put('/file/api/upload/video', {
+      spaceSeq,
+      fileUrl,
+      fileName,
+    });
+    return (data?.result ?? data) as PersoUploadedFile;
   });
-  return (data?.result ?? data) as PersoUploadedFile;
 }
 
 export async function uploadVideoFile(
@@ -208,35 +251,36 @@ export interface TranslateRequest {
 }
 
 export async function ensureSpaceQueue(spaceSeq: number): Promise<QueueStatus> {
-  const { data } = await api.put(
-    `/video-translator/api/v1/projects/spaces/${spaceSeq}/queue`
-  );
-  // Perso 응답: { result: { userSeq, planName, usedQueueCount, ... } }
-  return unwrapResult<QueueStatus>(data);
+  return retryWithBackoff(async () => {
+    const { data } = await api.put(
+      `/video-translator/api/v1/projects/spaces/${spaceSeq}/queue`
+    );
+    return unwrapResult<QueueStatus>(data);
+  });
 }
 
 export async function requestTranslation(
   spaceSeq: number,
   req: TranslateRequest
 ): Promise<number[]> {
-  const { data } = await api.post(
-    `/video-translator/api/v1/projects/spaces/${spaceSeq}/translate`,
-    req
-  );
-
-  // 디버깅: 실제 응답 구조를 콘솔에서 확인할 수 있도록
-  // (Perso API 응답 형식이 환경/버전에 따라 다를 수 있음)
-  if (typeof console !== 'undefined') {
-    console.log('[persoApi] requestTranslation response:', data);
-  }
-
-  const ids = extractProjectIds(data);
-  if (ids.length === 0) {
-    throw new Error(
-      `Perso translate API가 project id를 반환하지 않았습니다. 응답: ${JSON.stringify(data).slice(0, 500)}`
+  return retryWithBackoff(async () => {
+    const { data } = await api.post(
+      `/video-translator/api/v1/projects/spaces/${spaceSeq}/translate`,
+      req
     );
-  }
-  return ids;
+
+    if (typeof console !== 'undefined') {
+      console.log('[persoApi] requestTranslation response:', data);
+    }
+
+    const ids = extractProjectIds(data);
+    if (ids.length === 0) {
+      throw new Error(
+        `Perso translate API가 project id를 반환하지 않았습니다. 응답: ${JSON.stringify(data).slice(0, 500)}`
+      );
+    }
+    return ids;
+  });
 }
 
 /**
