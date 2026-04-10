@@ -66,7 +66,7 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-surface-950 pt-24 pb-16 px-4">
+    <main className="min-h-screen bg-surface-950 pt-24 pb-16 px-4">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <h1 className="text-3xl font-bold gradient-text mb-2">
@@ -357,6 +357,6 @@ export default function SettingsPage() {
           </button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

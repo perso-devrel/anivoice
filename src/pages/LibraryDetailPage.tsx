@@ -40,15 +40,15 @@ export default function LibraryDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-surface-950 pt-24 pb-16 flex items-center justify-center">
+      <main className="min-h-screen bg-surface-950 pt-24 pb-16 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
-      </div>
+      </main>
     );
   }
 
   if (error || !item) {
     return (
-      <div className="min-h-screen bg-surface-950 pt-24 pb-16">
+      <main className="min-h-screen bg-surface-950 pt-24 pb-16">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h1 className="text-2xl font-bold text-white mb-2">{t('library.notFound')}</h1>
           <p className="text-gray-400 mb-6">{t('library.notFoundDesc')}</p>
@@ -59,7 +59,7 @@ export default function LibraryDetailPage() {
             {t('library.backToLibrary')}
           </Link>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -68,7 +68,7 @@ export default function LibraryDetailPage() {
   const subtitleSrc = resolvePersoFileUrl(item.subtitleUrl);
 
   return (
-    <div className="min-h-screen bg-surface-950 pt-24 pb-16">
+    <main className="min-h-screen bg-surface-950 pt-24 pb-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Back link */}
         <Link
@@ -176,7 +176,7 @@ export default function LibraryDetailPage() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

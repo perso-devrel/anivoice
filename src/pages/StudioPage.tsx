@@ -911,14 +911,14 @@ export default function StudioPage() {
   /* ── render ── */
 
   return (
-    <div className="min-h-screen bg-surface-950 text-white">
+    <main className="min-h-screen bg-surface-950 text-white">
       <div className="max-w-4xl mx-auto px-4 py-10 sm:py-16">
         {StepIndicator()}
         {step === 'upload' && UploadStep()}
         {step === 'settings' && SettingsStep()}
         {step === 'result' && ResultStep()}
       </div>
-    </div>
+    </main>
   );
 }
 

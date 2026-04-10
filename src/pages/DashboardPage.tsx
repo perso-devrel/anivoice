@@ -147,7 +147,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-surface-950 pt-20 pb-12">
+    <main className="min-h-screen bg-surface-950 pt-20 pb-12">
       {showOnboarding && (
         <OnboardingModal onClose={() => setShowOnboarding(false)} />
       )}
@@ -533,6 +533,6 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }

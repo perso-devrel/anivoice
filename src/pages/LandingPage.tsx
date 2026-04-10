@@ -279,7 +279,7 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100 overflow-x-hidden">
+    <main className="min-h-screen bg-gray-950 text-gray-100 overflow-x-hidden">
       {/* Decorative gradient orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-primary-600/10 blur-[120px]" />
@@ -462,6 +462,6 @@ export default function LandingPage() {
           <p className="text-gray-500 text-sm">{t('landing.copyright')}</p>
         </footer>
       </div>
-    </div>
+    </main>
   );
 }

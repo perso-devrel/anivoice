@@ -77,7 +77,7 @@ export default function AuthPage() {
   const isLogin = mode === 'login';
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface-950 px-4">
+    <main className="min-h-screen flex items-center justify-center bg-surface-950 px-4">
       <div className="w-full max-w-md glass rounded-2xl p-8">
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-8">
@@ -204,7 +204,7 @@ export default function AuthPage() {
           </button>
         </p>
       </div>
-    </div>
+    </main>
   );
 }
 

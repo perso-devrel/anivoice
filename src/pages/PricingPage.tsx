@@ -170,7 +170,7 @@ export default function PricingPage() {
   const isCurrentPlan = (planType: PlanType) => user?.plan === planType;
 
   return (
-    <div className="min-h-screen bg-surface-950 pt-24 pb-16 px-4">
+    <main className="min-h-screen bg-surface-950 pt-24 pb-16 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
@@ -433,6 +433,6 @@ export default function PricingPage() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }
