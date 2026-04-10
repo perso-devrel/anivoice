@@ -30,15 +30,12 @@ type PersoLanguage = {
   experiment: boolean;
 };
 
-type QueueStatusResponse = {
-  success: boolean;
-  data: {
-    userSeq: number;
-    planName: string;
-    usedQueueCount: number;
-    maxQueueCount: number;
-    redZoneQueueCount: number;
-  };
+type QueueStatus = {
+  userSeq: number;
+  planName: string;
+  usedQueueCount: number;
+  maxQueueCount: number;
+  redZoneQueueCount: number;
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -210,11 +207,12 @@ export interface TranslateRequest {
   preferredSpeedType: 'GREEN' | 'RED';
 }
 
-export async function ensureSpaceQueue(spaceSeq: number): Promise<QueueStatusResponse> {
+export async function ensureSpaceQueue(spaceSeq: number): Promise<QueueStatus> {
   const { data } = await api.put(
     `/video-translator/api/v1/projects/spaces/${spaceSeq}/queue`
   );
-  return data as QueueStatusResponse;
+  // Perso 응답: { result: { userSeq, planName, usedQueueCount, ... } }
+  return unwrapResult<QueueStatus>(data);
 }
 
 export async function requestTranslation(
@@ -225,7 +223,80 @@ export async function requestTranslation(
     `/video-translator/api/v1/projects/spaces/${spaceSeq}/translate`,
     req
   );
-  return unwrapResult<{ startGenerateProjectIdList: number[] }>(data).startGenerateProjectIdList;
+
+  // 디버깅: 실제 응답 구조를 콘솔에서 확인할 수 있도록
+  // (Perso API 응답 형식이 환경/버전에 따라 다를 수 있음)
+  if (typeof console !== 'undefined') {
+    console.log('[persoApi] requestTranslation response:', data);
+  }
+
+  const ids = extractProjectIds(data);
+  if (ids.length === 0) {
+    throw new Error(
+      `Perso translate API가 project id를 반환하지 않았습니다. 응답: ${JSON.stringify(data).slice(0, 500)}`
+    );
+  }
+  return ids;
+}
+
+/**
+ * Perso translate / lip-sync 응답에서 project id 배열을 추출.
+ * 응답 구조가 여러 형태(`{ result: { startGenerateProjectIdList } }`,
+ * `{ startGenerateProjectIdList }`, `{ projectSeqList }`, 단일 객체 등)로
+ * 올 수 있어 알려진 모든 케이스를 시도한다.
+ */
+function extractProjectIds(payload: unknown): number[] {
+  const candidates: unknown[] = [];
+
+  const root = isRecord(payload) ? payload : {};
+  const result = isRecord(root.result) ? root.result : root;
+
+  // 알려진 키들
+  const keys = [
+    'startGenerateProjectIdList',
+    'projectSeqList',
+    'projectIdList',
+    'projectIds',
+    'projectSeqs',
+  ];
+
+  for (const obj of [result, root]) {
+    if (!isRecord(obj)) continue;
+    for (const key of keys) {
+      const v = obj[key];
+      if (v !== undefined) candidates.push(v);
+    }
+    // 단일 id 필드 (projectSeq, projectId, project_seq, ...)
+    for (const singleKey of ['projectSeq', 'projectId', 'project_seq', 'project_id']) {
+      const v = obj[singleKey];
+      if (typeof v === 'number') candidates.push([v]);
+    }
+  }
+
+  // result 자체가 배열인 경우
+  if (Array.isArray(result)) candidates.push(result);
+
+  for (const candidate of candidates) {
+    if (Array.isArray(candidate)) {
+      const ids = candidate
+        .map((v) => {
+          if (typeof v === 'number') return v;
+          if (typeof v === 'string' && /^\d+$/.test(v)) return Number(v);
+          if (isRecord(v)) {
+            for (const key of ['projectSeq', 'projectId', 'seq', 'id']) {
+              const inner = v[key];
+              if (typeof inner === 'number') return inner;
+              if (typeof inner === 'string' && /^\d+$/.test(inner)) return Number(inner);
+            }
+          }
+          return null;
+        })
+        .filter((v): v is number => v !== null);
+      if (ids.length > 0) return ids;
+    }
+  }
+
+  return [];
 }
 
 export async function getProject(projectSeq: number, spaceSeq: number) {
@@ -337,7 +408,18 @@ export async function requestLipSync(projectSeq: number, spaceSeq: number) {
     `/video-translator/api/v1/projects/${projectSeq}/spaces/${spaceSeq}/lip-sync`,
     { preferredSpeedType: 'GREEN' }
   );
-  return unwrapResult<{ startGenerateProjectIdList: number[] }>(data).startGenerateProjectIdList;
+
+  if (typeof console !== 'undefined') {
+    console.log('[persoApi] requestLipSync response:', data);
+  }
+
+  const ids = extractProjectIds(data);
+  if (ids.length === 0) {
+    throw new Error(
+      `Perso lip-sync API가 project id를 반환하지 않았습니다. 응답: ${JSON.stringify(data).slice(0, 500)}`
+    );
+  }
+  return ids;
 }
 
 async function fetchDownloadTarget(
