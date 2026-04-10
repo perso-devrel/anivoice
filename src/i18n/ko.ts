@@ -85,6 +85,7 @@ export default {
     statusUploading: '업로드 중',
     statusCompleted: '완료',
     statusFailed: '실패',
+    favorites: '즐겨찾기',
   },
   studio: {
     uploadTitle: '영상 업로드',

@@ -81,6 +81,7 @@ export interface DbProject {
   audioUrl: string | null;
   zipUrl: string | null;
   isPublic: boolean;
+  isFavorite: boolean;
   tags: string[];
   createdAt: string;
   updatedAt: string;
@@ -117,6 +118,10 @@ export async function updateProject(id: number, params: {
   zipUrl?: string;
 }): Promise<void> {
   await api.patch(`/projects/${id}`, params);
+}
+
+export async function toggleFavorite(id: number, isFavorite: boolean): Promise<void> {
+  await api.patch(`/projects/${id}`, { isFavorite });
 }
 
 export async function publishProject(id: number, tagIds: number[], isPublic = true): Promise<void> {

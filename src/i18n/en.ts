@@ -85,6 +85,7 @@ export default {
     statusUploading: 'Uploading',
     statusCompleted: 'Completed',
     statusFailed: 'Failed',
+    favorites: 'Favorites',
   },
   studio: {
     uploadTitle: 'Upload Video',

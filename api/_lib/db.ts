@@ -86,4 +86,11 @@ export async function migrate() {
     -- 한 번이라도 더빙해서 차감된 사용자(60초 != credit_seconds)는 영향 없음. 안전.
     UPDATE users SET credit_seconds = 360000 WHERE plan = 'free' AND credit_seconds = 60;
   `);
+
+  // Add is_favorite column if it doesn't exist yet (ALTER TABLE is not idempotent in SQLite)
+  try {
+    await db.execute({ sql: `ALTER TABLE projects ADD COLUMN is_favorite INTEGER NOT NULL DEFAULT 0`, args: [] });
+  } catch {
+    // column already exists — safe to ignore
+  }
 }

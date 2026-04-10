@@ -21,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method === 'PATCH') {
       const fields: string[] = [];
       const args: (string | number | null)[] = [];
-      const allowed = ['title', 'status', 'progress', 'duration_ms', 'perso_project_seq', 'perso_space_seq', 'thumbnail_url', 'video_url', 'audio_url', 'subtitle_url', 'zip_url'];
+      const allowed = ['title', 'status', 'progress', 'duration_ms', 'perso_project_seq', 'perso_space_seq', 'thumbnail_url', 'video_url', 'audio_url', 'subtitle_url', 'zip_url', 'is_favorite'];
 
       // Map camelCase body to snake_case columns
       const bodyMap: Record<string, string> = {
@@ -30,12 +30,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         persoSpaceSeq: 'perso_space_seq', thumbnailUrl: 'thumbnail_url',
         videoUrl: 'video_url', audioUrl: 'audio_url', subtitleUrl: 'subtitle_url',
         zipUrl: 'zip_url',
+        isFavorite: 'is_favorite',
       };
 
       for (const [camel, snake] of Object.entries(bodyMap)) {
         if (req.body[camel] !== undefined && allowed.includes(snake)) {
           fields.push(`${snake} = ?`);
-          args.push(req.body[camel]);
+          const val = req.body[camel];
+          args.push(snake === 'is_favorite' ? (val ? 1 : 0) : val);
         }
       }
 
