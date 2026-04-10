@@ -27,6 +27,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
+const STATE_FILE = path.join(__dirname, 'state.json');
 
 const BASE_URL = (process.env.BASE_URL || 'https://anivoice-lime.vercel.app').replace(/\/+$/, '');
 const PROXY = `${BASE_URL}/api/perso`;
@@ -85,6 +86,7 @@ async function call(method, path_, { query, body, headers } = {}) {
       log(`⚠ QUOTA EXCEEDED — ${method} ${path_} → HTTP ${res.status}`);
       log('  This is an external API quota limit, not a code regression.');
       log('  Exiting with code 78 (quota). Re-run when quota resets.');
+      saveState({ ts: new Date().toISOString(), status: 'quota', exitCode: 78, endpoint: `${method} ${path_}` });
       process.exit(78);
     }
     fail(`${method} ${path_} -> HTTP ${res.status}`, parsed);
@@ -285,6 +287,15 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
+function saveState(data) {
+  const prev = fs.existsSync(STATE_FILE)
+    ? JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'))
+    : { runs: [] };
+  prev.runs.push(data);
+  if (prev.runs.length > 50) prev.runs = prev.runs.slice(-50);
+  fs.writeFileSync(STATE_FILE, JSON.stringify(prev, null, 2));
+}
+
 // ────────────── 한 영상 처리 ──────────────
 async function dubOne({ id, label, file }, spaceSeq) {
   log(`──────── Video #${id} (${label}) ────────`);
@@ -364,10 +375,24 @@ async function main() {
     log(`✔ ${r.label}: project=${r.projectSeq}, dubbingVideo=${r.downloads?.dubbingVideo?.videoFile?.videoDownloadLink ? 'OK' : 'MISSING'}`);
   }
   log('ALL VIDEOS DUBBED SUCCESSFULLY');
+
+  saveState({
+    ts: new Date().toISOString(),
+    status: 'success',
+    exitCode: 0,
+    videos: results.map((r) => ({
+      label: r.label,
+      mediaSeq: r.mediaSeq,
+      projectSeq: r.projectSeq,
+      dubbingVideoUrl: r.downloads?.dubbingVideo?.videoFile?.videoDownloadLink ?? null,
+      voiceAudioUrl: r.downloads?.voiceAudio?.videoFile?.videoDownloadLink ?? null,
+    })),
+  });
 }
 
 main().catch((e) => {
   console.error('\n═════════ FAILURE ═════════');
   console.error(e?.stack || String(e));
+  saveState({ ts: new Date().toISOString(), status: 'error', exitCode: 1, error: String(e?.message || e).slice(0, 500) });
   process.exit(1);
 });
