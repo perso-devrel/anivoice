@@ -169,7 +169,7 @@ export async function getSasToken(fileName: string) {
     });
     const payload = (data?.result ?? data) as { blobSasUrl: string; expirationDatetime: string };
     if (!payload?.blobSasUrl) {
-      throw new Error(`SAS 토큰 발급 실패: 응답에 blobSasUrl이 없습니다. 응답: ${JSON.stringify(data).slice(0, 200)}`);
+      throw new Error(`Failed to get SAS token: blobSasUrl missing in response. Response: ${JSON.stringify(data).slice(0, 200)}`);
     }
     return payload;
   });
@@ -272,7 +272,7 @@ export async function requestTranslation(
     const ids = extractProjectIds(data);
     if (ids.length === 0) {
       throw new Error(
-        `Perso translate API가 project id를 반환하지 않았습니다. 응답: ${JSON.stringify(data).slice(0, 500)}`
+        `Perso translate API did not return project IDs. Response: ${JSON.stringify(data).slice(0, 500)}`
       );
     }
     return ids;
@@ -486,7 +486,7 @@ export async function requestLipSync(projectSeq: number, spaceSeq: number) {
     const ids = extractProjectIds(data);
     if (ids.length === 0) {
       throw new Error(
-        `Perso lip-sync API가 project id를 반환하지 않았습니다. 응답: ${JSON.stringify(data).slice(0, 500)}`
+        `Perso lip-sync API did not return project IDs. Response: ${JSON.stringify(data).slice(0, 500)}`
       );
     }
     return ids;
