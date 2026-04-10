@@ -7,9 +7,7 @@ const UsageChart = lazy(() => import('../components/UsageChart'));
 import { useAuthStore } from '../stores/authStore';
 import OnboardingModal from '../components/OnboardingModal';
 import { shouldShowOnboarding } from '../utils/onboarding';
-import { mapDbStatus, formatDuration, getProgressBarColor } from '../utils/dashboard';
-
-type FilterTab = 'all' | 'favorites' | 'in-progress' | 'completed';
+import { mapDbStatus, formatDuration, getProgressBarColor, filterProjects, sortProjects, extractAvailableLanguages, type FilterTab, type SortOrder } from '../utils/dashboard';
 
 const STATUS_CONFIG: Record<
   string,
@@ -60,8 +58,6 @@ const GRADIENT_PLACEHOLDERS = [
   'from-indigo-600/30 to-pink-600/30',
   'from-amber-600/30 to-red-600/30',
 ];
-
-type SortOrder = 'newest' | 'oldest';
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -117,29 +113,12 @@ export default function DashboardPage() {
     mappedStatus: mapDbStatus(p),
   }));
 
-  const availableLanguages = Array.from(
-    new Set(
-      projects.flatMap((p) =>
-        (p.targetLanguage || '').split(',').map((l) => l.trim().toLowerCase()).filter(Boolean)
-      )
-    )
-  ).sort();
+  const availableLanguages = extractAvailableLanguages(projects);
 
-  const query = searchQuery.trim().toLowerCase();
-  const filteredProjects = mappedProjects
-    .filter((project) => {
-      if (query && !project.title.toLowerCase().includes(query) && !project.targetLanguage.toLowerCase().includes(query)) return false;
-      if (languageFilter && !project.targetLanguage.toLowerCase().includes(languageFilter)) return false;
-      if (activeTab === 'all') return true;
-      if (activeTab === 'favorites') return project.isFavorite;
-      if (activeTab === 'completed') return project.mappedStatus === 'completed';
-      return project.mappedStatus !== 'completed' && project.mappedStatus !== 'failed';
-    })
-    .sort((a, b) => {
-      const dateA = a.createdAt || '';
-      const dateB = b.createdAt || '';
-      return sortOrder === 'newest' ? dateB.localeCompare(dateA) : dateA.localeCompare(dateB);
-    });
+  const filteredProjects = sortProjects(
+    filterProjects(mappedProjects, { query: searchQuery, languageFilter, activeTab }),
+    sortOrder,
+  );
 
   const inProgressCount = mappedProjects.filter(
     (p) => p.mappedStatus !== 'completed' && p.mappedStatus !== 'failed'
