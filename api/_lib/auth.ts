@@ -1,10 +1,45 @@
-import type { VercelRequest } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { db } from './db.js';
 
 interface FirebaseTokenPayload {
   sub: string; // uid
   email?: string;
   name?: string;
   picture?: string;
+}
+
+/**
+ * Turso users 테이블에 해당 토큰의 사용자가 없으면 생성한다.
+ * project 등 FK가 users(id) 를 참조하는 INSERT 직전에 호출해
+ * "/api/user/me 를 한 번도 안 거친 새 사용자" 의 FK 위반을 방지.
+ */
+export async function ensureUser(token: FirebaseTokenPayload): Promise<void> {
+  await db.execute({
+    sql: `INSERT INTO users (id, email, display_name, photo_url, plan, credit_seconds)
+          VALUES (?, ?, ?, ?, 'free', 60)
+          ON CONFLICT(id) DO NOTHING`,
+    args: [token.sub, token.email || '', token.name || '', token.picture || null],
+  });
+}
+
+/**
+ * 인증 관련 에러는 401, 그 외는 500 으로 통일된 에러 응답.
+ */
+export function sendAuthAwareError(res: VercelResponse, e: unknown): void {
+  const msg = e instanceof Error ? e.message : String(e);
+  const isAuthError =
+    msg.includes('Unauthorized') ||
+    msg.includes('Token') ||
+    msg.includes('Authorization header') ||
+    msg.includes('audience') ||
+    msg.includes('expired');
+
+  if (isAuthError) {
+    res.status(401).json({ error: msg });
+  } else {
+    console.error('[api error]', msg);
+    res.status(500).json({ error: msg });
+  }
 }
 
 /**
