@@ -5,7 +5,7 @@
     }
   },
   "rewrites": [
-    { "source": "/api/perso/(.*)", "destination": "/api/perso?_path=$1" },
+    { "source": "/api/perso/:path*", "destination": "/api/perso?_path=:path*" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
