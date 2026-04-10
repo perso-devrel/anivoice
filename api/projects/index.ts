@@ -17,7 +17,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               LEFT JOIN tags t ON pt.tag_id = t.id
               WHERE p.user_id = ?
               GROUP BY p.id
-              ORDER BY p.created_at DESC
+              ORDER BY p.is_favorite DESC, p.created_at DESC
               LIMIT ? OFFSET ?`,
         args: [token.sub, Number(limit), Number(offset)],
       });
@@ -72,6 +72,7 @@ function mapProject(row: Record<string, unknown>) {
     audioUrl: row.audio_url,
     zipUrl: row.zip_url,
     isPublic: row.is_public === 1,
+    isFavorite: row.is_favorite === 1,
     tags: typeof row.tag_names === 'string' ? row.tag_names.split(',') : [],
     createdAt: row.created_at,
     updatedAt: row.updated_at,
