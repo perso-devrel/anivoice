@@ -881,22 +881,7 @@ export default function StudioPage() {
         <div className="text-center pt-4">
           <button
             type="button"
-            onClick={() => {
-              setStep('upload');
-              setSelectedFile(null);
-              setTargetLanguages([]);
-              setProjectSeq(null);
-              setSpaceSeq(null);
-              setDownloadLinks(null);
-              setSentences([]);
-              setEditingValues({});
-              setError(null);
-              setProgress(0);
-              setWithLipSync(false);
-              setDbProjectId(null);
-              setSelectedTags([]);
-              setIsPublished(false);
-            }}
+            onClick={handleResetProject}
             className="text-sm text-primary-400 hover:text-primary-300 transition-colors"
           >
             + {t('dashboard.newProject')}
@@ -904,6 +889,23 @@ export default function StudioPage() {
         </div>
       </div>
     );
+  }
+
+  function handleResetProject() {
+    setStep('upload');
+    setSelectedFile(null);
+    setTargetLanguages([]);
+    setProjectSeq(null);
+    setSpaceSeq(null);
+    setDownloadLinks(null);
+    setSentences([]);
+    setEditingValues({});
+    setError(null);
+    setProgress(0);
+    setWithLipSync(false);
+    setDbProjectId(null);
+    setSelectedTags([]);
+    setIsPublished(false);
   }
 
   /* ── render ── */
