@@ -357,6 +357,9 @@ export default function PricingPage() {
       {modal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={t('pricing.checkout')}
           onClick={() => !isProcessing && setModal(null)}
         >
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />

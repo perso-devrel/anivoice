@@ -252,6 +252,7 @@ export default {
     contactUs: 'Contact us',
     changePlan: 'Change plan',
     buyCredits: 'Buy credits',
+    checkout: 'Checkout',
     cardNumber: 'Card number',
     expiry: 'Expiry',
     processing: 'Processing...',

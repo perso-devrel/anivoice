@@ -252,6 +252,7 @@ export default {
     contactUs: '문의하기',
     changePlan: '플랜 변경',
     buyCredits: '크레딧 구매',
+    checkout: '결제',
     cardNumber: '카드 번호',
     expiry: '만료일',
     processing: '처리 중...',

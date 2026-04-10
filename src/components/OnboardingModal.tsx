@@ -66,7 +66,7 @@ export default function OnboardingModal({ onClose }: Props) {
   const current = STEPS[step];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4" role="dialog" aria-modal="true" aria-label={t('onboarding.welcome')}>
       <div className="w-full max-w-md glass rounded-2xl p-8 relative animate-in fade-in">
         <button
           onClick={handleSkip}

@@ -120,7 +120,7 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-surface-700 py-4 space-y-2">
+          <nav className="md:hidden border-t border-surface-700 py-4 space-y-2" aria-label={t('common.menu')}>
             {navLinks.map((link) => (
               <Link
                 key={link.to}
@@ -145,7 +145,7 @@ export default function Navbar() {
                 </Link>
               )}
             </div>
-          </div>
+          </nav>
         )}
       </div>
     </nav>
