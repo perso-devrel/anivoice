@@ -113,6 +113,7 @@ export default {
     lockTranslation: 'Lock translation',
     lipSyncProRequired: 'Pro plan required',
     selectTargetLanguage: 'Select a target language',
+    languagesSelected: '{{count}} language(s) selected',
     loadingProject: 'Loading project...',
     remainingTime: '~{{minutes}}min remaining',
     publishedMessage: 'Published to the library.',

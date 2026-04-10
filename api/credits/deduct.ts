@@ -10,8 +10,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await migrate();
     await ensureUser(token);
 
-    const { projectId, durationMs } = req.body;
-    const seconds = Math.ceil(durationMs / 1000);
+    const { projectId, durationMs, languageCount = 1 } = req.body;
+    const seconds = Math.ceil(durationMs / 1000) * Math.max(1, Math.floor(languageCount));
 
     // Atomic deduct: only succeeds if enough credits
     const result = await db.execute({

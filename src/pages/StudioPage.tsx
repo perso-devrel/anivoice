@@ -82,7 +82,7 @@ export default function StudioPage() {
   const [step, setStep] = useState<Step>('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [sourceLanguage, setSourceLanguage] = useState('auto');
-  const [targetLanguage, setTargetLanguage] = useState<string>('');
+  const [targetLanguages, setTargetLanguages] = useState<string[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const [withLipSync, setWithLipSync] = useState(false);
 
@@ -259,7 +259,7 @@ export default function StudioPage() {
     setProgress(0);
 
     try {
-      if (!targetLanguage || targetLanguage === sourceLanguage) {
+      if (targetLanguages.length === 0 || targetLanguages.every((l) => l === sourceLanguage)) {
         throw new Error(t('studio.selectTargetLanguage'));
       }
 
@@ -294,7 +294,7 @@ export default function StudioPage() {
         mediaSeq: uploadedFile.seq,
         isVideoProject: true,
         sourceLanguageCode: sourceLanguage === 'auto' ? undefined : sourceLanguage,
-        targetLanguageCodes: [targetLanguage],
+        targetLanguageCodes: targetLanguages,
         numberOfSpeakers: 1,
         withLipSync,
         preferredSpeedType: 'GREEN',
@@ -311,7 +311,7 @@ export default function StudioPage() {
         title: selectedFile?.name || 'Untitled',
         originalFileName: selectedFile?.name,
         sourceLanguage,
-        targetLanguage: targetLanguage,
+        targetLanguage: targetLanguages.join(','),
         durationMs: uploadedFile.durationMs,
         persoProjectSeq: primaryProjectSeq,
         persoSpaceSeq: space.spaceSeq,
@@ -358,7 +358,7 @@ export default function StudioPage() {
         });
         // Deduct credits
         try {
-          const result = await deductCredits(dbProject.id, uploadedFile.durationMs);
+          const result = await deductCredits(dbProject.id, uploadedFile.durationMs, targetLanguages.length);
           useAuthStore.getState().setCreditSeconds(result.remainingSeconds);
         } catch { /* credits may not be set up yet */ }
       }
@@ -372,7 +372,7 @@ export default function StudioPage() {
       setRemainingMinutes(null);
       setIsProcessing(false);
     }
-  }, [selectedFile, sourceLanguage, targetLanguage, withLipSync, t]);
+  }, [selectedFile, sourceLanguage, targetLanguages, withLipSync, t]);
 
   async function handleSaveSentence(sentenceSeq: number) {
     if (!projectSeq || !(sentenceSeq in editingValues)) return;
@@ -550,7 +550,7 @@ export default function StudioPage() {
             onChange={(e) => {
               const nextSourceLanguage = e.target.value;
               setSourceLanguage(nextSourceLanguage);
-              if (targetLanguage === nextSourceLanguage) setTargetLanguage('');
+              setTargetLanguages((prev) => prev.filter((l) => l !== nextSourceLanguage));
             }}
             className="w-full bg-surface-900 border border-surface-700 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary-500 transition-colors appearance-none"
           >
@@ -562,20 +562,22 @@ export default function StudioPage() {
           </select>
         </div>
 
-        {/* target language (single select) */}
+        {/* target languages (multi select) */}
         <div className="glass rounded-2xl p-5 space-y-3">
           <div className="flex items-center justify-between">
             <label className="block text-sm font-medium text-surface-200/80">
               {t('studio.targetLanguage')}
               <span className="ml-1 text-red-400" aria-hidden="true">*</span>
             </label>
-            {!targetLanguage && (
+            {targetLanguages.length === 0 ? (
               <span className="text-xs text-yellow-400/90">{t('studio.selectTargetLanguage')}</span>
+            ) : (
+              <span className="text-xs text-primary-400">{t('studio.languagesSelected', { count: targetLanguages.length })}</span>
             )}
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {LANGUAGES.filter((l) => l !== 'auto' && l !== sourceLanguage).map((lang) => {
-              const checked = targetLanguage === lang;
+              const checked = targetLanguages.includes(lang);
               return (
                 <label
                   key={lang}
@@ -585,9 +587,16 @@ export default function StudioPage() {
                       : 'border-surface-700 bg-surface-900/50 text-surface-200/60 hover:border-surface-200/30'
                   }`}
                 >
-                  <input type="radio" name="targetLanguage" checked={checked} onChange={() => setTargetLanguage(lang)} className="hidden" />
-                  <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${checked ? 'border-primary-500' : 'border-surface-700'}`}>
-                    {checked && <span className="w-2 h-2 rounded-full bg-primary-500" />}
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => setTargetLanguages((prev) =>
+                      checked ? prev.filter((l) => l !== lang) : [...prev, lang]
+                    )}
+                    className="hidden"
+                  />
+                  <span className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${checked ? 'border-primary-500 bg-primary-500' : 'border-surface-700'}`}>
+                    {checked && <CheckIcon className="w-3 h-3 text-white" />}
                   </span>
                   {t(`languages.${lang}`)}
                 </label>
@@ -616,12 +625,12 @@ export default function StudioPage() {
         <button
           type="button"
           onClick={handleStartDubbing}
-          disabled={!targetLanguage}
-          aria-disabled={!targetLanguage}
-          title={!targetLanguage ? t('studio.selectTargetLanguage') : undefined}
+          disabled={targetLanguages.length === 0}
+          aria-disabled={targetLanguages.length === 0}
+          title={targetLanguages.length === 0 ? t('studio.selectTargetLanguage') : undefined}
           className="w-full gradient-bg py-3 rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {targetLanguage ? t('studio.startDubbing') : t('studio.selectTargetLanguage')}
+          {targetLanguages.length > 0 ? t('studio.startDubbing') : t('studio.selectTargetLanguage')}
         </button>
       </div>
     );
@@ -888,7 +897,7 @@ export default function StudioPage() {
             onClick={() => {
               setStep('upload');
               setSelectedFile(null);
-              setTargetLanguage('');
+              setTargetLanguages([]);
               setProjectSeq(null);
               setSpaceSeq(null);
               setDownloadLinks(null);

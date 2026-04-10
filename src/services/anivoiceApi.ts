@@ -125,8 +125,8 @@ export async function publishProject(id: number, tagIds: number[], isPublic = tr
 
 // ── Credits ──
 
-export async function deductCredits(projectId: number, durationMs: number): Promise<{ remainingSeconds: number; deducted: number }> {
-  const { data } = await api.post('/credits/deduct', { projectId, durationMs });
+export async function deductCredits(projectId: number, durationMs: number, languageCount = 1): Promise<{ remainingSeconds: number; deducted: number }> {
+  const { data } = await api.post('/credits/deduct', { projectId, durationMs, languageCount });
   return data;
 }
 

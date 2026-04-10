@@ -113,6 +113,7 @@ export default {
     lockTranslation: '번역 잠금',
     lipSyncProRequired: 'Pro 플랜 필요',
     selectTargetLanguage: '대상 언어를 선택하세요',
+    languagesSelected: '{{count}}개 언어 선택됨',
     loadingProject: '프로젝트를 불러오는 중...',
     remainingTime: '약 {{minutes}}분 남음',
     publishedMessage: '라이브러리에 공개되었습니다.',
