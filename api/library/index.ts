@@ -7,7 +7,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     await migrate();
 
-    const { tag, lang, sort = 'latest', search, limit = '20', offset = '0' } = req.query;
+    const tag = String(req.query.tag || '');
+    const lang = String(req.query.lang || '');
+    const sort = String(req.query.sort || 'latest');
+    const search = String(req.query.search || '');
+    const limit = String(req.query.limit || '20');
+    const offset = String(req.query.offset || '0');
 
     let sql = `
       SELECT p.*, u.display_name as author_name, GROUP_CONCAT(t.name) as tag_names
