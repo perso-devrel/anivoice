@@ -22,7 +22,7 @@ import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { formatMs } from '../utils/format';
 import { getDownloadUrl, computeDubbingProgress, buildShareUrl } from '../utils/studio';
-import { FileIcon, PlayIcon, DownloadIcon, CheckIcon, SpinnerIcon } from '../components/icons';
+import { FileIcon, PlayIcon, DownloadIcon, CheckIcon, SpinnerIcon, AlertCircleIcon } from '../components/icons';
 
 type Step = 'upload' | 'settings' | 'result';
 
@@ -640,9 +640,7 @@ export default function StudioPage() {
       return (
         <div className="max-w-lg mx-auto text-center py-12 space-y-4">
           <div className="w-16 h-16 mx-auto rounded-full bg-red-500/10 flex items-center justify-center">
-            <svg className="w-8 h-8 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-            </svg>
+            <AlertCircleIcon className="w-8 h-8 text-red-400" />
           </div>
           <h2 className="text-xl font-bold text-red-400">{t('common.error')}</h2>
           <p className="text-sm text-surface-200/60 break-words">{error}</p>
