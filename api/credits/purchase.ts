@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db, migrate } from '../_lib/db.js';
-import { verifyFirebaseToken } from '../_lib/auth.js';
+import { verifyFirebaseToken, ensureUser, sendAuthAwareError } from '../_lib/auth.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -8,6 +8,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const token = await verifyFirebaseToken(req);
     await migrate();
+    await ensureUser(token);
 
     const { seconds, plan, description } = req.body;
 
@@ -58,8 +59,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(400).json({ error: 'seconds or plan required' });
   } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
-    if (msg.includes('Token') || msg.includes('Unauthorized')) return res.status(401).json({ error: msg });
-    return res.status(500).json({ error: msg });
+    return sendAuthAwareError(res, e);
   }
 }
