@@ -329,6 +329,7 @@ export default {
     pricing: 'Pricing',
     settings: 'Settings',
     test: 'Dev Tools',
+    notFound: 'Page Not Found',
   },
   pageDesc: {
     landing: 'AI anime dubbing service — preserve character voices and dub into 6+ languages.',
@@ -340,6 +341,12 @@ export default {
     pricing: 'Choose a plan that fits your dubbing needs.',
     settings: 'Manage your account, language, and preferences.',
     test: 'Developer tools for testing AniVoice API integration.',
+    notFound: 'The page you are looking for could not be found.',
+  },
+  notFound: {
+    title: 'Page not found',
+    description: 'The page you are looking for does not exist or has been moved.',
+    goHome: 'Go to homepage',
   },
   errorBoundary: {
     title: 'Something went wrong',
