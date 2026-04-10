@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../services/firebase';
 import { useAuthStore } from '../stores/authStore';
 import { showToast } from '../stores/toastStore';
+import { mapAuthError } from '../utils/auth';
 import type { User } from '../types';
 
 type Mode = 'login' | 'signup';
@@ -207,33 +208,3 @@ export default function AuthPage() {
   );
 }
 
-/** Map Firebase auth error codes to user-friendly i18n messages */
-function mapAuthError(err: unknown, t: (key: string) => string): string {
-  const msg = err instanceof Error ? err.message : String(err);
-
-  // Firebase error codes (nested in message)
-  if (msg.includes('auth/wrong-password') || msg.includes('auth/invalid-credential')) {
-    return t('auth.errorWrongPassword');
-  }
-  if (msg.includes('auth/user-not-found')) {
-    return t('auth.errorUserNotFound');
-  }
-  if (msg.includes('auth/email-already-in-use')) {
-    return t('auth.errorEmailInUse');
-  }
-  if (msg.includes('auth/weak-password')) {
-    return t('auth.errorWeakPassword');
-  }
-  if (msg.includes('auth/invalid-email')) {
-    return t('auth.errorInvalidEmail');
-  }
-  if (msg.includes('auth/too-many-requests')) {
-    return t('auth.errorTooManyRequests');
-  }
-  if (msg.includes('auth/popup-closed-by-user')) {
-    return t('auth.errorPopupClosed');
-  }
-
-  // Return the original message if it's already user-facing (mock auth)
-  return msg || t('common.error');
-}

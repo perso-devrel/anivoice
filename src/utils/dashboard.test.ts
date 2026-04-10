@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mapDbStatus, formatDuration } from './dashboard';
+import { mapDbStatus, formatDuration, getProgressBarColor } from './dashboard';
 import type { DbProject } from '../services/anivoiceApi';
 
 function makeProject(overrides: Partial<DbProject> = {}): DbProject {
@@ -91,5 +91,35 @@ describe('formatDuration', () => {
   it('floors partial seconds', () => {
     expect(formatDuration(1500)).toBe('0:01');
     expect(formatDuration(999)).toBe('0:00');
+  });
+});
+
+describe('getProgressBarColor', () => {
+  it('returns yellow for analyzing', () => {
+    expect(getProgressBarColor('analyzing')).toBe('bg-yellow-400');
+  });
+
+  it('returns yellow for uploading', () => {
+    expect(getProgressBarColor('uploading')).toBe('bg-yellow-400');
+  });
+
+  it('returns blue for dubbing', () => {
+    expect(getProgressBarColor('dubbing')).toBe('bg-blue-400');
+  });
+
+  it('returns blue for lip-syncing', () => {
+    expect(getProgressBarColor('lip-syncing')).toBe('bg-blue-400');
+  });
+
+  it('returns green for completed', () => {
+    expect(getProgressBarColor('completed')).toBe('bg-green-400');
+  });
+
+  it('returns red for failed', () => {
+    expect(getProgressBarColor('failed')).toBe('bg-red-400');
+  });
+
+  it('returns primary for unknown status', () => {
+    expect(getProgressBarColor('unknown' as never)).toBe('bg-primary-400');
   });
 });
