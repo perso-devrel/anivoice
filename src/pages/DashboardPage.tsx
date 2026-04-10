@@ -93,10 +93,15 @@ const GRADIENT_PLACEHOLDERS = [
   'from-amber-600/30 to-red-600/30',
 ];
 
+type SortOrder = 'newest' | 'oldest';
+
 export default function DashboardPage() {
   const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [languageFilter, setLanguageFilter] = useState('');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
   const [projects, setProjects] = useState<DbProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -129,12 +134,29 @@ export default function DashboardPage() {
     mappedStatus: mapDbStatus(p),
   }));
 
-  const filteredProjects = mappedProjects.filter((project) => {
-    if (activeTab === 'all') return true;
-    if (activeTab === 'favorites') return project.isFavorite;
-    if (activeTab === 'completed') return project.mappedStatus === 'completed';
-    return project.mappedStatus !== 'completed' && project.mappedStatus !== 'failed';
-  });
+  const availableLanguages = Array.from(
+    new Set(
+      projects.flatMap((p) =>
+        (p.targetLanguage || '').split(',').map((l) => l.trim().toLowerCase()).filter(Boolean)
+      )
+    )
+  ).sort();
+
+  const query = searchQuery.trim().toLowerCase();
+  const filteredProjects = mappedProjects
+    .filter((project) => {
+      if (query && !project.title.toLowerCase().includes(query) && !project.targetLanguage.toLowerCase().includes(query)) return false;
+      if (languageFilter && !project.targetLanguage.toLowerCase().includes(languageFilter)) return false;
+      if (activeTab === 'all') return true;
+      if (activeTab === 'favorites') return project.isFavorite;
+      if (activeTab === 'completed') return project.mappedStatus === 'completed';
+      return project.mappedStatus !== 'completed' && project.mappedStatus !== 'failed';
+    })
+    .sort((a, b) => {
+      const dateA = a.createdAt || '';
+      const dateB = b.createdAt || '';
+      return sortOrder === 'newest' ? dateB.localeCompare(dateA) : dateA.localeCompare(dateB);
+    });
 
   const inProgressCount = mappedProjects.filter(
     (p) => p.mappedStatus !== 'completed' && p.mappedStatus !== 'failed'
@@ -283,25 +305,66 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Recent Projects Header + Tabs */}
+        {/* Recent Projects Header + Search + Tabs */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <h2 className="text-lg font-semibold text-white">
             {t('dashboard.recentProjects')}
           </h2>
-          <div className="flex gap-1 p-1 rounded-lg bg-surface-800">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  activeTab === tab.key
-                    ? 'bg-surface-700 text-white'
-                    : 'text-gray-400 hover:text-gray-200'
-                }`}
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="relative">
+              <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z" />
+              </svg>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t('common.search')}
+                className="w-44 pl-8 pr-3 py-1.5 rounded-lg bg-surface-800 text-sm text-white placeholder-gray-500 border border-surface-700 focus:border-primary-500 focus:outline-none transition-colors"
+              />
+            </div>
+            {availableLanguages.length > 0 && (
+              <select
+                value={languageFilter}
+                onChange={(e) => setLanguageFilter(e.target.value)}
+                className="px-3 py-1.5 rounded-lg bg-surface-800 text-sm text-white border border-surface-700 focus:border-primary-500 focus:outline-none transition-colors"
               >
-                {tab.label}
-              </button>
-            ))}
+                <option value="">{t('dashboard.allLanguages')}</option>
+                {availableLanguages.map((lang) => (
+                  <option key={lang} value={lang}>
+                    {t(`languages.${lang}`, lang.toUpperCase())}
+                  </option>
+                ))}
+              </select>
+            )}
+            <button
+              onClick={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-800 text-sm text-gray-300 border border-surface-700 hover:text-white transition-colors"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                {sortOrder === 'newest' ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12" />
+                )}
+              </svg>
+              {t(sortOrder === 'newest' ? 'dashboard.sortNewest' : 'dashboard.sortOldest')}
+            </button>
+            <div className="flex gap-1 p-1 rounded-lg bg-surface-800">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    activeTab === tab.key
+                      ? 'bg-surface-700 text-white'
+                      : 'text-gray-400 hover:text-gray-200'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

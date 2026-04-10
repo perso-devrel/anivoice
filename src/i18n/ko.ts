@@ -86,6 +86,9 @@ export default {
     statusCompleted: '완료',
     statusFailed: '실패',
     favorites: '즐겨찾기',
+    allLanguages: '전체 언어',
+    sortNewest: '최신순',
+    sortOldest: '오래된순',
   },
   studio: {
     uploadTitle: '영상 업로드',

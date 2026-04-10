@@ -86,6 +86,9 @@ export default {
     statusCompleted: 'Completed',
     statusFailed: 'Failed',
     favorites: 'Favorites',
+    allLanguages: 'All languages',
+    sortNewest: 'Newest',
+    sortOldest: 'Oldest',
   },
   studio: {
     uploadTitle: 'Upload Video',
