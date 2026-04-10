@@ -27,11 +27,25 @@ vi.mock('react', async () => {
 });
 
 const metaEl = { getAttribute: vi.fn(), setAttribute: vi.fn() };
+const canonicalEl = { setAttribute: vi.fn(), removeAttribute: vi.fn() };
 
 Object.defineProperty(globalThis, 'document', {
   value: {
     title: 'AniVoice',
-    querySelector: (sel: string) => sel === 'meta[name="description"]' ? metaEl : null,
+    querySelector: (sel: string) => {
+      if (sel === 'meta[name="description"]') return metaEl;
+      if (sel === 'link[rel="canonical"]') return canonicalEl;
+      return null;
+    },
+    createElement: () => canonicalEl,
+    head: { appendChild: vi.fn() },
+  },
+  writable: true,
+});
+
+Object.defineProperty(globalThis, 'window', {
+  value: {
+    location: { origin: 'https://anivoice-lime.vercel.app', pathname: '/dashboard' },
   },
   writable: true,
 });
@@ -44,6 +58,8 @@ describe('usePageTitle', () => {
     effectFn = null;
     metaEl.getAttribute.mockReturnValue('default desc');
     metaEl.setAttribute.mockClear();
+    canonicalEl.setAttribute.mockClear();
+    canonicalEl.removeAttribute.mockClear();
   });
 
   it('sets document.title with translated key and app name', () => {
@@ -94,5 +110,47 @@ describe('usePageTitle', () => {
     const cleanup = effectFn?.() as unknown as (() => void) | undefined;
     cleanup?.();
     expect(metaEl.setAttribute).toHaveBeenCalledWith('content', 'default desc');
+  });
+
+  it('sets canonical link href to current URL', () => {
+    usePageTitle('pageTitle.dashboard');
+    effectFn?.();
+    expect(canonicalEl.setAttribute).toHaveBeenCalledWith(
+      'href',
+      'https://anivoice-lime.vercel.app/dashboard',
+    );
+  });
+
+  it('uses existing canonical link element if present', () => {
+    usePageTitle('pageTitle.studio');
+    effectFn?.();
+    expect(canonicalEl.setAttribute).toHaveBeenCalledWith(
+      'href',
+      'https://anivoice-lime.vercel.app/dashboard',
+    );
+    expect(document.head.appendChild).not.toHaveBeenCalled();
+  });
+
+  it('creates canonical link element when none exists', () => {
+    const origQuerySelector = document.querySelector;
+    document.querySelector = (sel: string) => {
+      if (sel === 'link[rel="canonical"]') return null;
+      return origQuerySelector(sel);
+    };
+
+    usePageTitle('pageTitle.dashboard');
+    effectFn?.();
+
+    expect(document.head.appendChild).toHaveBeenCalled();
+    expect(canonicalEl.setAttribute).toHaveBeenCalledWith('rel', 'canonical');
+
+    document.querySelector = origQuerySelector;
+  });
+
+  it('cleanup removes canonical href', () => {
+    usePageTitle('pageTitle.dashboard');
+    const cleanup = effectFn?.() as unknown as (() => void) | undefined;
+    cleanup?.();
+    expect(canonicalEl.removeAttribute).toHaveBeenCalledWith('href');
   });
 });

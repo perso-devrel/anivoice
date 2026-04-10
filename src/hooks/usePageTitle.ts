@@ -8,6 +8,16 @@ function getMetaDescription(): HTMLMetaElement | null {
   return document.querySelector('meta[name="description"]');
 }
 
+function getOrCreateCanonicalLink(): HTMLLinkElement {
+  let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  if (!link) {
+    link = document.createElement('link');
+    link.setAttribute('rel', 'canonical');
+    document.head.appendChild(link);
+  }
+  return link;
+}
+
 export function usePageTitle(titleKey: string) {
   const { t, i18n } = useTranslation();
 
@@ -23,9 +33,14 @@ export function usePageTitle(titleKey: string) {
       meta.setAttribute('content', desc);
     }
 
+    const canonicalLink = getOrCreateCanonicalLink();
+    const canonicalUrl = `${window.location.origin}${window.location.pathname}`;
+    canonicalLink.setAttribute('href', canonicalUrl);
+
     return () => {
       document.title = APP_NAME;
       if (meta) meta.setAttribute('content', prevDesc);
+      canonicalLink.removeAttribute('href');
     };
   }, [t, titleKey, i18n.language]);
 }
