@@ -269,10 +269,6 @@ export async function requestTranslation(
       req
     );
 
-    if (typeof console !== 'undefined') {
-      console.log('[persoApi] requestTranslation response:', data);
-    }
-
     const ids = extractProjectIds(data);
     if (ids.length === 0) {
       throw new Error(
@@ -486,10 +482,6 @@ export async function requestLipSync(projectSeq: number, spaceSeq: number) {
       `/video-translator/api/v1/projects/${projectSeq}/spaces/${spaceSeq}/lip-sync`,
       { preferredSpeedType: 'GREEN' }
     );
-
-    if (typeof console !== 'undefined') {
-      console.log('[persoApi] requestLipSync response:', data);
-    }
 
     const ids = extractProjectIds(data);
     if (ids.length === 0) {
