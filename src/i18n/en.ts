@@ -29,6 +29,8 @@ export default {
     free: 'Free',
     more: 'More',
     buy: 'Buy',
+    close: 'Close',
+    menu: 'Menu',
   },
   auth: {
     name: 'Name',
@@ -97,6 +99,8 @@ export default {
     usageChart: 'Usage — Last 30 days',
     usageSeconds: 'Seconds used',
     noUsageData: 'No usage data yet',
+    addFavorite: 'Add to favorites',
+    removeFavorite: 'Remove from favorites',
   },
   studio: {
     uploadTitle: 'Upload Video',

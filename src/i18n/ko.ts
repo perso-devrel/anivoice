@@ -29,6 +29,8 @@ export default {
     free: '무료',
     more: '더보기',
     buy: '구매하기',
+    close: '닫기',
+    menu: '메뉴',
   },
   auth: {
     name: '이름',
@@ -97,6 +99,8 @@ export default {
     usageChart: '최근 30일 사용량',
     usageSeconds: '사용 시간(초)',
     noUsageData: '아직 사용 기록이 없습니다',
+    addFavorite: '즐겨찾기에 추가',
+    removeFavorite: '즐겨찾기에서 제거',
   },
   studio: {
     uploadTitle: '영상 업로드',
