@@ -5,6 +5,7 @@ import {
   findApiMessage,
   isTransientError,
   isRecord,
+  resolvePersoFileUrl,
 } from './persoApi';
 
 describe('isRecord', () => {
@@ -201,5 +202,27 @@ describe('isTransientError', () => {
     expect(isTransientError('string error')).toBe(false);
     expect(isTransientError(42)).toBe(false);
     expect(isTransientError(null)).toBe(false);
+  });
+});
+
+describe('resolvePersoFileUrl', () => {
+  it('returns undefined for null/undefined/empty', () => {
+    expect(resolvePersoFileUrl(null)).toBeUndefined();
+    expect(resolvePersoFileUrl(undefined)).toBeUndefined();
+    expect(resolvePersoFileUrl('')).toBeUndefined();
+  });
+
+  it('returns absolute URL as-is', () => {
+    const url = 'https://cdn.perso.ai/files/video.mp4';
+    expect(resolvePersoFileUrl(url)).toBe(url);
+  });
+
+  it('returns http URL as-is', () => {
+    const url = 'http://example.com/file.mp4';
+    expect(resolvePersoFileUrl(url)).toBe(url);
+  });
+
+  it('prepends base URL for relative paths', () => {
+    expect(resolvePersoFileUrl('/files/video.mp4')).toBe('https://perso.ai/files/video.mp4');
   });
 });
