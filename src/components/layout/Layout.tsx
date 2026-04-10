@@ -1,8 +1,15 @@
-import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ToastContainer from '../Toast';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
 
 export default function Layout() {
   const { t } = useTranslation();
@@ -14,6 +21,7 @@ export default function Layout() {
       >
         {t('common.skipToContent')}
       </a>
+      <ScrollToTop />
       <Navbar />
       <ToastContainer />
       <main id="main-content" className="flex-1 pt-16">
