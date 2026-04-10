@@ -434,11 +434,13 @@ export async function getScript(
   sentences: PersoScriptSentence[];
   speakers: { speakerOrderIndex: number; externalSpeakerSeq: string }[];
 }> {
-  const { data } = await api.get(
-    `/video-translator/api/v1/projects/${projectSeq}/spaces/${spaceSeq}/script`,
-    { params: { size: 10000 } }
-  );
-  return unwrapResult(data);
+  return retryWithBackoff(async () => {
+    const { data } = await api.get(
+      `/video-translator/api/v1/projects/${projectSeq}/spaces/${spaceSeq}/script`,
+      { params: { size: 10000 } }
+    );
+    return unwrapResult(data);
+  });
 }
 
 export async function translateSentence(
@@ -446,11 +448,13 @@ export async function translateSentence(
   sentenceSeq: number,
   targetText: string
 ) {
-  const { data } = await api.patch(
-    `/video-translator/api/v1/project/${projectSeq}/audio-sentence/${sentenceSeq}`,
-    { targetText }
-  );
-  return unwrapResult(data);
+  return retryWithBackoff(async () => {
+    const { data } = await api.patch(
+      `/video-translator/api/v1/project/${projectSeq}/audio-sentence/${sentenceSeq}`,
+      { targetText }
+    );
+    return unwrapResult(data);
+  });
 }
 
 export async function generateSentenceAudio(
@@ -458,11 +462,13 @@ export async function generateSentenceAudio(
   sentenceSeq: number,
   targetText: string
 ) {
-  const { data } = await api.patch(
-    `/video-translator/api/v1/project/${projectSeq}/audio-sentence/${sentenceSeq}/generate-audio`,
-    { targetText }
-  );
-  return unwrapResult(data);
+  return retryWithBackoff(async () => {
+    const { data } = await api.patch(
+      `/video-translator/api/v1/project/${projectSeq}/audio-sentence/${sentenceSeq}/generate-audio`,
+      { targetText }
+    );
+    return unwrapResult(data);
+  });
 }
 
 export async function resetSentence(projectSeq: number, sentenceSeq: number) {
@@ -473,22 +479,24 @@ export async function resetSentence(projectSeq: number, sentenceSeq: number) {
 }
 
 export async function requestLipSync(projectSeq: number, spaceSeq: number) {
-  const { data } = await api.post(
-    `/video-translator/api/v1/projects/${projectSeq}/spaces/${spaceSeq}/lip-sync`,
-    { preferredSpeedType: 'GREEN' }
-  );
-
-  if (typeof console !== 'undefined') {
-    console.log('[persoApi] requestLipSync response:', data);
-  }
-
-  const ids = extractProjectIds(data);
-  if (ids.length === 0) {
-    throw new Error(
-      `Perso lip-sync API가 project id를 반환하지 않았습니다. 응답: ${JSON.stringify(data).slice(0, 500)}`
+  return retryWithBackoff(async () => {
+    const { data } = await api.post(
+      `/video-translator/api/v1/projects/${projectSeq}/spaces/${spaceSeq}/lip-sync`,
+      { preferredSpeedType: 'GREEN' }
     );
-  }
-  return ids;
+
+    if (typeof console !== 'undefined') {
+      console.log('[persoApi] requestLipSync response:', data);
+    }
+
+    const ids = extractProjectIds(data);
+    if (ids.length === 0) {
+      throw new Error(
+        `Perso lip-sync API가 project id를 반환하지 않았습니다. 응답: ${JSON.stringify(data).slice(0, 500)}`
+      );
+    }
+    return ids;
+  });
 }
 
 async function fetchDownloadTarget(
