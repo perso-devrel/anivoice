@@ -25,6 +25,7 @@ function makeProject(overrides: Partial<DbProject> = {}): DbProject {
     thumbnailUrl: null,
     videoUrl: null,
     audioUrl: null,
+    subtitleUrl: null,
     zipUrl: null,
     isPublic: false,
     isFavorite: false,

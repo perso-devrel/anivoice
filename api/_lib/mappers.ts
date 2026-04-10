@@ -17,6 +17,7 @@ export function mapProjectRow(row: Record<string, unknown>) {
     thumbnailUrl: row.thumbnail_url,
     videoUrl: row.video_url,
     audioUrl: row.audio_url,
+    subtitleUrl: row.subtitle_url,
     zipUrl: row.zip_url,
     isPublic: row.is_public === 1,
     isFavorite: row.is_favorite === 1,

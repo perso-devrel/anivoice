@@ -79,6 +79,7 @@ export interface DbProject {
   thumbnailUrl: string | null;
   videoUrl: string | null;
   audioUrl: string | null;
+  subtitleUrl: string | null;
   zipUrl: string | null;
   isPublic: boolean;
   isFavorite: boolean;

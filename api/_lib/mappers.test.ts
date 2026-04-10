@@ -42,6 +42,7 @@ describe('mapProjectRow', () => {
     thumbnail_url: 'https://example.com/thumb.jpg',
     video_url: 'https://example.com/video.mp4',
     audio_url: 'https://example.com/audio.mp3',
+    subtitle_url: 'https://example.com/subs.srt',
     zip_url: 'https://example.com/all.zip',
     is_public: 1,
     is_favorite: 0,
@@ -65,6 +66,7 @@ describe('mapProjectRow', () => {
     expect(result.thumbnailUrl).toBe('https://example.com/thumb.jpg');
     expect(result.videoUrl).toBe('https://example.com/video.mp4');
     expect(result.audioUrl).toBe('https://example.com/audio.mp3');
+    expect(result.subtitleUrl).toBe('https://example.com/subs.srt');
     expect(result.zipUrl).toBe('https://example.com/all.zip');
     expect(result.createdAt).toBe('2026-04-10');
     expect(result.updatedAt).toBe('2026-04-11');
