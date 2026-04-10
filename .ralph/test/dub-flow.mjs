@@ -81,6 +81,12 @@ async function call(method, path_, { query, body, headers } = {}) {
   try { parsed = JSON.parse(text); } catch { /* leave as text */ }
 
   if (!res.ok) {
+    if (res.status === 402 || (parsed?.detailCode ?? parsed?.code ?? '').toString().includes('QUOTA')) {
+      log(`⚠ QUOTA EXCEEDED — ${method} ${path_} → HTTP ${res.status}`);
+      log('  This is an external API quota limit, not a code regression.');
+      log('  Exiting with code 78 (quota). Re-run when quota resets.');
+      process.exit(78);
+    }
     fail(`${method} ${path_} -> HTTP ${res.status}`, parsed);
   }
   return parsed;
