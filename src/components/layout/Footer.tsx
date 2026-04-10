@@ -21,7 +21,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-gray-300 mb-3">Product</h4>
+            <h4 className="text-sm font-semibold text-gray-300 mb-3">{t('footer.product')}</h4>
             <div className="space-y-2">
               <Link to="/studio" className="block text-sm text-gray-500 hover:text-gray-300">{t('common.studio')}</Link>
               <Link to="/library" className="block text-sm text-gray-500 hover:text-gray-300">{t('common.library')}</Link>
@@ -30,19 +30,19 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-gray-300 mb-3">Support</h4>
+            <h4 className="text-sm font-semibold text-gray-300 mb-3">{t('footer.support')}</h4>
             <div className="space-y-2">
-              <a href="#faq" className="block text-sm text-gray-500 hover:text-gray-300">FAQ</a>
-              <a href="mailto:support@anivoice.ai" className="block text-sm text-gray-500 hover:text-gray-300">Contact</a>
+              <a href="#faq" className="block text-sm text-gray-500 hover:text-gray-300">{t('footer.faq')}</a>
+              <a href="mailto:support@anivoice.ai" className="block text-sm text-gray-500 hover:text-gray-300">{t('footer.contact')}</a>
             </div>
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-gray-300 mb-3">Legal</h4>
+            <h4 className="text-sm font-semibold text-gray-300 mb-3">{t('footer.legal')}</h4>
             <div className="space-y-2">
-              <a href="#" className="block text-sm text-gray-500 hover:text-gray-300">Terms of Service</a>
-              <a href="#" className="block text-sm text-gray-500 hover:text-gray-300">Privacy Policy</a>
-              <a href="#" className="block text-sm text-gray-500 hover:text-gray-300">DMCA</a>
+              <a href="#" className="block text-sm text-gray-500 hover:text-gray-300">{t('footer.terms')}</a>
+              <a href="#" className="block text-sm text-gray-500 hover:text-gray-300">{t('footer.privacy')}</a>
+              <a href="#" className="block text-sm text-gray-500 hover:text-gray-300">{t('footer.dmca')}</a>
             </div>
           </div>
         </div>

@@ -285,6 +285,16 @@ export default {
     id: 'Indonesian',
     ar: 'Arabic',
   },
+  footer: {
+    product: 'Product',
+    support: 'Support',
+    faq: 'FAQ',
+    contact: 'Contact',
+    legal: 'Legal',
+    terms: 'Terms of Service',
+    privacy: 'Privacy Policy',
+    dmca: 'DMCA',
+  },
   errorBoundary: {
     title: 'Something went wrong',
     description: 'An unexpected error occurred. Please reload the page and try again.',
