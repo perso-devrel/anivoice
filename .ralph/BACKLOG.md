@@ -163,6 +163,7 @@
 - [x] PricingPage 중복 selectPlan 버튼 JSX를 조건부 className 1개로 통합 ← iter-167, #539, PR #540/#541
 - [x] PricingPage 인라인 checkout modal JSX를 CheckoutModal 컴포넌트로 추출 (404→335줄) ← iter-168, #544, PR #545/#546
 - [x] PricingPage 인라인 plan card JSX를 PlanCard 컴포넌트로 추출 (336→259줄) ← iter-169, #549, PR #550/#551
+- [x] SettingsPage 인라인 프로필 탭 JSX를 ProfileTab 컴포넌트로 추출 (299→233줄) ← iter-170, #554, PR #555/#556
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
