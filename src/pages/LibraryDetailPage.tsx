@@ -8,6 +8,8 @@ import { formatCreditTimeMs } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
 import { DownloadIcon, LinkIcon, ChevronLeftIcon, LoadingSpinner } from '../components/icons';
 
+const PAGE_SHELL_CLASS = 'min-h-screen bg-surface-950 pt-24 pb-16';
+
 const SECONDARY_BUTTON_CLASS =
   'inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-700 text-white text-sm font-medium hover:bg-surface-600 transition-colors';
 
@@ -46,7 +48,7 @@ export default function LibraryDetailPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-surface-950 pt-24 pb-16 flex items-center justify-center">
+      <main className={`${PAGE_SHELL_CLASS} flex items-center justify-center`}>
         <LoadingSpinner />
       </main>
     );
@@ -54,7 +56,7 @@ export default function LibraryDetailPage() {
 
   if (error || !item) {
     return (
-      <main className="min-h-screen bg-surface-950 pt-24 pb-16">
+      <main className={PAGE_SHELL_CLASS}>
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h1 className="text-2xl font-bold text-white mb-2">{t('library.notFound')}</h1>
           <p className="text-gray-400 mb-6">{t('library.notFoundDesc')}</p>
