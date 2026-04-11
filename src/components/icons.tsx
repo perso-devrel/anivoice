@@ -122,6 +122,22 @@ export function CheckmarkIcon({ className = 'w-5 h-5' }: IconProps) {
   );
 }
 
+export function InfoIcon({ className = 'w-5 h-5' }: IconProps) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+    </svg>
+  );
+}
+
+export function MenuIcon({ className = 'w-6 h-6' }: IconProps) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  );
+}
+
 export function LinkIcon({ className = 'w-4 h-4' }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>

@@ -1,16 +1,12 @@
 import type { ReactNode } from 'react';
 import { useToastStore } from '../stores/toastStore';
 import type { ToastType } from '../stores/toastStore';
-import { XIcon, CheckmarkIcon } from './icons';
+import { XIcon, CheckmarkIcon, InfoIcon } from './icons';
 
 const iconByType: Record<ToastType, ReactNode> = {
   success: <CheckmarkIcon />,
   error: <XIcon />,
-  info: (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
-    </svg>
-  ),
+  info: <InfoIcon />,
 };
 
 const bgByType: Record<ToastType, string> = {
