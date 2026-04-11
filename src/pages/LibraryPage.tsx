@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { getLibrary, getTags, type LibraryItem, type Tag } from '../services/anivoiceApi';
-import { formatSeconds } from '../utils/format';
+import { formatSeconds, getErrorMessage } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
 import { SearchIcon, PlayIcon, ChevronDownIcon, ClockIcon, SpinnerIcon } from '../components/icons';
 
@@ -59,7 +59,7 @@ export default function LibraryPage() {
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : t('library.loadError'));
+          setError(getErrorMessage(err, t('library.loadError')));
         }
       } finally {
         if (!cancelled) setLoading(false);

@@ -164,4 +164,14 @@ describe('getErrorMessage', () => {
   it('handles Error subclass', () => {
     expect(getErrorMessage(new TypeError('type error'))).toBe('type error');
   });
+
+  it('uses fallback for non-Error when provided', () => {
+    expect(getErrorMessage('oops', 'default msg')).toBe('default msg');
+    expect(getErrorMessage(null, 'default msg')).toBe('default msg');
+    expect(getErrorMessage(undefined, 'default msg')).toBe('default msg');
+  });
+
+  it('prefers Error.message over fallback', () => {
+    expect(getErrorMessage(new Error('real'), 'fallback')).toBe('real');
+  });
 });

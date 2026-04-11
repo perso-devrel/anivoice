@@ -29,6 +29,7 @@ export function formatDuration(ms: number): string {
   return `${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 
-export function getErrorMessage(err: unknown): string {
-  return err instanceof Error ? err.message : String(err);
+export function getErrorMessage(err: unknown, fallback?: string): string {
+  if (err instanceof Error) return err.message;
+  return fallback ?? String(err);
 }
