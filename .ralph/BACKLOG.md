@@ -140,6 +140,7 @@
 - [x] SettingsPage 언어 버튼 중복 JSX를 LANGUAGE_OPTIONS 상수 + map()으로 교체 ← iter-144, #428, PR #429/#430
 - [x] LandingPage 중복 waveform 렌더링을 WaveformBars 서브컴포넌트로 추출 ← iter-145, #433, PR #434/#435
 - [x] DashboardPage 중복 stat card JSX를 StatCard 컴포넌트로 추출 ← iter-146, #438, PR #439/#440
+- [x] StudioPage sentence editing JSX를 SentenceEditList 컴포넌트로 추출 ← iter-147, #443, PR #444/#445
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
