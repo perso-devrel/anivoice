@@ -136,6 +136,7 @@
 - [x] LandingPage 인라인 features/steps/plans/waveform 배열을 모듈 수준 상수로 추출 ← iter-140, #407, PR #408/#409
 - [x] Navbar 인라인 navLinks 배열을 모듈 수준 NAV_LINK_KEYS 상수로 추출 ← iter-141, #412, PR #413/#414
 - [x] PricingPage 인라인 plans/timePackages 배열을 모듈 수준 PLAN_CONFIGS/TIME_PACKAGE_CONFIGS 상수로 추출 ← iter-142, #417, PR #418/#419
+- [x] SettingsPage 인라인 billingHistory/basicFeatures 배열을 모듈 수준 BILLING_HISTORY_ENTRIES/BASIC_FEATURE_KEYS 상수로 추출 ← iter-143, #422, PR #423/#424
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
