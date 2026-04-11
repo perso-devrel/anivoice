@@ -186,6 +186,7 @@
 - [x] LibraryDetailPage 중복 page shell className 3개를 PAGE_SHELL_CLASS 상수로 추출 ← iter-190, #651, PR #652/#653
 - [x] LandingPage 중복 비디오 미리보기 JSX를 VideoPreviewBox 서브컴포넌트로 추출 ← iter-191, #656, PR #657/#658
 - [x] LandingPage 중복 section 패딩 className 5개를 LANDING_SECTION_CLASS 상수로 추출 ← iter-192, #661, PR #662/#663
+- [x] DashboardToolbar 중복 control className 3개를 TOOLBAR_CONTROL_CLASS 상수로 추출 ← iter-193, #666, PR #667/#668
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
