@@ -24,6 +24,8 @@ const BILLING_HISTORY_ENTRIES = [
   { date: '2026-01-15', descriptionKey: 'settings.billingCreditPack', amount: '$12.00', statusKey: 'settings.paid' },
 ] as const;
 
+const TABLE_HEADER_CLASS = 'text-left text-sm font-medium text-gray-400 pb-3';
+
 const LANGUAGE_OPTIONS: { code: 'ko' | 'en'; emoji: string; label: string; subtitleKey: string }[] = [
   { code: 'ko', emoji: '🇰🇷', label: '한국어', subtitleKey: 'settings.langKoreanSub' },
   { code: 'en', emoji: '🇺🇸', label: 'English', subtitleKey: 'settings.langEnglishSub' },
@@ -102,16 +104,16 @@ export default function SettingsPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-surface-700">
-                    <th className="text-left text-sm font-medium text-gray-400 pb-3 pr-4">
+                    <th className={`${TABLE_HEADER_CLASS} pr-4`}>
                       {t('settings.date')}
                     </th>
-                    <th className="text-left text-sm font-medium text-gray-400 pb-3 pr-4">
+                    <th className={`${TABLE_HEADER_CLASS} pr-4`}>
                       {t('settings.description')}
                     </th>
-                    <th className="text-left text-sm font-medium text-gray-400 pb-3 pr-4">
+                    <th className={`${TABLE_HEADER_CLASS} pr-4`}>
                       {t('settings.amount')}
                     </th>
-                    <th className="text-left text-sm font-medium text-gray-400 pb-3">
+                    <th className={TABLE_HEADER_CLASS}>
                       {t('settings.status')}
                     </th>
                   </tr>
