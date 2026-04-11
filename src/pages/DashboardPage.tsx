@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { listMyProjects, toggleFavorite, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
 import { formatSeconds, getErrorMessage } from '../utils/format';
-import { PlusIcon, AlertCircleIcon, CheckCircleIcon, SearchIcon, StarIcon, WalletIcon, RefreshIcon, SortIcon, VideoPlayIcon } from '../components/icons';
+import { PlusIcon, AlertCircleIcon, CheckCircleIcon, SearchIcon, StarIcon, WalletIcon, RefreshIcon, SortIcon, VideoPlayIcon, EmptyProjectsIcon } from '../components/icons';
 
 const UsageChart = lazy(() => import('../components/UsageChart'));
 import { useAuthStore } from '../stores/authStore';
@@ -325,21 +325,7 @@ export default function DashboardPage() {
             <div className="w-32 h-32 mb-8 relative">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-500/20 to-accent-500/20 blur-xl" />
               <div className="relative w-full h-full rounded-2xl bg-surface-800/80 flex items-center justify-center">
-                <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-                  <rect x="8" y="14" width="48" height="36" rx="4" stroke="url(#emptyGrad)" strokeWidth="2.5" />
-                  <path d="M8 22h48" stroke="url(#emptyGrad)" strokeWidth="2" opacity="0.5" />
-                  <circle cx="32" cy="36" r="8" stroke="url(#emptyGrad)" strokeWidth="2.5" />
-                  <polygon points="30,33 30,39 36,36" fill="url(#emptyGrad)" />
-                  <path d="M44 10l4-4m0 0l4 4m-4-4v8" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
-                  <circle cx="14" cy="10" r="2" fill="#ec4899" opacity="0.5" />
-                  <circle cx="52" cy="54" r="1.5" fill="#8b5cf6" opacity="0.5" />
-                  <defs>
-                    <linearGradient id="emptyGrad" x1="8" y1="14" x2="56" y2="50">
-                      <stop stopColor="#ec4899" />
-                      <stop offset="1" stopColor="#8b5cf6" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+                <EmptyProjectsIcon className="w-16 h-16" />
               </div>
             </div>
             <h3 className="text-xl font-bold gradient-text mb-2">
