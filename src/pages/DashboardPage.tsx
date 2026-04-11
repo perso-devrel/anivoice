@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { listMyProjects, toggleFavorite, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
 import { formatCreditTime, getErrorMessage } from '../utils/format';
-import { PlusIcon, AlertCircleIcon, CheckCircleIcon, SearchIcon, WalletIcon, RefreshIcon, SortIcon, EmptyProjectsIcon, LoadingSpinner } from '../components/icons';
+import { PlusIcon, AlertCircleIcon, CheckCircleIcon, SearchIcon, WalletIcon, RefreshIcon, EmptyProjectsIcon, LoadingSpinner } from '../components/icons';
 import { ProjectCard } from '../components/ProjectCard';
+import { DashboardToolbar } from '../components/DashboardToolbar';
 
 const UsageChart = lazy(() => import('../components/UsageChart'));
 import { useAuthStore } from '../stores/authStore';
@@ -194,56 +195,18 @@ export default function DashboardPage() {
           <h2 className="text-lg font-semibold text-white">
             {t('dashboard.recentProjects')}
           </h2>
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="relative">
-              <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('common.search')}
-                aria-label={t('common.search')}
-                className="w-44 pl-8 pr-3 py-1.5 rounded-lg bg-surface-800 text-sm text-white placeholder-gray-500 border border-surface-700 focus:border-primary-500 focus:outline-none transition-colors"
-              />
-            </div>
-            {availableLanguages.length > 0 && (
-              <select
-                value={languageFilter}
-                onChange={(e) => setLanguageFilter(e.target.value)}
-                aria-label={t('common.filterByLanguage')}
-                className="px-3 py-1.5 rounded-lg bg-surface-800 text-sm text-white border border-surface-700 focus:border-primary-500 focus:outline-none transition-colors"
-              >
-                <option value="">{t('dashboard.allLanguages')}</option>
-                {availableLanguages.map((lang) => (
-                  <option key={lang} value={lang}>
-                    {t(`languages.${lang}`, lang.toUpperCase())}
-                  </option>
-                ))}
-              </select>
-            )}
-            <button
-              onClick={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-800 text-sm text-gray-300 border border-surface-700 hover:text-white transition-colors"
-            >
-              <SortIcon className="w-3.5 h-3.5" />
-              {t(sortOrder === 'newest' ? 'dashboard.sortNewest' : 'dashboard.sortOldest')}
-            </button>
-            <div className="flex gap-1 p-1 rounded-lg bg-surface-800">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === tab.key
-                      ? 'bg-surface-700 text-white'
-                      : 'text-gray-400 hover:text-gray-200'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
+          <DashboardToolbar
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              languageFilter={languageFilter}
+              onLanguageFilterChange={setLanguageFilter}
+              availableLanguages={availableLanguages}
+              sortOrder={sortOrder}
+              onSortToggle={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              tabs={tabs}
+            />
         </div>
 
         {/* Loading State */}
