@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { SearchIcon, SortIcon } from './icons';
 import type { FilterTab, SortOrder } from '../utils/dashboard';
 
+const TOOLBAR_CONTROL_CLASS = 'py-1.5 rounded-lg bg-surface-800 text-sm border border-surface-700 transition-colors';
+
 interface DashboardToolbarProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
@@ -39,7 +41,7 @@ export function DashboardToolbar({
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={t('common.search')}
           aria-label={t('common.search')}
-          className="w-44 pl-8 pr-3 py-1.5 rounded-lg bg-surface-800 text-sm text-white placeholder-gray-500 border border-surface-700 focus:border-primary-500 focus:outline-none transition-colors"
+          className={`w-44 pl-8 pr-3 ${TOOLBAR_CONTROL_CLASS} text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none`}
         />
       </div>
       {availableLanguages.length > 0 && (
@@ -47,7 +49,7 @@ export function DashboardToolbar({
           value={languageFilter}
           onChange={(e) => onLanguageFilterChange(e.target.value)}
           aria-label={t('common.filterByLanguage')}
-          className="px-3 py-1.5 rounded-lg bg-surface-800 text-sm text-white border border-surface-700 focus:border-primary-500 focus:outline-none transition-colors"
+          className={`px-3 ${TOOLBAR_CONTROL_CLASS} text-white focus:border-primary-500 focus:outline-none`}
         >
           <option value="">{t('dashboard.allLanguages')}</option>
           {availableLanguages.map((lang) => (
@@ -59,7 +61,7 @@ export function DashboardToolbar({
       )}
       <button
         onClick={onSortToggle}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-800 text-sm text-gray-300 border border-surface-700 hover:text-white transition-colors"
+        className={`flex items-center gap-1.5 px-3 ${TOOLBAR_CONTROL_CLASS} text-gray-300 hover:text-white`}
       >
         <SortIcon className="w-3.5 h-3.5" />
         {t(sortOrder === 'newest' ? 'dashboard.sortNewest' : 'dashboard.sortOldest')}
