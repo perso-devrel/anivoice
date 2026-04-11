@@ -23,7 +23,7 @@ import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { formatMs } from '../utils/format';
 import { getDownloadUrl, computeDubbingProgress, buildShareUrl } from '../utils/studio';
-import { FileIcon, PlayIcon, DownloadIcon, CheckIcon, SpinnerIcon, AlertCircleIcon } from '../components/icons';
+import { FileIcon, PlayIcon, DownloadIcon, CheckIcon, SpinnerIcon, AlertCircleIcon, LinkIcon } from '../components/icons';
 
 type Step = 'upload' | 'settings' | 'result';
 
@@ -730,9 +730,7 @@ export default function StudioPage() {
                 onClick={handleCopyShareLink}
                 className="w-full glass rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 text-sm text-surface-200/80 hover:text-white hover:border-primary-500/40 transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-2.514a4.5 4.5 0 00-1.242-7.244l-4.5-4.5a4.5 4.5 0 00-6.364 6.364L4.34 8.374" />
-                </svg>
+                <LinkIcon />
                 {linkCopied ? t('studio.linkCopied') : t('studio.copyShareLink')}
               </button>
             </div>
