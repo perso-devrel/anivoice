@@ -53,6 +53,16 @@ const WAVEFORM_HEIGHT_MULTIPLIER = 3;
 /*  Sub-components                                                    */
 /* ------------------------------------------------------------------ */
 
+function WaveformBars({ data, colorClass }: { data: number[]; colorClass: string }) {
+  return (
+    <div className="absolute bottom-3 left-3 flex items-end gap-0.5">
+      {data.map((h, i) => (
+        <div key={i} className={`w-1 ${colorClass} rounded-full`} style={{ height: `${h * WAVEFORM_HEIGHT_MULTIPLIER}px` }} />
+      ))}
+    </div>
+  );
+}
+
 function FeatureCard({
   icon,
   title,
@@ -242,12 +252,7 @@ export default function LandingPage() {
                   <span className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-xs text-gray-300 px-3 py-1 rounded-full">
                     {t('landing.videoOriginalLang')}
                   </span>
-                  {/* Waveform decoration */}
-                  <div className="absolute bottom-3 left-3 flex items-end gap-0.5">
-                    {WAVEFORM_ORIGINAL.map((h, i) => (
-                      <div key={i} className="w-1 bg-primary-400/60 rounded-full" style={{ height: `${h * WAVEFORM_HEIGHT_MULTIPLIER}px` }} />
-                    ))}
-                  </div>
+                  <WaveformBars data={WAVEFORM_ORIGINAL} colorClass="bg-primary-400/60" />
                 </div>
                 {/* Dubbed */}
                 <div className="relative rounded-xl overflow-hidden bg-surface-900 aspect-video flex items-center justify-center group cursor-pointer">
@@ -259,11 +264,7 @@ export default function LandingPage() {
                   <span className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-xs text-gray-300 px-3 py-1 rounded-full">
                     {t('landing.videoDubbedLang')}
                   </span>
-                  <div className="absolute bottom-3 left-3 flex items-end gap-0.5">
-                    {WAVEFORM_DUBBED.map((h, i) => (
-                      <div key={i} className="w-1 bg-accent-400/60 rounded-full" style={{ height: `${h * WAVEFORM_HEIGHT_MULTIPLIER}px` }} />
-                    ))}
-                  </div>
+                  <WaveformBars data={WAVEFORM_DUBBED} colorClass="bg-accent-400/60" />
                 </div>
               </div>
             </div>
