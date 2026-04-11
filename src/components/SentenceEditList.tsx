@@ -4,6 +4,7 @@ import { SpinnerIcon } from './icons';
 import type { PersoScriptSentence } from '../types';
 
 const SPEAKER_COLORS = ['#f472b6', '#a78bfa', '#38bdf8', '#34d399', '#fbbf24', '#fb923c'];
+const MATCHING_RATE_GOOD_THRESHOLD = 3;
 
 interface Props {
   sentences: PersoScriptSentence[];
@@ -35,7 +36,7 @@ export function SentenceEditList({ sentences, editingValues, savingSentence, onE
                 <span className="ml-auto">{formatMs(s.offsetMs)} - {formatMs(s.offsetMs + s.durationMs)}</span>
                 {s.matchingRate && (
                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
-                    s.matchingRate.level >= 3 ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
+                    s.matchingRate.level >= MATCHING_RATE_GOOD_THRESHOLD ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
                   }`}>
                     {s.matchingRate.levelType}
                   </span>
