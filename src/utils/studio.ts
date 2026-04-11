@@ -30,3 +30,7 @@ export function buildShareUrl(origin: string, dbProjectId: number | null): strin
     ? `${origin}/library/${dbProjectId}`
     : `${origin}/library`;
 }
+
+export function toggleArrayItem<T>(arr: T[], item: T): T[] {
+  return arr.includes(item) ? arr.filter((v) => v !== item) : [...arr, item];
+}

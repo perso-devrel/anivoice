@@ -22,7 +22,7 @@ import { useAuthStore } from '../stores/authStore';
 import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { getErrorMessage } from '../utils/format';
-import { getDownloadUrl, computeDubbingProgress, buildShareUrl } from '../utils/studio';
+import { getDownloadUrl, computeDubbingProgress, buildShareUrl, toggleArrayItem } from '../utils/studio';
 import { StepIndicator, type Step } from '../components/StepIndicator';
 import { SettingsStep } from '../components/SettingsStep';
 import { UploadStep } from '../components/UploadStep';
@@ -371,9 +371,7 @@ export default function StudioPage() {
   }
 
   function handleTargetLanguageToggle(lang: string) {
-    setTargetLanguages((prev) =>
-      prev.includes(lang) ? prev.filter((l) => l !== lang) : [...prev, lang]
-    );
+    setTargetLanguages((prev) => toggleArrayItem(prev, lang));
   }
 
   function handleFileReset() {
@@ -443,11 +441,7 @@ export default function StudioPage() {
             onGoBack={() => { setError(null); setStep('settings'); }}
             onDownload={handleDownload}
             onRequestLipSync={handleRequestLipSync}
-            onTagToggle={(tagId) =>
-              setSelectedTags((prev) =>
-                prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
-              )
-            }
+            onTagToggle={(tagId) => setSelectedTags((prev) => toggleArrayItem(prev, tagId))}
             onPublish={handlePublish}
             onCopyShareLink={handleCopyShareLink}
             onEditChange={(seq, value) => setEditingValues((prev) => ({ ...prev, [seq]: value }))}

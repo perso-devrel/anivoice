@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getDownloadUrl, computeDubbingProgress, buildShareUrl } from './studio';
+import { getDownloadUrl, computeDubbingProgress, buildShareUrl, toggleArrayItem } from './studio';
 import type { PersoDownloadLinks } from '../types';
 
 describe('getDownloadUrl', () => {
@@ -87,5 +87,30 @@ describe('buildShareUrl', () => {
 
   it('builds generic library URL when id is null', () => {
     expect(buildShareUrl('https://example.com', null)).toBe('https://example.com/library');
+  });
+});
+
+describe('toggleArrayItem', () => {
+  it('adds item when not present', () => {
+    expect(toggleArrayItem([1, 2], 3)).toEqual([1, 2, 3]);
+  });
+
+  it('removes item when already present', () => {
+    expect(toggleArrayItem([1, 2, 3], 2)).toEqual([1, 3]);
+  });
+
+  it('works with strings', () => {
+    expect(toggleArrayItem(['en', 'ko'], 'ja')).toEqual(['en', 'ko', 'ja']);
+    expect(toggleArrayItem(['en', 'ko'], 'en')).toEqual(['ko']);
+  });
+
+  it('returns empty array when toggling only item off', () => {
+    expect(toggleArrayItem(['a'], 'a')).toEqual([]);
+  });
+
+  it('does not mutate original array', () => {
+    const original = [1, 2, 3];
+    toggleArrayItem(original, 2);
+    expect(original).toEqual([1, 2, 3]);
   });
 });
