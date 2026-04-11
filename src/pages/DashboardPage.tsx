@@ -10,7 +10,8 @@ const UsageChart = lazy(() => import('../components/UsageChart'));
 import { useAuthStore } from '../stores/authStore';
 import OnboardingModal from '../components/OnboardingModal';
 import { shouldShowOnboarding } from '../utils/onboarding';
-import { mapDbStatus, formatDuration, getProgressBarColor, filterProjects, sortProjects, extractAvailableLanguages, type FilterTab, type SortOrder } from '../utils/dashboard';
+import { mapDbStatus, getProgressBarColor, filterProjects, sortProjects, extractAvailableLanguages, type FilterTab, type SortOrder } from '../utils/dashboard';
+import { formatDuration } from '../utils/format';
 
 const STATUS_CONFIG: Record<
   string,

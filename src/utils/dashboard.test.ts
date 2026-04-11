@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
   mapDbStatus,
-  formatDuration,
   getProgressBarColor,
   filterProjects,
   sortProjects,
@@ -78,28 +77,6 @@ describe('mapDbStatus', () => {
   it('defaults to analyzing for unknown status and zero progress', () => {
     expect(mapDbStatus(makeProject({ status: 'unknown', progress: 0 }))).toBe('analyzing');
     expect(mapDbStatus(makeProject({}))).toBe('analyzing');
-  });
-});
-
-describe('formatDuration', () => {
-  it('formats zero', () => {
-    expect(formatDuration(0)).toBe('0:00');
-  });
-
-  it('formats seconds only', () => {
-    expect(formatDuration(5000)).toBe('0:05');
-    expect(formatDuration(59000)).toBe('0:59');
-  });
-
-  it('formats minutes and seconds', () => {
-    expect(formatDuration(60000)).toBe('1:00');
-    expect(formatDuration(90000)).toBe('1:30');
-    expect(formatDuration(3661000)).toBe('61:01');
-  });
-
-  it('floors partial seconds', () => {
-    expect(formatDuration(1500)).toBe('0:01');
-    expect(formatDuration(999)).toBe('0:00');
   });
 });
 
