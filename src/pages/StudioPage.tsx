@@ -23,11 +23,12 @@ import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { getErrorMessage } from '../utils/format';
 import { getDownloadUrl, computeDubbingProgress, buildShareUrl } from '../utils/studio';
-import { FileIcon, PlayIcon, DownloadIcon, AlertCircleIcon, LoadingSpinner } from '../components/icons';
+import { PlayIcon, DownloadIcon, AlertCircleIcon, LoadingSpinner } from '../components/icons';
 import { SentenceEditList } from '../components/SentenceEditList';
 import { StepIndicator, type Step } from '../components/StepIndicator';
 import { PublishSection } from '../components/PublishSection';
 import { SettingsStep } from '../components/SettingsStep';
+import { UploadStep } from '../components/UploadStep';
 
 const STAGE_ORDER = ['uploading', 'dubbing', 'lip-syncing', 'done'] as const;
 
@@ -47,7 +48,6 @@ export default function StudioPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [sourceLanguage, setSourceLanguage] = useState('auto');
   const [targetLanguages, setTargetLanguages] = useState<string[]>([]);
-  const [isDragOver, setIsDragOver] = useState(false);
   const [withLipSync, setWithLipSync] = useState(false);
 
   // Processing
@@ -75,8 +75,6 @@ export default function StudioPage() {
   const [isPublishing, setIsPublishing] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
   const { copied: linkCopied, copy: copyToClipboard } = useClipboard();
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Store uploaded file info for use after polling
   const uploadedFileRef = useRef<{ seq: number; durationMs: number } | null>(null);
@@ -161,17 +159,10 @@ export default function StudioPage() {
 
   /* ── handlers ── */
 
-  function handleFileChange(file: File | null) {
-    if (!file) return;
+  function handleFileChange(file: File) {
     setSelectedFile(file);
     setError(null);
     setStep('settings');
-  }
-
-  function handleDrop(e: React.DragEvent) {
-    e.preventDefault();
-    setIsDragOver(false);
-    handleFileChange(e.dataTransfer.files?.[0] ?? null);
   }
 
   const handleStartDubbing = useCallback(async () => {
@@ -382,46 +373,6 @@ export default function StudioPage() {
     } catch {
       setError(t('studio.clipboardError'));
     }
-  }
-
-  /* ── step: upload ── */
-
-  function UploadStep() {
-    return (
-      <div className="max-w-2xl mx-auto space-y-6">
-        <div className="text-center mb-2">
-          <h2 className="text-2xl font-bold gradient-text mb-2">{t('studio.uploadTitle')}</h2>
-          <p className="text-surface-200/60 text-sm">{t('studio.uploadDesc')}</p>
-        </div>
-
-        <div
-          onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
-          onDragLeave={() => setIsDragOver(false)}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-          className={`glass rounded-2xl border-2 border-dashed cursor-pointer transition-all flex flex-col items-center justify-center py-16 gap-4 ${
-            isDragOver
-              ? 'border-primary-400 bg-primary-500/10'
-              : 'border-surface-700 hover:border-primary-500/50'
-          }`}
-        >
-          <FileIcon className="w-12 h-12 text-surface-200/40" />
-          <p className="text-surface-200/70 text-center">{t('studio.dragDrop')}</p>
-          <button type="button" className="gradient-bg px-5 py-2 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity">
-            {t('studio.orBrowse')}
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="video/*"
-            className="hidden"
-            onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
-          />
-        </div>
-
-        <p className="text-center text-xs text-surface-200/40">{t('studio.supportedFormats')}</p>
-      </div>
-    );
   }
 
   function handleSourceLanguageChange(nextSourceLanguage: string) {
@@ -636,7 +587,7 @@ export default function StudioPage() {
     <main className="min-h-screen bg-surface-950 text-white">
       <div className="max-w-4xl mx-auto px-4 py-10 sm:py-16">
         <StepIndicator currentStep={step} labels={stepLabels} />
-        {step === 'upload' && UploadStep()}
+        {step === 'upload' && <UploadStep onFileChange={handleFileChange} />}
         {step === 'settings' && (
           <SettingsStep
             selectedFile={selectedFile}
