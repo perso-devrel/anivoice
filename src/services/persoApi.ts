@@ -10,6 +10,19 @@ import type {
 const BASE = (import.meta.env.VITE_PERSO_PROXY_PATH || '/api/perso').replace(/\/+$/, '');
 const PERSO_FILE_BASE_URL = 'https://perso.ai';
 
+const UPLOAD_RETRY_BASE_DELAY_MS = 2000;
+const DEFAULT_POLL_INTERVAL_MS = 5000;
+const LONG_ETA_POLL_INTERVAL_MS = 10000;
+const MEDIUM_ETA_POLL_INTERVAL_MS = 7000;
+const LONG_ETA_THRESHOLD_MINUTES = 3;
+const MEDIUM_ETA_THRESHOLD_MINUTES = 1;
+const MAX_CONSECUTIVE_POLL_ERRORS = 30;
+const COMPLETION_PROGRESS = 100;
+const ERROR_SNIPPET_LENGTH = 500;
+const SAS_ERROR_SNIPPET_LENGTH = 200;
+const SCRIPT_FETCH_SIZE = 10000;
+const DEFAULT_PROJECT_LIST_SIZE = 20;
+
 const api = axios.create({
   baseURL: BASE,
   headers: { 'Content-Type': 'application/json' },
@@ -169,7 +182,7 @@ export async function getSasToken(fileName: string) {
     });
     const payload = (data?.result ?? data) as { blobSasUrl: string; expirationDatetime: string };
     if (!payload?.blobSasUrl) {
-      throw new Error(`Failed to get SAS token: blobSasUrl missing in response. Response: ${JSON.stringify(data).slice(0, 200)}`);
+      throw new Error(`Failed to get SAS token: blobSasUrl missing in response. Response: ${JSON.stringify(data).slice(0, SAS_ERROR_SNIPPET_LENGTH)}`);
     }
     return payload;
   });
@@ -185,7 +198,7 @@ export async function uploadToAzure(blobSasUrl: string, file: File) {
         },
       }),
     3,
-    2000,
+    UPLOAD_RETRY_BASE_DELAY_MS,
   );
 }
 
@@ -272,7 +285,7 @@ export async function requestTranslation(
     const ids = extractProjectIds(data);
     if (ids.length === 0) {
       throw new Error(
-        `Perso translate API did not return project IDs. Response: ${JSON.stringify(data).slice(0, 500)}`
+        `Perso translate API did not return project IDs. Response: ${JSON.stringify(data).slice(0, ERROR_SNIPPET_LENGTH)}`
       );
     }
     return ids;
@@ -362,12 +375,12 @@ export async function pollProgress(
   projectSeq: number,
   spaceSeq: number,
   onProgress: (p: PersoProgress) => void,
-  intervalMs = 5000
+  intervalMs = DEFAULT_POLL_INTERVAL_MS
 ): Promise<PersoProgress> {
   // Tolerate transient network errors up to MAX_CONSECUTIVE_ERRORS before aborting.
   // Observed: 25 consecutive fetch failures over 5 min during dubbing, followed by
   // full recovery and successful completion.
-  const MAX_CONSECUTIVE_ERRORS = 30;
+  const MAX_CONSECUTIVE_ERRORS = MAX_CONSECUTIVE_POLL_ERRORS;
 
   return new Promise((resolve, reject) => {
     let consecutiveErrors = 0;
@@ -380,7 +393,7 @@ export async function pollProgress(
 
         const reason = (progress.progressReason || '').toUpperCase();
 
-        if (reason === 'COMPLETED' || progress.progress >= 100) {
+        if (reason === 'COMPLETED' || progress.progress >= COMPLETION_PROGRESS) {
           resolve(progress);
           return;
         }
@@ -395,7 +408,7 @@ export async function pollProgress(
 
         // Adapt interval: poll less often when ETA is long
         const eta = progress.expectedRemainingTimeMinutes ?? 0;
-        const nextInterval = eta > 3 ? 10000 : eta > 1 ? 7000 : intervalMs;
+        const nextInterval = eta > LONG_ETA_THRESHOLD_MINUTES ? LONG_ETA_POLL_INTERVAL_MS : eta > MEDIUM_ETA_THRESHOLD_MINUTES ? MEDIUM_ETA_POLL_INTERVAL_MS : intervalMs;
         setTimeout(poll, nextInterval);
       } catch (error) {
         consecutiveErrors += 1;
@@ -435,7 +448,7 @@ export async function getScript(
   return retryWithBackoff(async () => {
     const { data } = await api.get(
       `/video-translator/api/v1/projects/${projectSeq}/spaces/${spaceSeq}/script`,
-      { params: { size: 10000 } }
+      { params: { size: SCRIPT_FETCH_SIZE } }
     );
     return unwrapResult(data);
   });
@@ -486,7 +499,7 @@ export async function requestLipSync(projectSeq: number, spaceSeq: number) {
     const ids = extractProjectIds(data);
     if (ids.length === 0) {
       throw new Error(
-        `Perso lip-sync API did not return project IDs. Response: ${JSON.stringify(data).slice(0, 500)}`
+        `Perso lip-sync API did not return project IDs. Response: ${JSON.stringify(data).slice(0, ERROR_SNIPPET_LENGTH)}`
       );
     }
     return ids;
@@ -574,7 +587,7 @@ export async function listProjects(
     {
       params: {
         memberRole: params.memberRole || 'space_owner',
-        size: params.size || 20,
+        size: params.size || DEFAULT_PROJECT_LIST_SIZE,
         offset: params.offset || 0,
         sortType: params.sortType || 'update_date',
         sortDirection: params.sortDirection || 'desc',
