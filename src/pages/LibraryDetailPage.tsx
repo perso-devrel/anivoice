@@ -8,6 +8,9 @@ import { formatCreditTimeMs } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
 import { DownloadIcon, LinkIcon, ChevronLeftIcon, LoadingSpinner } from '../components/icons';
 
+const SECONDARY_BUTTON_CLASS =
+  'inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-700 text-white text-sm font-medium hover:bg-surface-600 transition-colors';
+
 export default function LibraryDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
@@ -150,7 +153,7 @@ export default function LibraryDetailPage() {
                 href={audioSrc}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-700 text-white text-sm font-medium hover:bg-surface-600 transition-colors"
+                className={SECONDARY_BUTTON_CLASS}
               >
                 <DownloadIcon className="w-4 h-4" />
                 {t('library.downloadAudio')}
@@ -161,7 +164,7 @@ export default function LibraryDetailPage() {
                 href={subtitleSrc}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-700 text-white text-sm font-medium hover:bg-surface-600 transition-colors"
+                className={SECONDARY_BUTTON_CLASS}
               >
                 <DownloadIcon className="w-4 h-4" />
                 {t('library.downloadSubtitle')}
@@ -169,7 +172,7 @@ export default function LibraryDetailPage() {
             )}
             <button
               onClick={handleCopyLink}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-700 text-white text-sm font-medium hover:bg-surface-600 transition-colors"
+              className={SECONDARY_BUTTON_CLASS}
             >
               <LinkIcon />
               {linkCopied ? t('library.linkCopied') : t('library.copyLink')}
