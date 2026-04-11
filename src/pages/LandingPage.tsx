@@ -65,6 +65,34 @@ function WaveformBars({ data, colorClass }: { data: number[]; colorClass: string
   );
 }
 
+function VideoPreviewBox({
+  badgeLabel,
+  badgeClass,
+  langLabel,
+  waveformData,
+  waveformColor,
+}: {
+  badgeLabel: string;
+  badgeClass: string;
+  langLabel: string;
+  waveformData: number[];
+  waveformColor: string;
+}) {
+  return (
+    <div className="relative rounded-xl overflow-hidden bg-surface-900 aspect-video flex items-center justify-center group cursor-pointer">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+      <PlayIcon className="w-12 h-12 text-white/80" />
+      <span className={`absolute top-3 left-3 ${badgeClass} text-xs text-white px-3 py-1 rounded-full font-medium`}>
+        {badgeLabel}
+      </span>
+      <span className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-xs text-gray-300 px-3 py-1 rounded-full">
+        {langLabel}
+      </span>
+      <WaveformBars data={waveformData} colorClass={waveformColor} />
+    </div>
+  );
+}
+
 function FeatureCard({
   icon,
   title,
@@ -244,30 +272,20 @@ export default function LandingPage() {
           <div className="max-w-4xl mx-auto animate-float">
             <div className="glass rounded-2xl p-4 md:p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Original */}
-                <div className="relative rounded-xl overflow-hidden bg-surface-900 aspect-video flex items-center justify-center group cursor-pointer">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <PlayIcon className="w-12 h-12 text-white/80" />
-                  <span className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-xs text-white px-3 py-1 rounded-full font-medium">
-                    {t('landing.videoOriginal')}
-                  </span>
-                  <span className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-xs text-gray-300 px-3 py-1 rounded-full">
-                    {t('landing.videoOriginalLang')}
-                  </span>
-                  <WaveformBars data={WAVEFORM_ORIGINAL} colorClass="bg-primary-400/60" />
-                </div>
-                {/* Dubbed */}
-                <div className="relative rounded-xl overflow-hidden bg-surface-900 aspect-video flex items-center justify-center group cursor-pointer">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <PlayIcon className="w-12 h-12 text-white/80" />
-                  <span className="absolute top-3 left-3 gradient-bg text-xs text-white px-3 py-1 rounded-full font-medium">
-                    {t('landing.videoDubbed')}
-                  </span>
-                  <span className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-xs text-gray-300 px-3 py-1 rounded-full">
-                    {t('landing.videoDubbedLang')}
-                  </span>
-                  <WaveformBars data={WAVEFORM_DUBBED} colorClass="bg-accent-400/60" />
-                </div>
+                <VideoPreviewBox
+                  badgeLabel={t('landing.videoOriginal')}
+                  badgeClass="bg-black/60 backdrop-blur-sm"
+                  langLabel={t('landing.videoOriginalLang')}
+                  waveformData={WAVEFORM_ORIGINAL}
+                  waveformColor="bg-primary-400/60"
+                />
+                <VideoPreviewBox
+                  badgeLabel={t('landing.videoDubbed')}
+                  badgeClass="gradient-bg"
+                  langLabel={t('landing.videoDubbedLang')}
+                  waveformData={WAVEFORM_DUBBED}
+                  waveformColor="bg-accent-400/60"
+                />
               </div>
             </div>
           </div>
