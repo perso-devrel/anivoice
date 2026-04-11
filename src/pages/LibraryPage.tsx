@@ -59,7 +59,7 @@ export default function LibraryPage() {
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to load library');
+          setError(err instanceof Error ? err.message : t('library.loadError'));
         }
       } finally {
         if (!cancelled) setLoading(false);
