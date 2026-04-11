@@ -47,7 +47,7 @@ async function getFirebaseIdToken(): Promise<string | null> {
 
 // ── User ──
 
-export interface DbUser {
+interface DbUser {
   id: string;
   email: string;
   displayName: string;

@@ -7,7 +7,7 @@ export function formatMs(ms: number): string {
 
 interface TimeLabels { hours: string; minutes: string; seconds: string }
 
-export function formatSeconds(seconds: number, labels: TimeLabels): string {
+function formatSeconds(seconds: number, labels: TimeLabels): string {
   if (seconds >= 3600) {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);

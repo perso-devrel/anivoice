@@ -253,7 +253,7 @@ export async function getExternalMetadata(
   return data;
 }
 
-export interface TranslateRequest {
+interface TranslateRequest {
   mediaSeq: number;
   isVideoProject: boolean;
   sourceLanguageCode?: string;
