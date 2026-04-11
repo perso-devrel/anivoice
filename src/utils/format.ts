@@ -26,6 +26,10 @@ export function formatCreditTime(seconds: number, t: (key: string) => string): s
   });
 }
 
+export function formatCreditTimeMs(ms: number, t: (key: string) => string): string {
+  return formatCreditTime(Math.floor(ms / 1000), t);
+}
+
 export function formatChartDay(day: string): string {
   return day.slice(5);
 }

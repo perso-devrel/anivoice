@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatMs, formatDuration, formatSeconds, formatCreditTime, formatChartDay, getErrorMessage } from './format';
+import { formatMs, formatDuration, formatSeconds, formatCreditTime, formatCreditTimeMs, formatChartDay, getErrorMessage } from './format';
 
 describe('formatMs', () => {
   it('formats zero', () => {
@@ -145,6 +145,25 @@ describe('formatCreditTime', () => {
 
   it('handles zero', () => {
     expect(formatCreditTime(0, tEn)).toBe('0sec');
+  });
+});
+
+describe('formatCreditTimeMs', () => {
+  const tEn = (key: string): string => {
+    const map: Record<string, string> = { 'common.hours': 'hr', 'common.minutes': 'min', 'common.seconds': 'sec' };
+    return map[key] ?? key;
+  };
+
+  it('converts ms to seconds and formats', () => {
+    expect(formatCreditTimeMs(90000, tEn)).toBe('1min 30sec');
+  });
+
+  it('floors partial seconds', () => {
+    expect(formatCreditTimeMs(1999, tEn)).toBe('1sec');
+  });
+
+  it('handles zero', () => {
+    expect(formatCreditTimeMs(0, tEn)).toBe('0sec');
   });
 });
 
