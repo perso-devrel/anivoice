@@ -250,6 +250,7 @@ export default {
     checkout: '결제',
     cardNumber: '카드 번호',
     expiry: '만료일',
+    cvc: 'CVC',
     processing: '처리 중...',
     pay: '결제하기',
     planChanged: '플랜이 변경되었습니다!',
