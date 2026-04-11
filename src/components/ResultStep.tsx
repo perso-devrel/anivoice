@@ -14,6 +14,24 @@ const PROGRESS_STAGE_I18N = [
   { key: 'lip-syncing', i18nKey: 'studio.progressLipSync' },
 ] as const;
 
+const DOWNLOAD_BUTTONS = [
+  { i18nKey: 'studio.downloadVideo', type: 'video' },
+  { i18nKey: 'studio.downloadSubtitle', type: 'subtitle' },
+  { i18nKey: 'studio.downloadAudio', type: 'audio' },
+  { i18nKey: 'studio.downloadZip', type: 'zip' },
+] as const;
+
+function isDownloadAvailable(type: string, links: PersoDownloadLinks | null): boolean {
+  if (!links) return false;
+  switch (type) {
+    case 'video': return !!links.videoFile?.videoDownloadLink;
+    case 'subtitle': return !!(links.srtFile?.translatedSubtitleDownloadLink || links.srtFile?.originalSubtitleDownloadLink);
+    case 'audio': return !!(links.audioFile?.voiceWithBackgroundAudioDownloadLink || links.audioFile?.voiceAudioDownloadLink);
+    case 'zip': return !!links.zippedFileDownloadLink;
+    default: return false;
+  }
+}
+
 interface ResultStepProps {
   loadingProject: boolean;
   isProcessing: boolean;
@@ -175,21 +193,16 @@ export function ResultStep({
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {([
-          { label: t('studio.downloadVideo'), type: 'video' as const, available: !!downloadLinks?.videoFile?.videoDownloadLink },
-          { label: t('studio.downloadSubtitle'), type: 'subtitle' as const, available: !!(downloadLinks?.srtFile?.translatedSubtitleDownloadLink || downloadLinks?.srtFile?.originalSubtitleDownloadLink) },
-          { label: t('studio.downloadAudio'), type: 'audio' as const, available: !!(downloadLinks?.audioFile?.voiceWithBackgroundAudioDownloadLink || downloadLinks?.audioFile?.voiceAudioDownloadLink) },
-          { label: t('studio.downloadZip'), type: 'zip' as const, available: !!downloadLinks?.zippedFileDownloadLink },
-        ]).map(({ label, type, available }) => (
+        {DOWNLOAD_BUTTONS.map(({ i18nKey, type }) => (
           <button
             key={type}
             type="button"
             onClick={() => onDownload(type)}
-            disabled={!available}
+            disabled={!isDownloadAvailable(type, downloadLinks)}
             className="glass rounded-xl px-4 py-3 flex items-center justify-center gap-2 text-sm text-surface-200/80 hover:text-white hover:border-primary-500/40 transition-colors disabled:opacity-30"
           >
             <DownloadIcon className="w-4 h-4" />
-            {label}
+            {t(i18nKey)}
           </button>
         ))}
       </div>
