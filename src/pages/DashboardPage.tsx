@@ -21,6 +21,14 @@ const DASHBOARD_TABS: { key: FilterTab; i18nKey: string }[] = [
   { key: 'completed', i18nKey: 'dashboard.completed' },
 ];
 
+function StatePanel({ padding = 'p-16', children }: { padding?: string; children: React.ReactNode }) {
+  return (
+    <div className={`glass rounded-2xl ${padding} flex flex-col items-center justify-center text-center`}>
+      {children}
+    </div>
+  );
+}
+
 function StatCard({ icon, iconBg, label, value }: {
   icon: React.ReactNode;
   iconBg: string;
@@ -206,15 +214,15 @@ export default function DashboardPage() {
 
         {/* Loading State */}
         {loading && (
-          <div className="glass rounded-2xl p-16 flex flex-col items-center justify-center text-center">
+          <StatePanel>
             <LoadingSpinner className="w-10 h-10 border-primary-400 mb-4" />
             <p className="text-gray-400 text-base">{t('common.loading')}</p>
-          </div>
+          </StatePanel>
         )}
 
         {/* Error State */}
         {!loading && error && (
-          <div className="glass rounded-2xl p-16 flex flex-col items-center justify-center text-center">
+          <StatePanel>
             <div className="w-12 h-12 mb-4 rounded-full bg-red-500/15 flex items-center justify-center">
               <AlertCircleIcon className="w-6 h-6 text-red-400" />
             </div>
@@ -226,12 +234,12 @@ export default function DashboardPage() {
             >
               {t('common.retry')}
             </button>
-          </div>
+          </StatePanel>
         )}
 
         {/* Projects Grid / Empty State */}
         {!loading && !error && filteredProjects.length === 0 && projects.length === 0 && (
-          <div className="glass rounded-2xl p-12 sm:p-16 flex flex-col items-center justify-center text-center">
+          <StatePanel padding="p-12 sm:p-16">
             <div className="w-32 h-32 mb-8 relative">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-500/20 to-accent-500/20 blur-xl" />
               <div className="relative w-full h-full rounded-2xl bg-surface-800/80 flex items-center justify-center">
@@ -251,12 +259,12 @@ export default function DashboardPage() {
               <PlusIcon className="w-4 h-4" />
               {t('dashboard.newProject')}
             </Link>
-          </div>
+          </StatePanel>
         )}
 
         {/* Filter/Search — no results */}
         {!loading && !error && filteredProjects.length === 0 && projects.length > 0 && (
-          <div className="glass rounded-2xl p-12 flex flex-col items-center justify-center text-center">
+          <StatePanel padding="p-12">
             <div className="w-20 h-20 mb-6 rounded-2xl bg-surface-800/80 flex items-center justify-center">
               <SearchIcon className="w-10 h-10 text-gray-500" />
             </div>
@@ -272,7 +280,7 @@ export default function DashboardPage() {
             >
               {t('dashboard.clearFilters')}
             </button>
-          </div>
+          </StatePanel>
         )}
 
         {!loading && !error && filteredProjects.length > 0 && (
