@@ -23,13 +23,11 @@ import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { getErrorMessage } from '../utils/format';
 import { getDownloadUrl, computeDubbingProgress, buildShareUrl } from '../utils/studio';
-import { FileIcon, PlayIcon, DownloadIcon, CheckIcon, AlertCircleIcon, LoadingSpinner } from '../components/icons';
+import { FileIcon, PlayIcon, DownloadIcon, AlertCircleIcon, LoadingSpinner } from '../components/icons';
 import { SentenceEditList } from '../components/SentenceEditList';
 import { StepIndicator, type Step } from '../components/StepIndicator';
 import { PublishSection } from '../components/PublishSection';
-import { LANGUAGE_KEYS } from '../constants';
-
-const STUDIO_LANGUAGES = ['auto', ...LANGUAGE_KEYS] as const;
+import { SettingsStep } from '../components/SettingsStep';
 
 const STAGE_ORDER = ['uploading', 'dubbing', 'lip-syncing', 'done'] as const;
 
@@ -426,124 +424,20 @@ export default function StudioPage() {
     );
   }
 
-  /* ── step: settings ── */
+  function handleSourceLanguageChange(nextSourceLanguage: string) {
+    setSourceLanguage(nextSourceLanguage);
+    setTargetLanguages((prev) => prev.filter((l) => l !== nextSourceLanguage));
+  }
 
-  function SettingsStep() {
-    return (
-      <div className="max-w-2xl mx-auto space-y-6">
-        <div className="text-center mb-2">
-          <h2 className="text-2xl font-bold gradient-text mb-2">{t('studio.selectLanguage')}</h2>
-        </div>
-
-        {selectedFile && (
-          <div className="glass rounded-xl px-4 py-3 flex items-center gap-3 text-sm text-surface-200/80">
-            <FileIcon className="w-5 h-5 shrink-0" />
-            <span className="truncate">{selectedFile.name}</span>
-            <button
-              type="button"
-              onClick={() => { setSelectedFile(null); setStep('upload'); }}
-              className="ml-auto text-xs text-surface-200/40 hover:text-red-400 transition-colors"
-            >
-              {t('common.cancel')}
-            </button>
-          </div>
-        )}
-
-        {/* source language */}
-        <div className="glass rounded-2xl p-5 space-y-3">
-          <label className="block text-sm font-medium text-surface-200/80">
-            {t('studio.sourceLanguage')}
-          </label>
-          <select
-            value={sourceLanguage}
-            onChange={(e) => {
-              const nextSourceLanguage = e.target.value;
-              setSourceLanguage(nextSourceLanguage);
-              setTargetLanguages((prev) => prev.filter((l) => l !== nextSourceLanguage));
-            }}
-            aria-label={t('studio.sourceLanguage')}
-            className="w-full bg-surface-900 border border-surface-700 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary-500 transition-colors appearance-none"
-          >
-            {STUDIO_LANGUAGES.map((lang) => (
-              <option key={lang} value={lang}>
-                {lang === 'auto' ? t('studio.autoDetect') : t(`languages.${lang}`)}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* target languages (multi select) */}
-        <div className="glass rounded-2xl p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <label className="block text-sm font-medium text-surface-200/80">
-              {t('studio.targetLanguage')}
-              <span className="ml-1 text-red-400" aria-hidden="true">*</span>
-            </label>
-            {targetLanguages.length === 0 ? (
-              <span className="text-xs text-yellow-400/90">{t('studio.selectTargetLanguage')}</span>
-            ) : (
-              <span className="text-xs text-primary-400">{t('studio.languagesSelected', { count: targetLanguages.length })}</span>
-            )}
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {STUDIO_LANGUAGES.filter((l) => l !== 'auto' && l !== sourceLanguage).map((lang) => {
-              const checked = targetLanguages.includes(lang);
-              return (
-                <label
-                  key={lang}
-                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg cursor-pointer border transition-all text-sm ${
-                    checked
-                      ? 'border-primary-500 bg-primary-500/10 text-white'
-                      : 'border-surface-700 bg-surface-900/50 text-surface-200/60 hover:border-surface-200/30'
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={() => setTargetLanguages((prev) =>
-                      checked ? prev.filter((l) => l !== lang) : [...prev, lang]
-                    )}
-                    className="hidden"
-                  />
-                  <span className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${checked ? 'border-primary-500 bg-primary-500' : 'border-surface-700'}`}>
-                    {checked && <CheckIcon className="w-3 h-3 text-white" />}
-                  </span>
-                  {t(`languages.${lang}`)}
-                </label>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* lip sync toggle */}
-        <div className="glass rounded-2xl p-5">
-          <label className="flex items-center gap-3 cursor-pointer">
-            <button
-              type="button"
-              onClick={() => setWithLipSync(!withLipSync)}
-              className={`w-11 h-6 rounded-full transition-colors relative ${withLipSync ? 'bg-primary-500' : 'bg-surface-700'}`}
-            >
-              <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${withLipSync ? 'left-5.5 translate-x-0' : 'left-0.5'}`} />
-            </button>
-            <div>
-              <span className="text-sm font-medium text-surface-200/80">{t('studio.progressLipSync')}</span>
-              <p className="text-xs text-surface-200/40 mt-0.5">{t('studio.lipSyncProRequired')}</p>
-            </div>
-          </label>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleStartDubbing}
-          disabled={targetLanguages.length === 0}
-          aria-disabled={targetLanguages.length === 0}
-          title={targetLanguages.length === 0 ? t('studio.selectTargetLanguage') : undefined}
-          className="w-full gradient-bg py-3 rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          {targetLanguages.length > 0 ? t('studio.startDubbing') : t('studio.selectTargetLanguage')}
-        </button>
-      </div>
+  function handleTargetLanguageToggle(lang: string) {
+    setTargetLanguages((prev) =>
+      prev.includes(lang) ? prev.filter((l) => l !== lang) : [...prev, lang]
     );
+  }
+
+  function handleFileReset() {
+    setSelectedFile(null);
+    setStep('upload');
   }
 
   /* ── step: result ── */
@@ -743,7 +637,19 @@ export default function StudioPage() {
       <div className="max-w-4xl mx-auto px-4 py-10 sm:py-16">
         <StepIndicator currentStep={step} labels={stepLabels} />
         {step === 'upload' && UploadStep()}
-        {step === 'settings' && SettingsStep()}
+        {step === 'settings' && (
+          <SettingsStep
+            selectedFile={selectedFile}
+            sourceLanguage={sourceLanguage}
+            targetLanguages={targetLanguages}
+            withLipSync={withLipSync}
+            onFileReset={handleFileReset}
+            onSourceLanguageChange={handleSourceLanguageChange}
+            onTargetLanguageToggle={handleTargetLanguageToggle}
+            onWithLipSyncToggle={() => setWithLipSync(!withLipSync)}
+            onStartDubbing={handleStartDubbing}
+          />
+        )}
         {step === 'result' && ResultStep()}
       </div>
     </main>
