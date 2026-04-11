@@ -6,6 +6,7 @@ import { useClipboard } from '../hooks/useClipboard';
 import { getErrorMessage } from '../utils/format';
 
 const BASE = (import.meta.env.VITE_PERSO_PROXY_PATH || '/api/perso').replace(/\/+$/, '');
+const INTEGRATION_INPUT_CLASS = 'w-24 bg-surface-900 border border-surface-700 rounded px-2 py-1 text-white text-xs';
 
 // ── Types ──
 
@@ -270,21 +271,17 @@ export default function TestPage() {
         <div className="glass rounded-xl p-4 mb-4">
           <p className="text-xs text-gray-400 mb-2">🔗 Integration state (previous test results feed into the next test)</p>
           <div className="flex flex-wrap gap-3 text-sm">
-            <label className="flex items-center gap-2 text-gray-400">
-              <span className="text-[10px] bg-surface-800 px-1.5 py-0.5 rounded">spaceSeq</span>
-              <input type="number" value={spaceSeq ?? ''} onChange={e => setSpaceSeq(e.target.value ? Number(e.target.value) : null)}
-                className="w-24 bg-surface-900 border border-surface-700 rounded px-2 py-1 text-white text-xs" />
-            </label>
-            <label className="flex items-center gap-2 text-gray-400">
-              <span className="text-[10px] bg-surface-800 px-1.5 py-0.5 rounded">mediaSeq</span>
-              <input type="number" value={mediaSeq ?? ''} onChange={e => setMediaSeq(e.target.value ? Number(e.target.value) : null)}
-                className="w-24 bg-surface-900 border border-surface-700 rounded px-2 py-1 text-white text-xs" />
-            </label>
-            <label className="flex items-center gap-2 text-gray-400">
-              <span className="text-[10px] bg-surface-800 px-1.5 py-0.5 rounded">projectSeq</span>
-              <input type="number" value={projectSeq ?? ''} onChange={e => setProjectSeq(e.target.value ? Number(e.target.value) : null)}
-                className="w-24 bg-surface-900 border border-surface-700 rounded px-2 py-1 text-white text-xs" />
-            </label>
+            {[
+              { label: 'spaceSeq', value: spaceSeq, onChange: setSpaceSeq },
+              { label: 'mediaSeq', value: mediaSeq, onChange: setMediaSeq },
+              { label: 'projectSeq', value: projectSeq, onChange: setProjectSeq },
+            ].map(({ label, value, onChange }) => (
+              <label key={label} className="flex items-center gap-2 text-gray-400">
+                <span className="text-[10px] bg-surface-800 px-1.5 py-0.5 rounded">{label}</span>
+                <input type="number" value={value ?? ''} onChange={e => onChange(e.target.value ? Number(e.target.value) : null)}
+                  className={INTEGRATION_INPUT_CLASS} />
+              </label>
+            ))}
           </div>
         </div>
 
