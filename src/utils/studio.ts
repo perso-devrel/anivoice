@@ -1,5 +1,18 @@
 import type { PersoDownloadLinks } from '../types';
 
+export const PROGRESS_GET_SPACE = 5;
+export const PROGRESS_UPLOAD_START = 10;
+export const PROGRESS_UPLOAD_DONE = 30;
+export const PROGRESS_QUEUE_ENSURED = 33;
+export const PROGRESS_TRANSLATION_REQUESTED = 35;
+export const PROGRESS_POLL_COMPLETE = 90;
+export const PROGRESS_SCRIPT_FETCHED = 95;
+export const PROGRESS_LIP_SYNC_BASE = 50;
+export const PROGRESS_LIP_SYNC_SCALE = 0.5;
+
+const DUBBING_PROGRESS_OFFSET = 35;
+const DUBBING_PROGRESS_SCALE = 0.55;
+
 type DownloadType = 'video' | 'subtitle' | 'audio' | 'zip';
 
 export function getDownloadUrl(
@@ -22,7 +35,7 @@ export function getDownloadUrl(
 }
 
 export function computeDubbingProgress(pollProgress: number): number {
-  return 35 + pollProgress * 0.55;
+  return DUBBING_PROGRESS_OFFSET + pollProgress * DUBBING_PROGRESS_SCALE;
 }
 
 export function buildShareUrl(origin: string, dbProjectId: number | null): string {
