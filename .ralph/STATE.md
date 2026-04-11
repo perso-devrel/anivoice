@@ -3,7 +3,7 @@
 - **모드:** 무한 자율 (Ralph harness 구동 중)
 - **목표:** BACKLOG 의 P0 → P1 → 자가생성풀 순으로 끝없이 처리
 - **회귀 기준:** `node .ralph/test/dub-flow.mjs` 가 `ALL VIDEOS DUBBED SUCCESSFULLY` 출력 (exit 0), exit 78 = quota exceeded (외부 한도, 코드 회귀 아님)
-- **마지막 iteration:** #177 — Toast aria-label="Close" + StudioPage 'Untitled' 폴백을 i18n 키로 교체, dub-flow exit 77 upstream-down 지속
+- **마지막 iteration:** #178 — CheckoutModal 3개 카드 입력 블록을 CARD_FIELDS config + map()으로 통합, CardForm 상태 객체화 (props 11→7개), dub-flow exit 77 upstream-down 지속
 - **다음 루프가 기대하는 출발점:**
   - P0 전부 완료, P1 전부 완료, P2 32개 + 자가생성 52개 완료
   - 인라인 배열 hoisting 완료, 중복 JSX 제거 시리즈 완료, 컴포넌트 분해 완료, 중복 패턴 통합 진행 중
