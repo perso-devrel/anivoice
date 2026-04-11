@@ -158,6 +158,8 @@
 - [x] 미사용 export 정리: TranslateRequest (persoApi.ts), DbUser (anivoiceApi.ts), formatSeconds (format.ts) 내부 전용화 ← iter-162, #517, PR #518/#519
 - [x] pollProgress transient error console.warn 제거 (src/ 내 console.* 0개 달성) ← iter-163, #523, PR #524/#525
 - [x] StrokeIcon 내부 래퍼 추출로 29개 stroke 아이콘 SVG 보일러플레이트 제거 ← iter-164, #526, PR #527/#528
+- [x] LibraryPage 중복 sort 버튼을 SORT_MODES 상수 + .map() 루프로 교체 ← iter-165, #531, PR #532/#533
+- [x] ResultStep 인라인 다운로드 버튼 배열을 DOWNLOAD_BUTTONS 상수 + isDownloadAvailable 헬퍼로 추출 ← iter-166, #534, PR #535/#536
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
