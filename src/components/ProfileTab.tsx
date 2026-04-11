@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { updateProfile as updateUserProfile } from '../services/firebase';
 import { UserIcon } from './icons';
 
+const PROFILE_SAVE_DISPLAY_MS = 2000;
+
 interface ProfileTabProps {
   email: string;
   initialDisplayName: string;
@@ -19,7 +21,7 @@ export function ProfileTab({ email, initialDisplayName }: ProfileTabProps) {
     try {
       await updateUserProfile(displayName);
       setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
+      setTimeout(() => setSaved(false), PROFILE_SAVE_DISPLAY_MS);
     } catch {
       // Profile update failed silently — user can retry
     } finally {
