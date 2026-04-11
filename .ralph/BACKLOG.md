@@ -121,6 +121,8 @@
 - [x] LandingPage 인라인 SVG 4개를 공유 아이콘 컴포넌트로 교체 (IconDownload/IconPlay/IconCheck/IconChevron 제거) ← iter-125, #341, PR #342/#343
 - [x] StudioPage useEffect eslint-disable 제거 (searchParams deps 정리) ← iter-126, #344, PR #345/#346
 - [x] 중복 LANGUAGES 상수를 src/constants.ts로 추출 + 4개 테스트 추가 (372→376개) ← iter-127, #347, PR #348/#349
+- [x] formatDuration을 dashboard.ts에서 format.ts로 이동 (모듈 응집도 개선) ← iter-128, #351, PR #352/#353
+- [x] DashboardPage 인라인 빈 상태 SVG를 공유 EmptyProjectsIcon으로 추출 ← iter-129, #354, PR #355/#356
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
