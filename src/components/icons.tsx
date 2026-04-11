@@ -257,3 +257,23 @@ export function UserIcon({ className = 'w-10 h-10' }: IconProps) {
     </svg>
   );
 }
+
+export function EmptyProjectsIcon({ className = 'w-16 h-16' }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 64 64" fill="none">
+      <rect x="8" y="14" width="48" height="36" rx="4" stroke="url(#emptyProjGrad)" strokeWidth="2.5" />
+      <path d="M8 22h48" stroke="url(#emptyProjGrad)" strokeWidth="2" opacity="0.5" />
+      <circle cx="32" cy="36" r="8" stroke="url(#emptyProjGrad)" strokeWidth="2.5" />
+      <polygon points="30,33 30,39 36,36" fill="url(#emptyProjGrad)" />
+      <path d="M44 10l4-4m0 0l4 4m-4-4v8" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
+      <circle cx="14" cy="10" r="2" fill="#ec4899" opacity="0.5" />
+      <circle cx="52" cy="54" r="1.5" fill="#8b5cf6" opacity="0.5" />
+      <defs>
+        <linearGradient id="emptyProjGrad" x1="8" y1="14" x2="56" y2="50">
+          <stop stopColor="#ec4899" />
+          <stop offset="1" stopColor="#8b5cf6" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
