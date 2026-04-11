@@ -383,6 +383,8 @@ export default function DashboardPage() {
                       <img
                         src={project.thumbnailUrl}
                         alt={project.title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                       />
                     ) : (
