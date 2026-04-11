@@ -127,6 +127,7 @@
 - [x] AuthPage 인라인 Google 로고 SVG를 공유 GoogleIcon 컴포넌트로 추출 ← iter-131, #364, PR #365/#366
 - [x] Footer 하드코딩 copyright 문자열 i18n 키 교체 ← iter-132, #369, PR #370/#371
 - [x] 썸네일 이미지 loading="lazy" + decoding="async" 추가 (DashboardPage, LibraryPage) ← iter-133, #373, PR #374/#375
+- [x] 인라인 instanceof Error 패턴을 공유 getErrorMessage()로 통합 + fallback 파라미터 추가 (376→378 tests) ← iter-134, #377, PR #378/#379
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
