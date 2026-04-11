@@ -244,17 +244,14 @@ export default function PricingPage() {
                 >
                   {t('pricing.currentPlan')}
                 </button>
-              ) : plan.highlighted ? (
-                <button
-                  onClick={() => handleSelectPlan(plan)}
-                  className="w-full py-3 rounded-xl gradient-bg text-white font-medium hover:opacity-90 transition-opacity"
-                >
-                  {t('pricing.selectPlan')}
-                </button>
               ) : (
                 <button
                   onClick={() => handleSelectPlan(plan)}
-                  className="w-full py-3 rounded-xl border border-surface-600 text-gray-300 font-medium hover:border-primary-500 hover:text-white transition-colors"
+                  className={`w-full py-3 rounded-xl font-medium ${
+                    plan.highlighted
+                      ? 'gradient-bg text-white hover:opacity-90 transition-opacity'
+                      : 'border border-surface-600 text-gray-300 hover:border-primary-500 hover:text-white transition-colors'
+                  }`}
                 >
                   {t('pricing.selectPlan')}
                 </button>
