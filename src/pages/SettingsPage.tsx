@@ -17,6 +17,18 @@ const SETTINGS_TABS: { key: Tab; i18nKey: string }[] = [
   { key: 'language', i18nKey: 'settings.language' },
 ];
 
+const BILLING_HISTORY_ENTRIES = [
+  { date: '2026-03-01', descriptionKey: 'settings.billingBasicPlan', amount: '$4.99', statusKey: 'settings.paid' },
+  { date: '2026-02-01', descriptionKey: 'settings.billingBasicPlan', amount: '$4.99', statusKey: 'settings.paid' },
+  { date: '2026-01-15', descriptionKey: 'settings.billingCreditPack', amount: '$12.00', statusKey: 'settings.paid' },
+] as const;
+
+const BASIC_FEATURE_KEYS = [
+  'settings.basicFeature1',
+  'settings.basicFeature2',
+  'settings.basicFeature3',
+] as const;
+
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
   usePageTitle('pageTitle.settings');
@@ -47,26 +59,12 @@ export default function SettingsPage() {
     i18n.changeLanguage(lang);
   };
 
-  const billingHistory = [
-    {
-      date: '2026-03-01',
-      description: t('settings.billingBasicPlan'),
-      amount: '$4.99',
-      status: t('settings.paid'),
-    },
-    {
-      date: '2026-02-01',
-      description: t('settings.billingBasicPlan'),
-      amount: '$4.99',
-      status: t('settings.paid'),
-    },
-    {
-      date: '2026-01-15',
-      description: t('settings.billingCreditPack'),
-      amount: '$12.00',
-      status: t('settings.paid'),
-    },
-  ];
+  const billingHistory = BILLING_HISTORY_ENTRIES.map((entry) => ({
+    date: entry.date,
+    description: t(entry.descriptionKey),
+    amount: entry.amount,
+    status: t(entry.statusKey),
+  }));
 
   return (
     <main className="min-h-screen bg-surface-950 pt-24 pb-16 px-4">
@@ -173,14 +171,10 @@ export default function SettingsPage() {
               </div>
 
               <ul className="space-y-2 mb-6">
-                {[
-                  t('settings.basicFeature1'),
-                  t('settings.basicFeature2'),
-                  t('settings.basicFeature3'),
-                ].map((feature, i) => (
+                {BASIC_FEATURE_KEYS.map((key, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
                     <CheckmarkIcon className="w-4 h-4 text-primary-400 flex-shrink-0" />
-                    {feature}
+                    {t(key)}
                   </li>
                 ))}
               </ul>
