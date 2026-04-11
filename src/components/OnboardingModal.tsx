@@ -5,6 +5,9 @@ import { markOnboardingDone } from '../utils/onboarding';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { XIcon, UploadIcon, CheckCircleIcon, ArrowRightIcon, TranslateIcon } from './icons';
 
+const PRIMARY_BUTTON_CLASS =
+  'inline-flex items-center gap-2 px-6 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity';
+
 const STEPS = [
   {
     icon: <UploadIcon className="w-10 h-10 text-primary-400" />,
@@ -112,7 +115,7 @@ export default function OnboardingModal({ onClose }: Props) {
             <Link
               to="/studio"
               onClick={() => markOnboardingDone()}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+              className={PRIMARY_BUTTON_CLASS}
             >
               {t('onboarding.startNow')}
               <ArrowRightIcon />
@@ -120,7 +123,7 @@ export default function OnboardingModal({ onClose }: Props) {
           ) : (
             <button
               onClick={handleNext}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+              className={PRIMARY_BUTTON_CLASS}
             >
               {t('onboarding.next')}
               <ArrowRightIcon />
