@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { listMyProjects, toggleFavorite, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
-import { formatSeconds, getErrorMessage } from '../utils/format';
+import { formatCreditTime, getErrorMessage } from '../utils/format';
 import { PlusIcon, AlertCircleIcon, CheckCircleIcon, SearchIcon, WalletIcon, RefreshIcon, SortIcon, EmptyProjectsIcon, LoadingSpinner } from '../components/icons';
 import { ProjectCard } from '../components/ProjectCard';
 
@@ -163,7 +163,7 @@ export default function DashboardPage() {
             icon={<WalletIcon className="w-5 h-5 text-primary-400" />}
             iconBg="bg-primary-500/15"
             label={<>{t('dashboard.creditsRemaining')}{user?.plan && <span className="ml-1 text-gray-500">({user.plan})</span>}</>}
-            value={loading ? '...' : user ? formatSeconds(user.creditSeconds, { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') }) : '--'}
+            value={loading ? '...' : user ? formatCreditTime(user.creditSeconds, t) : '--'}
           />
           <StatCard
             icon={<RefreshIcon className="w-5 h-5 text-accent-400" />}

@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUIStore } from '../stores/uiStore';
 import { useAuthStore } from '../stores/authStore';
 import { signOut, updateProfile as updateUserProfile } from '../services/firebase';
-import { formatSeconds } from '../utils/format';
+import { formatCreditTime } from '../utils/format';
 import { CheckmarkIcon, UserIcon } from '../components/icons';
 
 type Tab = 'profile' | 'subscription' | 'billing' | 'language';
@@ -167,7 +167,7 @@ export default function SettingsPage() {
                 <div>
                   <p className="text-lg font-bold text-white capitalize">{user?.plan || 'Free'}</p>
                   <p className="text-sm text-gray-400">
-                    {t('common.credits')}: {formatSeconds(user?.creditSeconds || 0, { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') })}
+                    {t('common.credits')}: {formatCreditTime(user?.creditSeconds || 0, t)}
                   </p>
                 </div>
                 <span className="px-3 py-1 rounded-full text-xs font-medium bg-primary-500/20 text-primary-400">
