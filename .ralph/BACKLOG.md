@@ -133,6 +133,7 @@
 - [x] LibraryPage 인라인 languageOptions를 공유 LANGUAGE_KEYS 기반 모듈 수준 상수로 교체 ← iter-137, #392, PR #393/#394
 - [x] DashboardPage 인라인 tabs 배열을 모듈 수준 DASHBOARD_TABS 상수로 추출 ← iter-138, #397, PR #398/#399
 - [x] SettingsPage 인라인 tabs 배열을 모듈 수준 SETTINGS_TABS 상수로 추출 ← iter-139, #402, PR #403/#404
+- [x] LandingPage 인라인 features/steps/plans/waveform 배열을 모듈 수준 상수로 추출 ← iter-140, #407, PR #408/#409
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
