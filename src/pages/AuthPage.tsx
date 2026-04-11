@@ -14,6 +14,8 @@ type Mode = 'login' | 'signup';
 const AUTH_INPUT_CLASS =
   'w-full rounded-lg bg-surface-900 border border-surface-700 px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-primary-500 transition-colors';
 
+const AUTH_LABEL_CLASS = 'block text-sm text-gray-300 mb-1.5';
+
 export default function AuthPage() {
   const { t } = useTranslation();
   usePageTitle('pageTitle.auth');
@@ -123,7 +125,7 @@ export default function AuthPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <div>
-              <label className="block text-sm text-gray-300 mb-1.5">{t('auth.name')}</label>
+              <label className={AUTH_LABEL_CLASS}>{t('auth.name')}</label>
               <input
                 type="text"
                 value={displayName}
@@ -136,26 +138,26 @@ export default function AuthPage() {
           )}
 
           <div>
-            <label className="block text-sm text-gray-300 mb-1.5">{t('auth.email')}</label>
+            <label className={AUTH_LABEL_CLASS}>{t('auth.email')}</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full rounded-lg bg-surface-900 border border-surface-700 px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-primary-500 transition-colors"
+              className={AUTH_INPUT_CLASS}
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-gray-300 mb-1.5">{t('auth.password')}</label>
+            <label className={AUTH_LABEL_CLASS}>{t('auth.password')}</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full rounded-lg bg-surface-900 border border-surface-700 px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-primary-500 transition-colors"
+              className={AUTH_INPUT_CLASS}
               placeholder="••••••••"
             />
           </div>

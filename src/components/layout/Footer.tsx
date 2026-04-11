@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 const FOOTER_LINK_CLASS = 'block text-sm text-gray-500 hover:text-gray-300';
+const FOOTER_HEADING_CLASS = 'text-sm font-semibold text-gray-300 mb-3';
+const FOOTER_SECTION_CLASS = 'space-y-2';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -23,8 +25,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-gray-300 mb-3">{t('footer.product')}</h4>
-            <div className="space-y-2">
+            <h4 className={FOOTER_HEADING_CLASS}>{t('footer.product')}</h4>
+            <div className={FOOTER_SECTION_CLASS}>
               <Link to="/studio" className={FOOTER_LINK_CLASS}>{t('common.studio')}</Link>
               <Link to="/library" className={FOOTER_LINK_CLASS}>{t('common.library')}</Link>
               <Link to="/pricing" className={FOOTER_LINK_CLASS}>{t('common.pricing')}</Link>
@@ -32,16 +34,16 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-gray-300 mb-3">{t('footer.support')}</h4>
-            <div className="space-y-2">
+            <h4 className={FOOTER_HEADING_CLASS}>{t('footer.support')}</h4>
+            <div className={FOOTER_SECTION_CLASS}>
               <a href="#faq" className={FOOTER_LINK_CLASS}>{t('footer.faq')}</a>
               <a href="mailto:support@anivoice.ai" className={FOOTER_LINK_CLASS}>{t('footer.contact')}</a>
             </div>
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-gray-300 mb-3">{t('footer.legal')}</h4>
-            <div className="space-y-2">
+            <h4 className={FOOTER_HEADING_CLASS}>{t('footer.legal')}</h4>
+            <div className={FOOTER_SECTION_CLASS}>
               <a href="#" className={FOOTER_LINK_CLASS}>{t('footer.terms')}</a>
               <a href="#" className={FOOTER_LINK_CLASS}>{t('footer.privacy')}</a>
               <a href="#" className={FOOTER_LINK_CLASS}>{t('footer.dmca')}</a>
