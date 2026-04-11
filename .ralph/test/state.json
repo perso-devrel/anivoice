@@ -1,10 +1,304 @@
 {
   "runs": [
     {
-      "ts": "2026-04-10T14:26:07.543Z",
-      "status": "quota",
-      "exitCode": 78,
-      "endpoint": "POST /video-translator/api/v1/projects/spaces/501071/translate"
+      "ts": "2026-04-11T09:44:09.623Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T09:47:44.578Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T09:48:54.637Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T09:55:31.500Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T09:59:00.057Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:00:08.237Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:01:13.913Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:05:53.737Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:08:21.894Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:10:13.342Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:15:24.224Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:18:08.269Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:20:01.017Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:22:38.180Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:25:39.573Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:26:47.735Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:29:24.727Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:32:12.816Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:34:11.813Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:37:15.699Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:41:00.112Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:42:13.639Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:49:42.684Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:50:30.139Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:53:15.250Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:55:17.194Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T10:58:36.394Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:00:26.507Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:02:58.193Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:05:56.941Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:08:08.333Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:10:01.786Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:14:16.545Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:16:22.677Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:18:10.935Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:21:14.804Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:22:02.218Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:25:23.380Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:25:26.061Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:26:37.173Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:30:24.657Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:32:53.293Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:34:43.331Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:39:17.144Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:41:22.663Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:42:35.285Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:45:21.224Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:47:42.803Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:49:44.182Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:54:30.048Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
     }
   ]
 }
