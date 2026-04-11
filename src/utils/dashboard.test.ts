@@ -5,6 +5,7 @@ import {
   filterProjects,
   sortProjects,
   extractAvailableLanguages,
+  countProjectStats,
 } from './dashboard';
 import type { DbProject } from '../services/anivoiceApi';
 import type { ProjectStatus } from '../types';
@@ -212,6 +213,41 @@ describe('sortProjects', () => {
     ];
     const result = sortProjects(items, 'newest');
     expect(result[0].id).toBe(2);
+  });
+});
+
+describe('countProjectStats', () => {
+  it('counts in-progress and completed', () => {
+    const projects = [
+      makeMapped({ mappedStatus: 'completed' }),
+      makeMapped({ mappedStatus: 'dubbing' }),
+      makeMapped({ mappedStatus: 'failed' }),
+      makeMapped({ mappedStatus: 'analyzing' }),
+      makeMapped({ mappedStatus: 'completed' }),
+    ];
+    expect(countProjectStats(projects)).toEqual({ inProgress: 2, completed: 2 });
+  });
+
+  it('returns zeros for empty array', () => {
+    expect(countProjectStats([])).toEqual({ inProgress: 0, completed: 0 });
+  });
+
+  it('excludes failed from both counts', () => {
+    const projects = [
+      makeMapped({ mappedStatus: 'failed' }),
+      makeMapped({ mappedStatus: 'failed' }),
+    ];
+    expect(countProjectStats(projects)).toEqual({ inProgress: 0, completed: 0 });
+  });
+
+  it('counts all active statuses as in-progress', () => {
+    const projects = [
+      makeMapped({ mappedStatus: 'uploading' }),
+      makeMapped({ mappedStatus: 'analyzing' }),
+      makeMapped({ mappedStatus: 'dubbing' }),
+      makeMapped({ mappedStatus: 'lip-syncing' }),
+    ];
+    expect(countProjectStats(projects)).toEqual({ inProgress: 4, completed: 0 });
   });
 });
 

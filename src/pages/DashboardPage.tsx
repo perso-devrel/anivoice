@@ -12,7 +12,7 @@ const UsageChart = lazy(() => import('../components/UsageChart'));
 import { useAuthStore } from '../stores/authStore';
 import OnboardingModal from '../components/OnboardingModal';
 import { shouldShowOnboarding } from '../utils/onboarding';
-import { mapDbStatus, filterProjects, sortProjects, extractAvailableLanguages, type FilterTab, type SortOrder } from '../utils/dashboard';
+import { mapDbStatus, filterProjects, sortProjects, extractAvailableLanguages, countProjectStats, type FilterTab, type SortOrder } from '../utils/dashboard';
 
 const DASHBOARD_TABS: { key: FilterTab; i18nKey: string }[] = [
   { key: 'all', i18nKey: 'common.all' },
@@ -110,12 +110,7 @@ export default function DashboardPage() {
     sortOrder,
   );
 
-  const inProgressCount = mappedProjects.filter(
-    (p) => p.mappedStatus !== 'completed' && p.mappedStatus !== 'failed'
-  ).length;
-  const completedCount = mappedProjects.filter(
-    (p) => p.mappedStatus === 'completed'
-  ).length;
+  const { inProgress: inProgressCount, completed: completedCount } = countProjectStats(mappedProjects);
 
   async function handleToggleFavorite(e: React.MouseEvent, projectId: number, current: boolean) {
     e.preventDefault();

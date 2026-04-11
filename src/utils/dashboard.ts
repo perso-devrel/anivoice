@@ -51,6 +51,16 @@ export function mapDbStatus(project: DbProject): ProjectStatus {
   return 'analyzing';
 }
 
+export function countProjectStats(projects: MappedProject[]): { inProgress: number; completed: number } {
+  let inProgress = 0;
+  let completed = 0;
+  for (const p of projects) {
+    if (p.mappedStatus === 'completed') completed++;
+    else if (p.mappedStatus !== 'failed') inProgress++;
+  }
+  return { inProgress, completed };
+}
+
 export function getProgressBarColor(status: ProjectStatus): string {
   switch (status) {
     case 'analyzing':
