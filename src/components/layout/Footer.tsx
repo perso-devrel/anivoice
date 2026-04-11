@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+const FOOTER_LINK_CLASS = 'block text-sm text-gray-500 hover:text-gray-300';
+
 export default function Footer() {
   const { t } = useTranslation();
 
@@ -23,26 +25,26 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-semibold text-gray-300 mb-3">{t('footer.product')}</h4>
             <div className="space-y-2">
-              <Link to="/studio" className="block text-sm text-gray-500 hover:text-gray-300">{t('common.studio')}</Link>
-              <Link to="/library" className="block text-sm text-gray-500 hover:text-gray-300">{t('common.library')}</Link>
-              <Link to="/pricing" className="block text-sm text-gray-500 hover:text-gray-300">{t('common.pricing')}</Link>
+              <Link to="/studio" className={FOOTER_LINK_CLASS}>{t('common.studio')}</Link>
+              <Link to="/library" className={FOOTER_LINK_CLASS}>{t('common.library')}</Link>
+              <Link to="/pricing" className={FOOTER_LINK_CLASS}>{t('common.pricing')}</Link>
             </div>
           </div>
 
           <div>
             <h4 className="text-sm font-semibold text-gray-300 mb-3">{t('footer.support')}</h4>
             <div className="space-y-2">
-              <a href="#faq" className="block text-sm text-gray-500 hover:text-gray-300">{t('footer.faq')}</a>
-              <a href="mailto:support@anivoice.ai" className="block text-sm text-gray-500 hover:text-gray-300">{t('footer.contact')}</a>
+              <a href="#faq" className={FOOTER_LINK_CLASS}>{t('footer.faq')}</a>
+              <a href="mailto:support@anivoice.ai" className={FOOTER_LINK_CLASS}>{t('footer.contact')}</a>
             </div>
           </div>
 
           <div>
             <h4 className="text-sm font-semibold text-gray-300 mb-3">{t('footer.legal')}</h4>
             <div className="space-y-2">
-              <a href="#" className="block text-sm text-gray-500 hover:text-gray-300">{t('footer.terms')}</a>
-              <a href="#" className="block text-sm text-gray-500 hover:text-gray-300">{t('footer.privacy')}</a>
-              <a href="#" className="block text-sm text-gray-500 hover:text-gray-300">{t('footer.dmca')}</a>
+              <a href="#" className={FOOTER_LINK_CLASS}>{t('footer.terms')}</a>
+              <a href="#" className={FOOTER_LINK_CLASS}>{t('footer.privacy')}</a>
+              <a href="#" className={FOOTER_LINK_CLASS}>{t('footer.dmca')}</a>
             </div>
           </div>
         </div>
