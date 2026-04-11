@@ -140,7 +140,7 @@ function PricingCard({
           {popularLabel}
         </span>
       )}
-      <h3 className={`text-xl font-bold mb-1 ${highlight ? 'text-white' : 'text-white'}`}>
+      <h3 className="text-xl font-bold mb-1 text-white">
         {name}
       </h3>
       <p className={`text-3xl font-extrabold mb-6 ${highlight ? 'text-white' : 'gradient-text'}`}>
