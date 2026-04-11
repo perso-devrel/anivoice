@@ -180,6 +180,7 @@
 - [x] LibraryDetailPage 중복 버튼 className 3개를 SECONDARY_BUTTON_CLASS 상수로 추출 ← iter-184, #624, PR #625/#626
 - [x] Footer 중복 링크 className 8개를 FOOTER_LINK_CLASS 상수로 추출 ← iter-185, #629, PR #630/#631
 - [x] SettingsPage 빌링 테이블 헤더 중복 className 3개를 TABLE_HEADER_CLASS 상수로 추출 ← iter-186, #634, PR #635/#636
+- [x] ResultStep 중복 muted text className 3개를 RESULT_MUTED_TEXT 상수로 추출 ← iter-187, #638, PR #639/#640
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
