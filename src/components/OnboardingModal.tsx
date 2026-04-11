@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { markOnboardingDone } from '../utils/onboarding';
 import { useFocusTrap } from '../hooks/useFocusTrap';
-import { XIcon, UploadIcon, CheckCircleIcon, ArrowRightIcon } from './icons';
+import { XIcon, UploadIcon, CheckCircleIcon, ArrowRightIcon, TranslateIcon } from './icons';
 
 const STEPS = [
   {
@@ -12,11 +12,7 @@ const STEPS = [
     descKey: 'onboarding.step1Desc',
   },
   {
-    icon: (
-      <svg className="w-10 h-10 text-accent-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802" />
-      </svg>
-    ),
+    icon: <TranslateIcon className="w-10 h-10 text-accent-400" />,
     titleKey: 'onboarding.step2Title',
     descKey: 'onboarding.step2Desc',
   },

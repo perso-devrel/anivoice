@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { listMyProjects, toggleFavorite, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
 import { formatSeconds } from '../utils/format';
-import { PlusIcon, AlertCircleIcon, CheckCircleIcon, SearchIcon, StarIcon, WalletIcon, RefreshIcon } from '../components/icons';
+import { PlusIcon, AlertCircleIcon, CheckCircleIcon, SearchIcon, StarIcon, WalletIcon, RefreshIcon, SortIcon, VideoPlayIcon } from '../components/icons';
 
 const UsageChart = lazy(() => import('../components/UsageChart'));
 import { useAuthStore } from '../stores/authStore';
@@ -271,13 +271,7 @@ export default function DashboardPage() {
               onClick={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-800 text-sm text-gray-300 border border-surface-700 hover:text-white transition-colors"
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                {sortOrder === 'newest' ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12" />
-                )}
-              </svg>
+              <SortIcon className="w-3.5 h-3.5" />
               {t(sortOrder === 'newest' ? 'dashboard.sortNewest' : 'dashboard.sortOldest')}
             </button>
             <div className="flex gap-1 p-1 rounded-lg bg-surface-800">
@@ -407,19 +401,7 @@ export default function DashboardPage() {
                       <div className={`absolute inset-0 bg-gradient-to-br ${gradient}`} />
                     )}
                     {!project.thumbnailUrl && (
-                      <svg
-                        className="w-10 h-10 text-surface-700 relative z-10"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={1.2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-                        />
-                      </svg>
+                      <VideoPlayIcon className="w-10 h-10 text-surface-700 relative z-10" />
                     )}
                     {/* Language badge */}
                     <span className="absolute top-2 left-2 px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-900/80 text-gray-300 backdrop-blur-sm">
