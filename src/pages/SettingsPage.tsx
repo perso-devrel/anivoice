@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useUIStore } from '../stores/uiStore';
 import { useAuthStore } from '../stores/authStore';
 import { signOut } from '../services/firebase';
-import { formatCreditTime } from '../utils/format';
 import { CheckmarkIcon } from '../components/icons';
 import { ProfileTab } from '../components/ProfileTab';
+import { SubscriptionTab } from '../components/SubscriptionTab';
 
 type Tab = 'profile' | 'subscription' | 'billing' | 'language';
 
@@ -22,12 +22,6 @@ const BILLING_HISTORY_ENTRIES = [
   { date: '2026-03-01', descriptionKey: 'settings.billingBasicPlan', amount: '$4.99', statusKey: 'settings.paid' },
   { date: '2026-02-01', descriptionKey: 'settings.billingBasicPlan', amount: '$4.99', statusKey: 'settings.paid' },
   { date: '2026-01-15', descriptionKey: 'settings.billingCreditPack', amount: '$12.00', statusKey: 'settings.paid' },
-] as const;
-
-const BASIC_FEATURE_KEYS = [
-  'settings.basicFeature1',
-  'settings.basicFeature2',
-  'settings.basicFeature3',
 ] as const;
 
 const LANGUAGE_OPTIONS: { code: 'ko' | 'en'; emoji: string; label: string; subtitleKey: string }[] = [
@@ -91,41 +85,10 @@ export default function SettingsPage() {
 
         {/* Subscription Tab */}
         {activeTab === 'subscription' && (
-          <div className="glass rounded-2xl p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-white">
-              {t('settings.currentPlan')}
-            </h2>
-
-            <div className="rounded-xl border border-surface-700 bg-surface-900 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <p className="text-lg font-bold text-white capitalize">{user?.plan || 'Free'}</p>
-                  <p className="text-sm text-gray-400">
-                    {t('common.credits')}: {formatCreditTime(user?.creditSeconds || 0, t)}
-                  </p>
-                </div>
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-primary-500/20 text-primary-400">
-                  {t('settings.active')}
-                </span>
-              </div>
-
-              <ul className="space-y-2 mb-6">
-                {BASIC_FEATURE_KEYS.map((key, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
-                    <CheckmarkIcon className="w-4 h-4 text-primary-400 flex-shrink-0" />
-                    {t(key)}
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                to="/pricing"
-                className="inline-block px-6 py-3 rounded-xl border border-primary-500 text-primary-400 font-medium hover:bg-primary-500/10 transition-colors"
-              >
-                {t('settings.upgradePlan')}
-              </Link>
-            </div>
-          </div>
+          <SubscriptionTab
+            plan={user?.plan || 'Free'}
+            creditSeconds={user?.creditSeconds || 0}
+          />
         )}
 
         {/* Billing Tab */}
