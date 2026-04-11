@@ -258,6 +258,12 @@ export function UserIcon({ className = 'w-10 h-10' }: IconProps) {
   );
 }
 
+export function LoadingSpinner({ className = 'w-8 h-8 border-primary-500' }: IconProps) {
+  return (
+    <div className={`${className} border-2 border-t-transparent rounded-full animate-spin`} />
+  );
+}
+
 export function EmptyProjectsIcon({ className = 'w-16 h-16' }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 64 64" fill="none">

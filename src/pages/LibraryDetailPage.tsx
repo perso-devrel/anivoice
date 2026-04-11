@@ -6,7 +6,7 @@ import { useClipboard } from '../hooks/useClipboard';
 import { getLibraryItem, type LibraryItemDetail } from '../services/anivoiceApi';
 import { formatSeconds } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
-import { DownloadIcon, LinkIcon, ChevronLeftIcon } from '../components/icons';
+import { DownloadIcon, LinkIcon, ChevronLeftIcon, LoadingSpinner } from '../components/icons';
 
 export default function LibraryDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -44,7 +44,7 @@ export default function LibraryDetailPage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-surface-950 pt-24 pb-16 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+        <LoadingSpinner />
       </main>
     );
   }

@@ -23,7 +23,7 @@ import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { formatMs, getErrorMessage } from '../utils/format';
 import { getDownloadUrl, computeDubbingProgress, buildShareUrl } from '../utils/studio';
-import { FileIcon, PlayIcon, DownloadIcon, CheckIcon, SpinnerIcon, AlertCircleIcon, LinkIcon } from '../components/icons';
+import { FileIcon, PlayIcon, DownloadIcon, CheckIcon, SpinnerIcon, AlertCircleIcon, LinkIcon, LoadingSpinner } from '../components/icons';
 import { LANGUAGE_KEYS } from '../constants';
 
 type Step = 'upload' | 'settings' | 'result';
@@ -587,7 +587,7 @@ export default function StudioPage() {
     if (loadingProject) {
       return (
         <div className="max-w-lg mx-auto text-center py-12 space-y-4">
-          <div className="w-10 h-10 mx-auto border-2 border-primary-400 border-t-transparent rounded-full animate-spin" />
+          <LoadingSpinner className="w-10 h-10 mx-auto border-primary-400" />
           <p className="text-surface-200/60 text-sm">{t('studio.loadingProject')}</p>
         </div>
       );

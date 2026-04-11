@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { listMyProjects, toggleFavorite, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
 import { formatSeconds, getErrorMessage } from '../utils/format';
-import { PlusIcon, AlertCircleIcon, CheckCircleIcon, SearchIcon, StarIcon, WalletIcon, RefreshIcon, SortIcon, VideoPlayIcon, EmptyProjectsIcon } from '../components/icons';
+import { PlusIcon, AlertCircleIcon, CheckCircleIcon, SearchIcon, StarIcon, WalletIcon, RefreshIcon, SortIcon, VideoPlayIcon, EmptyProjectsIcon, LoadingSpinner } from '../components/icons';
 
 const UsageChart = lazy(() => import('../components/UsageChart'));
 import { useAuthStore } from '../stores/authStore';
@@ -232,7 +232,7 @@ export default function DashboardPage() {
           <h2 className="text-base font-semibold text-white mb-4">
             {t('dashboard.usageChart')}
           </h2>
-          <Suspense fallback={<div className="h-[200px] flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary-400 border-t-transparent rounded-full animate-spin" /></div>}>
+          <Suspense fallback={<div className="h-[200px] flex items-center justify-center"><LoadingSpinner className="w-6 h-6 border-primary-400" /></div>}>
             <UsageChart data={usageData} />
           </Suspense>
         </div>
@@ -297,7 +297,7 @@ export default function DashboardPage() {
         {/* Loading State */}
         {loading && (
           <div className="glass rounded-2xl p-16 flex flex-col items-center justify-center text-center">
-            <div className="w-10 h-10 border-2 border-primary-400 border-t-transparent rounded-full animate-spin mb-4" />
+            <LoadingSpinner className="w-10 h-10 border-primary-400 mb-4" />
             <p className="text-gray-400 text-base">{t('common.loading')}</p>
           </div>
         )}
