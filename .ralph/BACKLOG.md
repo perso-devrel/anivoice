@@ -161,6 +161,7 @@
 - [x] LibraryPage 중복 sort 버튼을 SORT_MODES 상수 + .map() 루프로 교체 ← iter-165, #531, PR #532/#533
 - [x] ResultStep 인라인 다운로드 버튼 배열을 DOWNLOAD_BUTTONS 상수 + isDownloadAvailable 헬퍼로 추출 ← iter-166, #534, PR #535/#536
 - [x] PricingPage 중복 selectPlan 버튼 JSX를 조건부 className 1개로 통합 ← iter-167, #539, PR #540/#541
+- [x] PricingPage 인라인 checkout modal JSX를 CheckoutModal 컴포넌트로 추출 (404→335줄) ← iter-168, #544, PR #545/#546
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
