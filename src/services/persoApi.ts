@@ -416,13 +416,6 @@ export async function pollProgress(
           reject(error);
           return;
         }
-        // Treat as transient error; retry on next polling interval
-        if (typeof console !== 'undefined') {
-          console.warn(
-            `[pollProgress] transient error (#${consecutiveErrors}/${MAX_CONSECUTIVE_ERRORS}):`,
-            error instanceof Error ? error.message : error,
-          );
-        }
         setTimeout(poll, intervalMs);
       }
     };
