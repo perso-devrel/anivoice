@@ -123,6 +123,7 @@
 - [x] 중복 LANGUAGES 상수를 src/constants.ts로 추출 + 4개 테스트 추가 (372→376개) ← iter-127, #347, PR #348/#349
 - [x] formatDuration을 dashboard.ts에서 format.ts로 이동 (모듈 응집도 개선) ← iter-128, #351, PR #352/#353
 - [x] DashboardPage 인라인 빈 상태 SVG를 공유 EmptyProjectsIcon으로 추출 ← iter-129, #354, PR #355/#356
+- [x] 인라인 CSS 로딩 스피너 6개를 공유 LoadingSpinner 컴포넌트로 추출 ← iter-130, #359, PR #360/#361
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
