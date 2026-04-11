@@ -133,17 +133,9 @@ export default function LibraryPage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             {/* Tag pills */}
             <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setActiveTag('all')}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  activeTag === 'all'
-                    ? 'gradient-bg text-white shadow-lg shadow-primary-500/20'
-                    : 'bg-surface-800 text-gray-400 hover:text-white hover:bg-surface-700'
-                }`}
-              >
-                {t('common.all')}
-              </button>
-              {tags.map((tag) => (
+              {[{ id: 'all', name: 'all', label: t('common.all') },
+                ...tags.map((tag) => ({ id: String(tag.id), name: tag.name, label: tag.displayNameKo })),
+              ].map((tag) => (
                 <button
                   key={tag.id}
                   onClick={() => setActiveTag(tag.name)}
@@ -153,7 +145,7 @@ export default function LibraryPage() {
                       : 'bg-surface-800 text-gray-400 hover:text-white hover:bg-surface-700'
                   }`}
                 >
-                  {tag.displayNameKo}
+                  {tag.label}
                 </button>
               ))}
             </div>
