@@ -156,6 +156,8 @@
 - [x] unused export 정리: DownloadType (studio.ts), TimeLabels (format.ts) 내부 전용화 ← iter-160, #506, PR #507/#508
 - [x] persoApi.ts 매직 넘버 12개를 명명 상수로 추출 (가독성 개선) ← iter-161, #512, PR #513/#514
 - [x] 미사용 export 정리: TranslateRequest (persoApi.ts), DbUser (anivoiceApi.ts), formatSeconds (format.ts) 내부 전용화 ← iter-162, #517, PR #518/#519
+- [x] pollProgress transient error console.warn 제거 (src/ 내 console.* 0개 달성) ← iter-163, #523, PR #524/#525
+- [x] StrokeIcon 내부 래퍼 추출로 29개 stroke 아이콘 SVG 보일러플레이트 제거 ← iter-164, #526, PR #527/#528
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
