@@ -29,6 +29,11 @@ const BASIC_FEATURE_KEYS = [
   'settings.basicFeature3',
 ] as const;
 
+const LANGUAGE_OPTIONS: { code: 'ko' | 'en'; emoji: string; label: string; subtitleKey: string }[] = [
+  { code: 'ko', emoji: '🇰🇷', label: '한국어', subtitleKey: 'settings.langKoreanSub' },
+  { code: 'en', emoji: '🇺🇸', label: 'English', subtitleKey: 'settings.langEnglishSub' },
+];
+
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
   usePageTitle('pageTitle.settings');
@@ -253,43 +258,26 @@ export default function SettingsPage() {
             </p>
 
             <div className="space-y-3">
-              {/* Korean */}
-              <button
-                onClick={() => handleLanguageChange('ko')}
-                className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all ${
-                  language === 'ko'
-                    ? 'border-primary-500 bg-primary-500/10'
-                    : 'border-surface-700 bg-surface-900 hover:border-surface-600'
-                }`}
-              >
-                <span className="text-2xl">🇰🇷</span>
-                <div className="text-left">
-                  <p className="text-white font-medium">한국어</p>
-                  <p className="text-sm text-gray-400">{t('settings.langKoreanSub')}</p>
-                </div>
-                {language === 'ko' && (
-                  <CheckmarkIcon className="w-5 h-5 text-primary-400 ml-auto" />
-                )}
-              </button>
-
-              {/* English */}
-              <button
-                onClick={() => handleLanguageChange('en')}
-                className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all ${
-                  language === 'en'
-                    ? 'border-primary-500 bg-primary-500/10'
-                    : 'border-surface-700 bg-surface-900 hover:border-surface-600'
-                }`}
-              >
-                <span className="text-2xl">🇺🇸</span>
-                <div className="text-left">
-                  <p className="text-white font-medium">English</p>
-                  <p className="text-sm text-gray-400">{t('settings.langEnglishSub')}</p>
-                </div>
-                {language === 'en' && (
-                  <CheckmarkIcon className="w-5 h-5 text-primary-400 ml-auto" />
-                )}
-              </button>
+              {LANGUAGE_OPTIONS.map((opt) => (
+                <button
+                  key={opt.code}
+                  onClick={() => handleLanguageChange(opt.code)}
+                  className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all ${
+                    language === opt.code
+                      ? 'border-primary-500 bg-primary-500/10'
+                      : 'border-surface-700 bg-surface-900 hover:border-surface-600'
+                  }`}
+                >
+                  <span className="text-2xl">{opt.emoji}</span>
+                  <div className="text-left">
+                    <p className="text-white font-medium">{opt.label}</p>
+                    <p className="text-sm text-gray-400">{t(opt.subtitleKey)}</p>
+                  </div>
+                  {language === opt.code && (
+                    <CheckmarkIcon className="w-5 h-5 text-primary-400 ml-auto" />
+                  )}
+                </button>
+              ))}
             </div>
           </div>
         )}
