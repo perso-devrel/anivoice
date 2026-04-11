@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+const TOAST_AUTO_DISMISS_MS = 4000;
+
 export type ToastType = 'success' | 'error' | 'info';
 
 interface Toast {
@@ -23,7 +25,7 @@ export const useToastStore = create<ToastState>((set) => ({
     set((s) => ({ toasts: [...s.toasts, { id, message, type }] }));
     setTimeout(() => {
       set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) }));
-    }, 4000);
+    }, TOAST_AUTO_DISMISS_MS);
   },
   removeToast: (id) =>
     set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
