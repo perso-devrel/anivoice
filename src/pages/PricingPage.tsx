@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
-import { useFocusTrap } from '../hooks/useFocusTrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { purchaseCredits } from '../services/anivoiceApi';
 import { formatCreditTime } from '../utils/format';
 import { showToast } from '../stores/toastStore';
-import { SpinnerIcon, CheckmarkIcon, ClockIcon } from '../components/icons';
+import { CheckmarkIcon, ClockIcon } from '../components/icons';
+import { CheckoutModal } from '../components/CheckoutModal';
 import type { PlanType } from '../types';
 
 interface ModalState {
@@ -91,7 +91,6 @@ export default function PricingPage() {
   const { user } = useAuthStore();
 
   const [modal, setModal] = useState<ModalState | null>(null);
-  const modalTrapRef = useFocusTrap<HTMLDivElement>(modal !== null);
   const [cardNumber, setCardNumber] = useState('4242 4242 4242 4242');
   const [cardExpiry, setCardExpiry] = useState('12/28');
   const [cardCvc, setCardCvc] = useState('123');
@@ -316,88 +315,21 @@ export default function PricingPage() {
         </div>
       </div>
 
-      {/* Checkout Modal */}
       {modal && (
-        <div
-          ref={modalTrapRef}
-          className="fixed inset-0 z-50 flex items-center justify-center px-4"
-          role="dialog"
-          aria-modal="true"
-          aria-label={t('pricing.checkout')}
-          onClick={() => !isProcessing && setModal(null)}
-        >
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-          <div
-            className="relative glass border border-surface-600 rounded-2xl p-8 w-full max-w-md shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className="text-xl font-bold text-white mb-1">
-              {modal.type === 'plan' ? t('pricing.changePlan') : t('pricing.buyCredits')}
-            </h3>
-            <p className="text-gray-400 mb-6">
-              {modal.label} — <span className="text-white font-semibold">{modal.price}</span>
-            </p>
-
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">{t('pricing.cardNumber')}</label>
-                <input
-                  type="text"
-                  value={cardNumber}
-                  onChange={(e) => setCardNumber(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-800 border border-surface-600 text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none transition-colors"
-                  placeholder="0000 0000 0000 0000"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">{t('pricing.expiry')}</label>
-                  <input
-                    type="text"
-                    value={cardExpiry}
-                    onChange={(e) => setCardExpiry(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-surface-800 border border-surface-600 text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none transition-colors"
-                    placeholder="MM/YY"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">{t('pricing.cvc')}</label>
-                  <input
-                    type="text"
-                    value={cardCvc}
-                    onChange={(e) => setCardCvc(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-surface-800 border border-surface-600 text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none transition-colors"
-                    placeholder="123"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => setModal(null)}
-                disabled={isProcessing}
-                className="flex-1 py-3 rounded-xl border border-surface-600 text-gray-300 font-medium hover:border-primary-500 hover:text-white transition-colors disabled:opacity-40"
-              >
-                {t('common.cancel')}
-              </button>
-              <button
-                onClick={handleCheckout}
-                disabled={isProcessing}
-                className="flex-1 py-3 rounded-xl gradient-bg text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-60 flex items-center justify-center gap-2"
-              >
-                {isProcessing ? (
-                  <>
-                    <SpinnerIcon className="w-5 h-5" />
-                    {t('pricing.processing')}
-                  </>
-                ) : (
-                  t('pricing.pay')
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
+        <CheckoutModal
+          type={modal.type}
+          label={modal.label}
+          price={modal.price}
+          cardNumber={cardNumber}
+          cardExpiry={cardExpiry}
+          cardCvc={cardCvc}
+          isProcessing={isProcessing}
+          onCardNumberChange={setCardNumber}
+          onCardExpiryChange={setCardExpiry}
+          onCardCvcChange={setCardCvc}
+          onCheckout={handleCheckout}
+          onClose={() => setModal(null)}
+        />
       )}
     </main>
   );
