@@ -4,6 +4,10 @@ import { LANGUAGE_KEYS } from '../constants';
 
 const STUDIO_LANGUAGES = ['auto', ...LANGUAGE_KEYS] as const;
 
+function SettingsSection({ children, className = 'space-y-3' }: { children: React.ReactNode; className?: string }) {
+  return <div className={`glass rounded-2xl p-5 ${className}`}>{children}</div>;
+}
+
 interface SettingsStepProps {
   selectedFile: File | null;
   sourceLanguage: string;
@@ -49,7 +53,7 @@ export function SettingsStep({
         </div>
       )}
 
-      <div className="glass rounded-2xl p-5 space-y-3">
+      <SettingsSection>
         <label className="block text-sm font-medium text-surface-200/80">
           {t('studio.sourceLanguage')}
         </label>
@@ -65,9 +69,9 @@ export function SettingsStep({
             </option>
           ))}
         </select>
-      </div>
+      </SettingsSection>
 
-      <div className="glass rounded-2xl p-5 space-y-3">
+      <SettingsSection>
         <div className="flex items-center justify-between">
           <label className="block text-sm font-medium text-surface-200/80">
             {t('studio.targetLanguage')}
@@ -105,9 +109,9 @@ export function SettingsStep({
             );
           })}
         </div>
-      </div>
+      </SettingsSection>
 
-      <div className="glass rounded-2xl p-5">
+      <SettingsSection className="">
         <label className="flex items-center gap-3 cursor-pointer">
           <button
             type="button"
@@ -121,7 +125,7 @@ export function SettingsStep({
             <p className="text-xs text-surface-200/40 mt-0.5">{t('studio.lipSyncProRequired')}</p>
           </div>
         </label>
-      </div>
+      </SettingsSection>
 
       <button
         type="button"
