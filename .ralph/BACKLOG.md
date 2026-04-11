@@ -143,6 +143,7 @@
 - [x] StudioPage sentence editing JSX를 SentenceEditList 컴포넌트로 추출 ← iter-147, #443, PR #444/#445
 - [x] StudioPage 내부 StepIndicator 함수를 별도 컴포넌트로 추출 ← iter-148, #448, PR #449/#450
 - [x] StudioPage ResultStep 내부 publish 섹션을 PublishSection 컴포넌트로 추출 ← iter-149, #451, PR #452/#453
+- [x] DashboardPage 인라인 프로젝트 카드 JSX를 ProjectCard 컴포넌트로 추출 ← iter-150, #456, PR #457/#458
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
