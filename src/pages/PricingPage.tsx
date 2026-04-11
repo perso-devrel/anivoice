@@ -7,7 +7,7 @@ import { useAuthStore } from '../stores/authStore';
 import { purchaseCredits } from '../services/anivoiceApi';
 import { formatSeconds } from '../utils/format';
 import { showToast } from '../stores/toastStore';
-import { SpinnerIcon, CheckmarkIcon } from '../components/icons';
+import { SpinnerIcon, CheckmarkIcon, ClockIcon } from '../components/icons';
 import type { PlanType } from '../types';
 
 interface Plan {
@@ -295,19 +295,7 @@ export default function PricingPage() {
                 className="glass rounded-2xl border border-surface-700 p-6 flex flex-col items-center text-center hover:border-primary-500/50 transition-colors"
               >
                 <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
-                  <svg
-                    className="w-6 h-6 text-primary-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+                  <ClockIcon className="w-6 h-6 text-primary-400" />
                 </div>
 
                 <p className="text-2xl font-bold text-white mb-1">
