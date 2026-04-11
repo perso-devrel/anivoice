@@ -6,6 +6,7 @@ import { useUIStore } from '../stores/uiStore';
 import { useAuthStore } from '../stores/authStore';
 import { signOut, updateProfile as updateUserProfile } from '../services/firebase';
 import { formatSeconds } from '../utils/format';
+import { CheckmarkIcon } from '../components/icons';
 
 type Tab = 'profile' | 'subscription' | 'billing' | 'language';
 
@@ -190,19 +191,7 @@ export default function SettingsPage() {
                   t('settings.basicFeature3'),
                 ].map((feature, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
-                    <svg
-                      className="w-4 h-4 text-primary-400 flex-shrink-0"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
+                    <CheckmarkIcon className="w-4 h-4 text-primary-400 flex-shrink-0" />
                     {feature}
                   </li>
                 ))}
@@ -297,19 +286,7 @@ export default function SettingsPage() {
                   <p className="text-sm text-gray-400">{t('settings.langKoreanSub')}</p>
                 </div>
                 {language === 'ko' && (
-                  <svg
-                    className="w-5 h-5 text-primary-400 ml-auto"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  <CheckmarkIcon className="w-5 h-5 text-primary-400 ml-auto" />
                 )}
               </button>
 
@@ -328,19 +305,7 @@ export default function SettingsPage() {
                   <p className="text-sm text-gray-400">{t('settings.langEnglishSub')}</p>
                 </div>
                 {language === 'en' && (
-                  <svg
-                    className="w-5 h-5 text-primary-400 ml-auto"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  <CheckmarkIcon className="w-5 h-5 text-primary-400 ml-auto" />
                 )}
               </button>
             </div>

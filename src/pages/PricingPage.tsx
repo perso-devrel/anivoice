@@ -7,7 +7,7 @@ import { useAuthStore } from '../stores/authStore';
 import { purchaseCredits } from '../services/anivoiceApi';
 import { formatSeconds } from '../utils/format';
 import { showToast } from '../stores/toastStore';
-import { SpinnerIcon } from '../components/icons';
+import { SpinnerIcon, CheckmarkIcon } from '../components/icons';
 import type { PlanType } from '../types';
 
 interface Plan {
@@ -245,19 +245,7 @@ export default function PricingPage() {
                     key={i}
                     className="flex items-start gap-2 text-sm text-gray-300"
                   >
-                    <svg
-                      className="w-5 h-5 text-primary-400 flex-shrink-0 mt-0.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
+                    <CheckmarkIcon className="w-5 h-5 text-primary-400 flex-shrink-0 mt-0.5" />
                     {feature}
                   </li>
                 ))}
