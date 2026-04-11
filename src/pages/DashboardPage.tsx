@@ -14,6 +14,9 @@ import OnboardingModal from '../components/OnboardingModal';
 import { shouldShowOnboarding } from '../utils/onboarding';
 import { mapDbStatus, filterProjects, sortProjects, extractAvailableLanguages, countProjectStats, type FilterTab, type SortOrder } from '../utils/dashboard';
 
+const PROJECT_PAGE_SIZE = 20;
+const CREDIT_HISTORY_DAYS = 30;
+
 const DASHBOARD_TABS: { key: FilterTab; i18nKey: string }[] = [
   { key: 'all', i18nKey: 'common.all' },
   { key: 'favorites', i18nKey: 'dashboard.favorites' },
@@ -77,7 +80,7 @@ export default function DashboardPage() {
       setLoading(true);
       setError(null);
       try {
-        const result = await listMyProjects(20, 0);
+        const result = await listMyProjects(PROJECT_PAGE_SIZE, 0);
         if (cancelled) return;
         setProjects(result.projects);
         if (shouldShowOnboarding(result.projects.length)) {
@@ -94,7 +97,7 @@ export default function DashboardPage() {
 
     async function fetchUsage() {
       try {
-        const hist = await getCreditHistory(30);
+        const hist = await getCreditHistory(CREDIT_HISTORY_DAYS);
         if (!cancelled) setUsageData(hist.data);
       } catch {
         // non-critical — chart simply stays empty
