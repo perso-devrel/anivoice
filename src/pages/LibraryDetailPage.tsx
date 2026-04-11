@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
+import { useClipboard } from '../hooks/useClipboard';
 import { getLibraryItem, type LibraryItemDetail } from '../services/anivoiceApi';
 import { formatSeconds } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
@@ -14,7 +15,7 @@ export default function LibraryDetailPage() {
   const [item, setItem] = useState<LibraryItemDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [linkCopied, setLinkCopied] = useState(false);
+  const { copied: linkCopied, copy: copyToClipboard } = useClipboard();
 
   useEffect(() => {
     if (!id) return;
@@ -37,9 +38,7 @@ export default function LibraryDetailPage() {
   }, [id]);
 
   async function handleCopyLink() {
-    await navigator.clipboard.writeText(window.location.href);
-    setLinkCopied(true);
-    setTimeout(() => setLinkCopied(false), 2000);
+    await copyToClipboard(window.location.href);
   }
 
   if (loading) {

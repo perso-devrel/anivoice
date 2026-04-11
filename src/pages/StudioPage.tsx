@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
+import { useClipboard } from '../hooks/useClipboard';
 import { useSearchParams } from 'react-router-dom';
 import {
   listSpaces,
@@ -69,7 +70,7 @@ export default function StudioPage() {
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
-  const [linkCopied, setLinkCopied] = useState(false);
+  const { copied: linkCopied, copy: copyToClipboard } = useClipboard();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -413,9 +414,7 @@ export default function StudioPage() {
   async function handleCopyShareLink() {
     const url = buildShareUrl(window.location.origin, dbProjectId);
     try {
-      await navigator.clipboard.writeText(url);
-      setLinkCopied(true);
-      setTimeout(() => setLinkCopied(false), 2000);
+      await copyToClipboard(url);
     } catch {
       setError('Failed to copy link to clipboard');
     }

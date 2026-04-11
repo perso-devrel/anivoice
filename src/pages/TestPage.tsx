@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 import * as api from '../services/persoApi';
 import { usePageTitle } from '../hooks/usePageTitle';
+import { useClipboard } from '../hooks/useClipboard';
 
 const BASE = (import.meta.env.VITE_PERSO_PROXY_PATH || '/api/perso').replace(/\/+$/, '');
 
@@ -62,11 +63,11 @@ function formatDocExpected(raw: string): string {
 }
 
 function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useClipboard(1500);
   return (
     <button
       className="text-[10px] text-gray-500 hover:text-white px-2 py-0.5 rounded bg-surface-800 border border-surface-700"
-      onClick={() => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
+      onClick={() => copy(text)}
     >
       {copied ? 'Copied!' : 'Copy'}
     </button>
