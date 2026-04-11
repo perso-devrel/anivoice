@@ -10,6 +10,19 @@ import { ClockIcon } from '../components/icons';
 import { CheckoutModal, type CardForm } from '../components/CheckoutModal';
 import { PlanCard, type PlanConfig } from '../components/PlanCard';
 import type { PlanType } from '../types';
+import {
+  FREE_PLAN_CREDITS,
+  BASIC_PLAN_CREDITS,
+  PRO_PLAN_CREDITS,
+  TIME_PACK_10_MIN_SECONDS,
+  TIME_PACK_50_MIN_SECONDS,
+  TIME_PACK_100_MIN_SECONDS,
+  TIME_PACK_10_MIN_PRICE,
+  TIME_PACK_50_MIN_PRICE,
+  TIME_PACK_100_MIN_PRICE,
+  FAKE_PAYMENT_DELAY_MS,
+  MOCK_CARD_DEFAULTS,
+} from '../utils/pricing';
 
 interface ModalState {
   type: 'plan' | 'credit';
@@ -28,7 +41,7 @@ const PLAN_CONFIGS: PlanConfig[] = [
     price: '$0',
     periodKey: null,
     timeLabelKey: 'pricing.freeTimeLabel',
-    creditSeconds: 360000,
+    creditSeconds: FREE_PLAN_CREDITS,
     featureKeys: ['pricing.freeFeatureMain', 'pricing.freeFeature2', 'pricing.freeFeature3'],
     highlighted: false,
   },
@@ -39,7 +52,7 @@ const PLAN_CONFIGS: PlanConfig[] = [
     price: '$4.99',
     periodKey: 'pricing.perMonth',
     timeLabelKey: 'pricing.basicTimeLabel',
-    creditSeconds: 1080000,
+    creditSeconds: BASIC_PLAN_CREDITS,
     featureKeys: ['pricing.basicFeatureMain', 'pricing.basicFeature2', 'pricing.basicFeature3', 'pricing.basicFeature4'],
     highlighted: false,
   },
@@ -50,7 +63,7 @@ const PLAN_CONFIGS: PlanConfig[] = [
     price: '$14.99',
     periodKey: 'pricing.perMonth',
     timeLabelKey: 'pricing.proTimeLabel',
-    creditSeconds: 3600000,
+    creditSeconds: PRO_PLAN_CREDITS,
     featureKeys: ['pricing.proFeatureMain', 'pricing.proFeature2', 'pricing.proFeature3', 'pricing.proFeature4', 'pricing.proFeature5'],
     highlighted: true,
   },
@@ -68,9 +81,9 @@ const PLAN_CONFIGS: PlanConfig[] = [
 ];
 
 const TIME_PACKAGE_CONFIGS = [
-  { seconds: 600, labelKey: 'pricing.timePack10', price: '$12', priceNum: 12, savingsKey: '' },
-  { seconds: 3000, labelKey: 'pricing.timePack50', price: '$50', priceNum: 50, savingsKey: 'pricing.save17' },
-  { seconds: 6000, labelKey: 'pricing.timePack100', price: '$90', priceNum: 90, savingsKey: 'pricing.save40' },
+  { seconds: TIME_PACK_10_MIN_SECONDS, labelKey: 'pricing.timePack10', price: `$${TIME_PACK_10_MIN_PRICE}`, priceNum: TIME_PACK_10_MIN_PRICE, savingsKey: '' },
+  { seconds: TIME_PACK_50_MIN_SECONDS, labelKey: 'pricing.timePack50', price: `$${TIME_PACK_50_MIN_PRICE}`, priceNum: TIME_PACK_50_MIN_PRICE, savingsKey: 'pricing.save17' },
+  { seconds: TIME_PACK_100_MIN_SECONDS, labelKey: 'pricing.timePack100', price: `$${TIME_PACK_100_MIN_PRICE}`, priceNum: TIME_PACK_100_MIN_PRICE, savingsKey: 'pricing.save40' },
 ];
 
 export default function PricingPage() {
@@ -80,7 +93,7 @@ export default function PricingPage() {
   const { user } = useAuthStore();
 
   const [modal, setModal] = useState<ModalState | null>(null);
-  const [cardForm, setCardForm] = useState<CardForm>({ number: '4242 4242 4242 4242', expiry: '12/28', cvc: '123' });
+  const [cardForm, setCardForm] = useState<CardForm>(MOCK_CARD_DEFAULTS);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleCardFormChange = (field: keyof CardForm, value: string) => {
@@ -123,8 +136,7 @@ export default function PricingPage() {
     setIsProcessing(true);
 
     try {
-      // Fake 1.5s payment delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, FAKE_PAYMENT_DELAY_MS));
 
       if (modal.type === 'plan' && modal.planType) {
         const result = await purchaseCredits({ plan: modal.planType });
