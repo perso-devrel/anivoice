@@ -5,7 +5,7 @@ export function formatMs(ms: number): string {
   return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 }
 
-export interface TimeLabels { hours: string; minutes: string; seconds: string }
+interface TimeLabels { hours: string; minutes: string; seconds: string }
 
 export function formatSeconds(seconds: number, labels: TimeLabels): string {
   if (seconds >= 3600) {

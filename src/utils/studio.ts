@@ -1,6 +1,6 @@
 import type { PersoDownloadLinks } from '../types';
 
-export type DownloadType = 'video' | 'subtitle' | 'audio' | 'zip';
+type DownloadType = 'video' | 'subtitle' | 'audio' | 'zip';
 
 export function getDownloadUrl(
   type: DownloadType,
