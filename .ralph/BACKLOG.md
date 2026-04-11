@@ -190,6 +190,7 @@
 - [x] ResultStep 중복 centering className 3개를 RESULT_CENTER_CLASS 상수로 추출 ← iter-194, #671, PR #672/#673
 - [x] DashboardPage 매직 넘버 2개를 PROJECT_PAGE_SIZE/CREDIT_HISTORY_DAYS 상수로 추출 ← iter-195, #675, PR #676/#677
 - [x] StudioPage 진행률 매직 넘버 10개를 PROGRESS_* 상수로 추출 (studio.ts) ← iter-196, #680, PR #681/#682
+- [x] PricingPage 매직 넘버 14개를 pricing.ts 명명 상수로 추출 ← iter-197, #685, PR #686/#687
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
