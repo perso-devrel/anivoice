@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { getLibrary, getTags, type LibraryItem, type Tag } from '../services/anivoiceApi';
-import { formatCreditTimeMs, getErrorMessage } from '../utils/format';
-import { resolvePersoFileUrl } from '../services/persoApi';
-import { SearchIcon, PlayIcon, ChevronDownIcon, ClockIcon, SpinnerIcon } from '../components/icons';
+import { getErrorMessage } from '../utils/format';
+import { SearchIcon, ChevronDownIcon, SpinnerIcon } from '../components/icons';
+import { LibraryCard } from '../components/LibraryCard';
 import { LANGUAGE_KEYS } from '../constants';
 
 const LIBRARY_LANGUAGE_OPTIONS = ['all', ...LANGUAGE_KEYS] as const;
@@ -205,77 +204,13 @@ export default function LibraryPage() {
           <>
             <p className="text-sm text-gray-500 mb-4">{t('library.totalCount', { count: total })}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {items.map((item, index) => {
-                const thumbnailSrc = resolvePersoFileUrl(item.thumbnailUrl);
-                return (
-                  <Link
-                    key={item.id}
-                    to={`/library/${item.id}`}
-                    className="group glass rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary-500/10 hover:border-primary-500/30"
-                  >
-                    {/* Thumbnail */}
-                    <div className={`relative aspect-video ${!thumbnailSrc ? `bg-gradient-to-br ${GRADIENT_PALETTES[index % GRADIENT_PALETTES.length]}` : 'bg-surface-800'} flex items-center justify-center overflow-hidden`}>
-                      {thumbnailSrc ? (
-                        <img
-                          src={thumbnailSrc}
-                          alt={item.title}
-                          loading="lazy"
-                          decoding="async"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-white/20 text-6xl font-black select-none">
-                          {item.title.charAt(0)}
-                        </span>
-                      )}
-                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white">
-                          <PlayIcon />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Info */}
-                    <div className="p-4 space-y-2.5">
-                      {/* Title + Author */}
-                      <div>
-                        <h3 className="text-white font-semibold text-sm leading-tight truncate">
-                          {item.title}
-                        </h3>
-                        <p className="text-gray-500 text-xs mt-0.5 truncate">
-                          {item.authorName}
-                        </p>
-                      </div>
-
-                      {/* Duration + Language row */}
-                      <div className="flex items-center gap-2">
-                        <span className="flex items-center gap-1 text-gray-500 text-xs">
-                          <ClockIcon />
-                          {formatCreditTimeMs(item.durationMs, t)}
-                        </span>
-                        <span className="text-gray-600 text-xs">|</span>
-                        <span className="text-xs text-gray-400 uppercase">
-                          {item.sourceLanguage} → {item.targetLanguage}
-                        </span>
-                      </div>
-
-                      {/* Tag badges */}
-                      {item.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
-                          {item.tags.map((tagName) => (
-                            <span
-                              key={tagName}
-                              className="px-1.5 py-0.5 rounded bg-accent-500/15 text-accent-400 text-[10px] font-medium"
-                            >
-                              {tagName}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })}
+              {items.map((item, index) => (
+                <LibraryCard
+                  key={item.id}
+                  item={item}
+                  gradient={GRADIENT_PALETTES[index % GRADIENT_PALETTES.length]}
+                />
+              ))}
             </div>
           </>
         )}
