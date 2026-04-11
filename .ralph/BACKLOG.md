@@ -193,6 +193,7 @@
 - [x] PricingPage 매직 넘버 14개를 pricing.ts 명명 상수로 추출 ← iter-197, #685, PR #686/#687
 - [x] SentenceEditList 매직 넘버 3을 MATCHING_RATE_GOOD_THRESHOLD 상수로 추출 ← iter-198, #690, PR #691/#692
 - [x] ProfileTab setTimeout 2000ms를 PROFILE_SAVE_DISPLAY_MS 상수로 추출 ← iter-199, #695, PR #696/#697
+- [x] toastStore setTimeout 4000ms를 TOAST_AUTO_DISMISS_MS 상수로 추출 ← iter-200, #700, PR #701/#702
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
