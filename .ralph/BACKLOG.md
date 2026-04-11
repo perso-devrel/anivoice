@@ -173,6 +173,7 @@
 - [x] Toast aria-label="Close" + StudioPage 'Untitled' 폴백 i18n 키 교체 ← iter-177, #589, PR #590/#591
 - [x] CheckoutModal 카드 입력 CARD_FIELDS config + CardForm 상태 객체 통합 (props 11→7개) ← iter-178, #594, PR #595/#596
 - [x] DashboardPage 4개 상태 패널 래퍼를 StatePanel 컴포넌트로 추출 (중복 className 제거) ← iter-179, #599, PR #600/#601
+- [x] SettingsStep 3개 glass panel을 SettingsSection 내부 컴포넌트로 추출 (중복 className 제거) ← iter-180, #604, PR #605/#606
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
