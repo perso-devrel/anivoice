@@ -7,7 +7,7 @@ import { purchaseCredits } from '../services/anivoiceApi';
 import { formatCreditTime } from '../utils/format';
 import { showToast } from '../stores/toastStore';
 import { ClockIcon } from '../components/icons';
-import { CheckoutModal } from '../components/CheckoutModal';
+import { CheckoutModal, type CardForm } from '../components/CheckoutModal';
 import { PlanCard, type PlanConfig } from '../components/PlanCard';
 import type { PlanType } from '../types';
 
@@ -80,10 +80,12 @@ export default function PricingPage() {
   const { user } = useAuthStore();
 
   const [modal, setModal] = useState<ModalState | null>(null);
-  const [cardNumber, setCardNumber] = useState('4242 4242 4242 4242');
-  const [cardExpiry, setCardExpiry] = useState('12/28');
-  const [cardCvc, setCardCvc] = useState('123');
+  const [cardForm, setCardForm] = useState<CardForm>({ number: '4242 4242 4242 4242', expiry: '12/28', cvc: '123' });
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleCardFormChange = (field: keyof CardForm, value: string) => {
+    setCardForm((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleSelectPlan = (plan: PlanConfig) => {
     if (!user) {
@@ -242,13 +244,9 @@ export default function PricingPage() {
           type={modal.type}
           label={modal.label}
           price={modal.price}
-          cardNumber={cardNumber}
-          cardExpiry={cardExpiry}
-          cardCvc={cardCvc}
+          cardForm={cardForm}
           isProcessing={isProcessing}
-          onCardNumberChange={setCardNumber}
-          onCardExpiryChange={setCardExpiry}
-          onCardCvcChange={setCardCvc}
+          onCardFormChange={handleCardFormChange}
           onCheckout={handleCheckout}
           onClose={() => setModal(null)}
         />
