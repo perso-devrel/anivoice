@@ -153,6 +153,7 @@
 - [x] PricingPage 하드코딩 "CVC" 라벨을 i18n 키 pricing.cvc 로 교체 ← iter-157, #491, PR #492/#493
 - [x] PricingPage `as PlanType` 4개 + ResultStep `as` 1개 불필요한 type assertion 제거 (PlanConfig 인터페이스 도입) ← iter-158, #496, PR #497/#498
 - [x] StudioPage 하드코딩 `Translation failed` 에러를 i18n 키 `studio.translationFailed` 로 교체 ← iter-159, #501, PR #502/#503
+- [x] unused export 정리: DownloadType (studio.ts), TimeLabels (format.ts) 내부 전용화 ← iter-160, #506, PR #507/#508
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
