@@ -11,6 +11,9 @@ import type { User } from '../types';
 
 type Mode = 'login' | 'signup';
 
+const AUTH_INPUT_CLASS =
+  'w-full rounded-lg bg-surface-900 border border-surface-700 px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-primary-500 transition-colors';
+
 export default function AuthPage() {
   const { t } = useTranslation();
   usePageTitle('pageTitle.auth');
@@ -126,7 +129,7 @@ export default function AuthPage() {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 required
-                className="w-full rounded-lg bg-surface-900 border border-surface-700 px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-primary-500 transition-colors"
+                className={AUTH_INPUT_CLASS}
                 placeholder={t('auth.namePlaceholder')}
               />
             </div>
