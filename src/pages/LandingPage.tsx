@@ -12,6 +12,43 @@ const FAQ_KEYS = [
   { qKey: 'landing.faqEditQ', aKey: 'landing.faqEditA' },
 ];
 
+const FEATURE_KEYS = [
+  { iconId: 'voice', titleKey: 'landing.featureVoice', descKey: 'landing.featureVoiceDesc' },
+  { iconId: 'globe', titleKey: 'landing.featureLang', descKey: 'landing.featureLangDesc' },
+  { iconId: 'lipSync', titleKey: 'landing.featureLipSync', descKey: 'landing.featureLipSyncDesc' },
+  { iconId: 'edit', titleKey: 'landing.featureEdit', descKey: 'landing.featureEditDesc' },
+] as const;
+
+const FEATURE_ICONS: Record<string, React.ReactNode> = {
+  voice: <VoiceIcon />,
+  globe: <GlobeIcon />,
+  lipSync: <LipSyncIcon />,
+  edit: <EditIcon />,
+};
+
+const STEP_KEYS = [
+  { iconId: 'upload', titleKey: 'landing.step1', descKey: 'landing.step1Desc' },
+  { iconId: 'settings', titleKey: 'landing.step2', descKey: 'landing.step2Desc' },
+  { iconId: 'download', titleKey: 'landing.step3', descKey: 'landing.step3Desc' },
+] as const;
+
+const STEP_ICONS: Record<string, React.ReactNode> = {
+  upload: <UploadIcon />,
+  settings: <SettingsIcon />,
+  download: <DownloadIcon className="w-10 h-10" />,
+};
+
+const PLAN_KEYS = [
+  { nameKey: 'pricing.free.name', priceKey: 'pricing.free.price', featuresKey: 'pricing.free.features', highlight: false },
+  { nameKey: 'pricing.basic.name', priceKey: 'pricing.basic.price', featuresKey: 'pricing.basic.features', highlight: false },
+  { nameKey: 'pricing.pro.name', priceKey: 'pricing.pro.price', featuresKey: 'pricing.pro.features', highlight: true },
+  { nameKey: 'pricing.payPerUse.name', priceKey: 'pricing.payPerUse.price', featuresKey: 'pricing.payPerUse.features', highlight: false },
+];
+
+const WAVEFORM_ORIGINAL = [3, 5, 2, 6, 4, 7, 3, 5, 2, 4, 6, 3, 5, 7, 4];
+const WAVEFORM_DUBBED = [4, 6, 3, 7, 5, 2, 6, 4, 7, 3, 5, 2, 6, 4, 5];
+const WAVEFORM_HEIGHT_MULTIPLIER = 3;
+
 /* ------------------------------------------------------------------ */
 /*  Sub-components                                                    */
 /* ------------------------------------------------------------------ */
@@ -154,26 +191,6 @@ export default function LandingPage() {
   const { t } = useTranslation();
   usePageTitle('pageTitle.landing');
 
-  const features = [
-    { icon: <VoiceIcon />, titleKey: 'landing.featureVoice', descKey: 'landing.featureVoiceDesc' },
-    { icon: <GlobeIcon />, titleKey: 'landing.featureLang', descKey: 'landing.featureLangDesc' },
-    { icon: <LipSyncIcon />, titleKey: 'landing.featureLipSync', descKey: 'landing.featureLipSyncDesc' },
-    { icon: <EditIcon />, titleKey: 'landing.featureEdit', descKey: 'landing.featureEditDesc' },
-  ];
-
-  const steps = [
-    { icon: <UploadIcon />, titleKey: 'landing.step1', descKey: 'landing.step1Desc' },
-    { icon: <SettingsIcon />, titleKey: 'landing.step2', descKey: 'landing.step2Desc' },
-    { icon: <DownloadIcon className="w-10 h-10" />, titleKey: 'landing.step3', descKey: 'landing.step3Desc' },
-  ];
-
-  const plans = [
-    { nameKey: 'pricing.free.name', priceKey: 'pricing.free.price', featuresKey: 'pricing.free.features', highlight: false },
-    { nameKey: 'pricing.basic.name', priceKey: 'pricing.basic.price', featuresKey: 'pricing.basic.features', highlight: false },
-    { nameKey: 'pricing.pro.name', priceKey: 'pricing.pro.price', featuresKey: 'pricing.pro.features', highlight: true },
-    { nameKey: 'pricing.payPerUse.name', priceKey: 'pricing.payPerUse.price', featuresKey: 'pricing.payPerUse.features', highlight: false },
-  ];
-
   return (
     <main className="min-h-screen bg-gray-950 text-gray-100 overflow-x-hidden">
       {/* Decorative gradient orbs */}
@@ -227,8 +244,8 @@ export default function LandingPage() {
                   </span>
                   {/* Waveform decoration */}
                   <div className="absolute bottom-3 left-3 flex items-end gap-0.5">
-                    {[3, 5, 2, 6, 4, 7, 3, 5, 2, 4, 6, 3, 5, 7, 4].map((h, i) => (
-                      <div key={i} className="w-1 bg-primary-400/60 rounded-full" style={{ height: `${h * 3}px` }} />
+                    {WAVEFORM_ORIGINAL.map((h, i) => (
+                      <div key={i} className="w-1 bg-primary-400/60 rounded-full" style={{ height: `${h * WAVEFORM_HEIGHT_MULTIPLIER}px` }} />
                     ))}
                   </div>
                 </div>
@@ -243,8 +260,8 @@ export default function LandingPage() {
                     {t('landing.videoDubbedLang')}
                   </span>
                   <div className="absolute bottom-3 left-3 flex items-end gap-0.5">
-                    {[4, 6, 3, 7, 5, 2, 6, 4, 7, 3, 5, 2, 6, 4, 5].map((h, i) => (
-                      <div key={i} className="w-1 bg-accent-400/60 rounded-full" style={{ height: `${h * 3}px` }} />
+                    {WAVEFORM_DUBBED.map((h, i) => (
+                      <div key={i} className="w-1 bg-accent-400/60 rounded-full" style={{ height: `${h * WAVEFORM_HEIGHT_MULTIPLIER}px` }} />
                     ))}
                   </div>
                 </div>
@@ -258,10 +275,10 @@ export default function LandingPage() {
         {/* ============================================================ */}
         <section className="px-4 py-20 md:py-28 max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((f) => (
+            {FEATURE_KEYS.map((f) => (
               <FeatureCard
                 key={f.titleKey}
-                icon={f.icon}
+                icon={FEATURE_ICONS[f.iconId]}
                 title={t(f.titleKey)}
                 desc={t(f.descKey)}
               />
@@ -280,14 +297,14 @@ export default function LandingPage() {
             {t('landing.heroSubtitle')}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
-            {steps.map((s, i) => (
+            {STEP_KEYS.map((s, i) => (
               <StepCard
                 key={s.titleKey}
                 num={i + 1}
                 title={t(s.titleKey)}
                 desc={t(s.descKey)}
-                icon={s.icon}
-                isLast={i === steps.length - 1}
+                icon={STEP_ICONS[s.iconId]}
+                isLast={i === STEP_KEYS.length - 1}
               />
             ))}
           </div>
@@ -326,7 +343,7 @@ export default function LandingPage() {
             {t('pricing.subtitle')}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {plans.map((plan) => (
+            {PLAN_KEYS.map((plan) => (
               <PricingCard
                 key={plan.nameKey}
                 name={t(plan.nameKey)}
