@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
-import { UploadIcon, VoiceIcon, GlobeIcon, LipSyncIcon, EditIcon, SettingsIcon } from '../components/icons';
+import { UploadIcon, VoiceIcon, GlobeIcon, LipSyncIcon, EditIcon, SettingsIcon, DownloadIcon, PlayIcon, CheckmarkIcon, ChevronDownIcon } from '../components/icons';
 
 const LANGUAGES = [
   { key: 'ja', flag: '🇯🇵' },
@@ -20,46 +20,6 @@ const FAQ_KEYS = [
   { qKey: 'landing.faqFormatQ', aKey: 'landing.faqFormatA' },
   { qKey: 'landing.faqEditQ', aKey: 'landing.faqEditA' },
 ];
-
-/* ------------------------------------------------------------------ */
-/*  Inline SVG Icons                                                  */
-/* ------------------------------------------------------------------ */
-
-function IconDownload() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M12 15V3m0 12l-3-3m3 3l3-3" />
-    </svg>
-  );
-}
-
-function IconPlay() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-12 h-12 text-white/80">
-      <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
-    </svg>
-  );
-}
-
-function IconCheck() {
-  return (
-    <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-primary-400 shrink-0">
-      <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
-    </svg>
-  );
-}
-
-function IconChevron({ open }: { open: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
-    >
-      <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-    </svg>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /*  Sub-components                                                    */
@@ -151,7 +111,7 @@ function PricingCard({
       <ul className="space-y-3 mb-8 flex-1">
         {features.map((f, i) => (
           <li key={i} className="flex items-start gap-2 text-sm">
-            <IconCheck />
+            <CheckmarkIcon className="w-5 h-5 text-primary-400 shrink-0" />
             <span className={highlight ? 'text-white/90' : 'text-gray-300'}>{f}</span>
           </li>
         ))}
@@ -182,7 +142,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         <span className="text-white font-medium pr-4 group-hover:text-primary-400 transition-colors">
           {question}
         </span>
-        <IconChevron open={open} />
+        <ChevronDownIcon className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
       </button>
       <div
         className={`overflow-hidden transition-all duration-300 ${
@@ -213,7 +173,7 @@ export default function LandingPage() {
   const steps = [
     { icon: <UploadIcon />, titleKey: 'landing.step1', descKey: 'landing.step1Desc' },
     { icon: <SettingsIcon />, titleKey: 'landing.step2', descKey: 'landing.step2Desc' },
-    { icon: <IconDownload />, titleKey: 'landing.step3', descKey: 'landing.step3Desc' },
+    { icon: <DownloadIcon className="w-10 h-10" />, titleKey: 'landing.step3', descKey: 'landing.step3Desc' },
   ];
 
   const plans = [
@@ -267,7 +227,7 @@ export default function LandingPage() {
                 {/* Original */}
                 <div className="relative rounded-xl overflow-hidden bg-surface-900 aspect-video flex items-center justify-center group cursor-pointer">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <IconPlay />
+                  <PlayIcon className="w-12 h-12 text-white/80" />
                   <span className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-xs text-white px-3 py-1 rounded-full font-medium">
                     {t('landing.videoOriginal')}
                   </span>
@@ -284,7 +244,7 @@ export default function LandingPage() {
                 {/* Dubbed */}
                 <div className="relative rounded-xl overflow-hidden bg-surface-900 aspect-video flex items-center justify-center group cursor-pointer">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <IconPlay />
+                  <PlayIcon className="w-12 h-12 text-white/80" />
                   <span className="absolute top-3 left-3 gradient-bg text-xs text-white px-3 py-1 rounded-full font-medium">
                     {t('landing.videoDubbed')}
                   </span>
