@@ -250,6 +250,7 @@ export default {
     checkout: 'Checkout',
     cardNumber: 'Card number',
     expiry: 'Expiry',
+    cvc: 'CVC',
     processing: 'Processing...',
     pay: 'Pay',
     planChanged: 'Plan changed successfully!',
