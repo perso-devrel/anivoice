@@ -164,6 +164,7 @@
 - [x] PricingPage 인라인 checkout modal JSX를 CheckoutModal 컴포넌트로 추출 (404→335줄) ← iter-168, #544, PR #545/#546
 - [x] PricingPage 인라인 plan card JSX를 PlanCard 컴포넌트로 추출 (336→259줄) ← iter-169, #549, PR #550/#551
 - [x] SettingsPage 인라인 프로필 탭 JSX를 ProfileTab 컴포넌트로 추출 (299→233줄) ← iter-170, #554, PR #555/#556
+- [x] SettingsPage 인라인 subscription 탭 JSX를 SubscriptionTab 컴포넌트로 추출 (233→196줄) ← iter-171, #560, PR #561/#562
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
