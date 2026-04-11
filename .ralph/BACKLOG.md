@@ -125,6 +125,7 @@
 - [x] DashboardPage 인라인 빈 상태 SVG를 공유 EmptyProjectsIcon으로 추출 ← iter-129, #354, PR #355/#356
 - [x] 인라인 CSS 로딩 스피너 6개를 공유 LoadingSpinner 컴포넌트로 추출 ← iter-130, #359, PR #360/#361
 - [x] AuthPage 인라인 Google 로고 SVG를 공유 GoogleIcon 컴포넌트로 추출 ← iter-131, #364, PR #365/#366
+- [x] Footer 하드코딩 copyright 문자열 i18n 키 교체 ← iter-132, #369, PR #370/#371
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
