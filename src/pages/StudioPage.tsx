@@ -495,6 +495,7 @@ export default function StudioPage() {
               setSourceLanguage(nextSourceLanguage);
               setTargetLanguages((prev) => prev.filter((l) => l !== nextSourceLanguage));
             }}
+            aria-label={t('studio.sourceLanguage')}
             className="w-full bg-surface-900 border border-surface-700 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary-500 transition-colors appearance-none"
           >
             {LANGUAGES.map((lang) => (

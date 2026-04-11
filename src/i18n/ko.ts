@@ -32,6 +32,7 @@ export default {
     close: '닫기',
     menu: '메뉴',
     skipToContent: '본문으로 건너뛰기',
+    filterByLanguage: '언어 필터',
     hours: '시간',
     minutes: '분',
     seconds: '초',

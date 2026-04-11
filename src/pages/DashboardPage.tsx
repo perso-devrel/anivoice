@@ -257,6 +257,7 @@ export default function DashboardPage() {
               <select
                 value={languageFilter}
                 onChange={(e) => setLanguageFilter(e.target.value)}
+                aria-label={t('common.filterByLanguage')}
                 className="px-3 py-1.5 rounded-lg bg-surface-800 text-sm text-white border border-surface-700 focus:border-primary-500 focus:outline-none transition-colors"
               >
                 <option value="">{t('dashboard.allLanguages')}</option>

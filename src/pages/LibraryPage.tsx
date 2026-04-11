@@ -108,6 +108,7 @@ export default function LibraryPage() {
               <select
                 value={languageFilter}
                 onChange={(e) => setLanguageFilter(e.target.value)}
+                aria-label={t('common.filterByLanguage')}
                 className="appearance-none w-full sm:w-44 px-4 py-2.5 pr-9 bg-surface-800 border border-surface-700 rounded-xl text-sm text-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors cursor-pointer"
               >
                 {languageOptions.map((lang) => (

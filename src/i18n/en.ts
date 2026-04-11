@@ -32,6 +32,7 @@ export default {
     close: 'Close',
     menu: 'Menu',
     skipToContent: 'Skip to content',
+    filterByLanguage: 'Filter by language',
     hours: 'hr',
     minutes: 'min',
     seconds: 'sec',
