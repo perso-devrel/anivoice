@@ -87,11 +87,4 @@ export async function migrate() {
     -- Users who already dubbed (credit_seconds != 60) are unaffected.
     UPDATE users SET credit_seconds = 360000 WHERE plan = 'free' AND credit_seconds = 60;
   `);
-
-  // Add is_favorite column if it doesn't exist yet (ALTER TABLE is not idempotent in SQLite)
-  try {
-    await db.execute({ sql: `ALTER TABLE projects ADD COLUMN is_favorite INTEGER NOT NULL DEFAULT 0`, args: [] });
-  } catch {
-    // column already exists — safe to ignore
-  }
 }
