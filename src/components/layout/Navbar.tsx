@@ -5,6 +5,13 @@ import { useAuthStore } from '../../stores/authStore';
 import { useUIStore } from '../../stores/uiStore';
 import { XIcon, MenuIcon } from '../icons';
 
+const NAV_LINK_KEYS = [
+  { to: '/dashboard', labelKey: 'common.dashboard', authOnly: true },
+  { to: '/studio', labelKey: 'common.studio', authOnly: true },
+  { to: '/library', labelKey: 'common.library', authOnly: false },
+  { to: '/pricing', labelKey: 'common.pricing', authOnly: false },
+] as const;
+
 export default function Navbar() {
   const { t, i18n } = useTranslation();
   const location = useLocation();
@@ -27,17 +34,7 @@ export default function Navbar() {
     i18n.changeLanguage(newLang);
   };
 
-  const navLinks = user
-    ? [
-        { to: '/dashboard', label: t('common.dashboard') },
-        { to: '/studio', label: t('common.studio') },
-        { to: '/library', label: t('common.library') },
-        { to: '/pricing', label: t('common.pricing') },
-      ]
-    : [
-        { to: '/library', label: t('common.library') },
-        { to: '/pricing', label: t('common.pricing') },
-      ];
+  const navLinks = NAV_LINK_KEYS.filter((link) => !link.authOnly || user);
 
   return (
     <nav className="glass fixed top-0 left-0 right-0 z-50">
@@ -64,7 +61,7 @@ export default function Navbar() {
                     : 'text-gray-400 hover:text-white'
                 }`}
               >
-                {link.label}
+                {t(link.labelKey)}
               </Link>
             ))}
           </div>
@@ -127,7 +124,7 @@ export default function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-surface-800 rounded-lg"
               >
-                {link.label}
+                {t(link.labelKey)}
               </Link>
             ))}
             <div className="flex items-center gap-3 px-3 pt-2 border-t border-surface-700 mt-2">
