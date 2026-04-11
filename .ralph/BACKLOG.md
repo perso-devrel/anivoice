@@ -128,6 +128,7 @@
 - [x] Footer 하드코딩 copyright 문자열 i18n 키 교체 ← iter-132, #369, PR #370/#371
 - [x] 썸네일 이미지 loading="lazy" + decoding="async" 추가 (DashboardPage, LibraryPage) ← iter-133, #373, PR #374/#375
 - [x] 인라인 instanceof Error 패턴을 공유 getErrorMessage()로 통합 + fallback 파라미터 추가 (376→378 tests) ← iter-134, #377, PR #378/#379
+- [x] UsageChart 인라인 객체 리터럴 5개를 모듈 수준 상수로 추출 (중복 tick 스타일 통합) ← iter-135, #382, PR #383/#384
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
