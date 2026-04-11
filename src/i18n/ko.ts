@@ -160,6 +160,7 @@ export default {
     noFileError: '파일이 선택되지 않았습니다',
     noDubbingProjectId: 'Perso에서 더빙 프로젝트 ID를 반환하지 않았습니다.',
     noLipSyncProjectId: 'Perso에서 립싱크 프로젝트 ID를 반환하지 않았습니다.',
+    clipboardError: '링크를 클립보드에 복사하지 못했습니다',
   },
   library: {
     title: '더빙 라이브러리',
@@ -177,6 +178,7 @@ export default {
     copyLink: '링크 복사',
     linkCopied: '복사됨!',
     by: '제작',
+    loadError: '라이브러리를 불러오지 못했습니다',
     emptyState: '아직 공개된 더빙 영상이 없습니다',
     totalCount: '{{count}}개의 영상',
   },

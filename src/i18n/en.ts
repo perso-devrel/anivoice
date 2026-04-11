@@ -160,6 +160,7 @@ export default {
     noFileError: 'No file provided',
     noDubbingProjectId: 'Perso did not return a project id for this dubbing request.',
     noLipSyncProjectId: 'Perso did not return a project id for lip sync.',
+    clipboardError: 'Failed to copy link to clipboard',
   },
   library: {
     title: 'Dubbing Library',
@@ -177,6 +178,7 @@ export default {
     copyLink: 'Copy link',
     linkCopied: 'Copied!',
     by: 'by',
+    loadError: 'Failed to load library',
     emptyState: 'No dubbed videos published yet',
     totalCount: '{{count}} videos',
   },

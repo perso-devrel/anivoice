@@ -416,7 +416,7 @@ export default function StudioPage() {
     try {
       await copyToClipboard(url);
     } catch {
-      setError('Failed to copy link to clipboard');
+      setError(t('studio.clipboardError'));
     }
   }
 
@@ -767,7 +767,7 @@ export default function StudioPage() {
                 disabled={!dbProjectId || isPublishing}
                 className="w-full gradient-bg py-2.5 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-40"
               >
-                {isPublishing ? <SpinnerIcon className="w-4 h-4 mx-auto" /> : '\uACF5\uAC1C\uD558\uAE30'}
+                {isPublishing ? <SpinnerIcon className="w-4 h-4 mx-auto" /> : t('studio.publishTitle')}
               </button>
             </>
           )}
