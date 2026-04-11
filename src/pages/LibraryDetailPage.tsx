@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { useClipboard } from '../hooks/useClipboard';
 import { getLibraryItem, type LibraryItemDetail } from '../services/anivoiceApi';
-import { formatSeconds } from '../utils/format';
+import { formatCreditTime } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
 import { DownloadIcon, LinkIcon, ChevronLeftIcon, LoadingSpinner } from '../components/icons';
 
@@ -114,7 +114,7 @@ export default function LibraryDetailPage() {
               {item.sourceLanguage} → {item.targetLanguage}
             </span>
             <span className="px-3 py-1 rounded-full bg-surface-800 text-xs text-gray-300">
-              {formatSeconds(Math.floor(item.durationMs / 1000), { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') })}
+              {formatCreditTime(Math.floor(item.durationMs / 1000), t)}
             </span>
           </div>
 

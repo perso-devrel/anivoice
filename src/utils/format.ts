@@ -18,6 +18,14 @@ export function formatSeconds(seconds: number, labels: TimeLabels): string {
   return m > 0 ? `${m}${labels.minutes} ${s}${labels.seconds}` : `${s}${labels.seconds}`;
 }
 
+export function formatCreditTime(seconds: number, t: (key: string) => string): string {
+  return formatSeconds(seconds, {
+    hours: t('common.hours'),
+    minutes: t('common.minutes'),
+    seconds: t('common.seconds'),
+  });
+}
+
 export function formatChartDay(day: string): string {
   return day.slice(5);
 }

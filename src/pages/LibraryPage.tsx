@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { getLibrary, getTags, type LibraryItem, type Tag } from '../services/anivoiceApi';
-import { formatSeconds, getErrorMessage } from '../utils/format';
+import { formatCreditTime, getErrorMessage } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
 import { SearchIcon, PlayIcon, ChevronDownIcon, ClockIcon, SpinnerIcon } from '../components/icons';
 import { LANGUAGE_KEYS } from '../constants';
@@ -252,7 +252,7 @@ export default function LibraryPage() {
                       <div className="flex items-center gap-2">
                         <span className="flex items-center gap-1 text-gray-500 text-xs">
                           <ClockIcon />
-                          {formatSeconds(Math.floor(item.durationMs / 1000), { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') })}
+                          {formatCreditTime(Math.floor(item.durationMs / 1000), t)}
                         </span>
                         <span className="text-gray-600 text-xs">|</span>
                         <span className="text-xs text-gray-400 uppercase">

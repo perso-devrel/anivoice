@@ -5,7 +5,7 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { purchaseCredits } from '../services/anivoiceApi';
-import { formatSeconds } from '../utils/format';
+import { formatCreditTime } from '../utils/format';
 import { showToast } from '../stores/toastStore';
 import { SpinnerIcon, CheckmarkIcon, ClockIcon } from '../components/icons';
 import type { PlanType } from '../types';
@@ -164,7 +164,7 @@ export default function PricingPage() {
           </p>
           {user && (
             <p className="mt-4 text-sm text-gray-500">
-              {t('pricing.remainingTime')} <span className="text-primary-400 font-medium">{formatSeconds(user.creditSeconds, { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') })}</span>
+              {t('pricing.remainingTime')} <span className="text-primary-400 font-medium">{formatCreditTime(user.creditSeconds, t)}</span>
             </p>
           )}
         </div>

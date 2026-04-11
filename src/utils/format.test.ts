@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatMs, formatDuration, formatSeconds, formatChartDay, getErrorMessage } from './format';
+import { formatMs, formatDuration, formatSeconds, formatCreditTime, formatChartDay, getErrorMessage } from './format';
 
 describe('formatMs', () => {
   it('formats zero', () => {
@@ -122,6 +122,29 @@ describe('formatSeconds', () => {
 
   it('formats large values (en)', () => {
     expect(formatSeconds(360000, en)).toBe('100hr 0min');
+  });
+});
+
+describe('formatCreditTime', () => {
+  const tKo = (key: string): string => {
+    const map: Record<string, string> = { 'common.hours': '시간', 'common.minutes': '분', 'common.seconds': '초' };
+    return map[key] ?? key;
+  };
+  const tEn = (key: string): string => {
+    const map: Record<string, string> = { 'common.hours': 'hr', 'common.minutes': 'min', 'common.seconds': 'sec' };
+    return map[key] ?? key;
+  };
+
+  it('delegates to formatSeconds with i18n labels (ko)', () => {
+    expect(formatCreditTime(3661, tKo)).toBe('1시간 1분');
+  });
+
+  it('delegates to formatSeconds with i18n labels (en)', () => {
+    expect(formatCreditTime(90, tEn)).toBe('1min 30sec');
+  });
+
+  it('handles zero', () => {
+    expect(formatCreditTime(0, tEn)).toBe('0sec');
   });
 });
 
