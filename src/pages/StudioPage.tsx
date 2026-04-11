@@ -25,13 +25,10 @@ import { getErrorMessage } from '../utils/format';
 import { getDownloadUrl, computeDubbingProgress, buildShareUrl } from '../utils/studio';
 import { FileIcon, PlayIcon, DownloadIcon, CheckIcon, SpinnerIcon, AlertCircleIcon, LinkIcon, LoadingSpinner } from '../components/icons';
 import { SentenceEditList } from '../components/SentenceEditList';
+import { StepIndicator, type Step } from '../components/StepIndicator';
 import { LANGUAGE_KEYS } from '../constants';
 
-type Step = 'upload' | 'settings' | 'result';
-
 const STUDIO_LANGUAGES = ['auto', ...LANGUAGE_KEYS] as const;
-
-const STEPS: Step[] = ['upload', 'settings', 'result'];
 
 const STAGE_ORDER = ['uploading', 'dubbing', 'lip-syncing', 'done'] as const;
 
@@ -162,46 +159,6 @@ export default function StudioPage() {
     settings: t('studio.selectLanguage'),
     result: t('studio.resultTitle'),
   };
-
-  function StepIndicator() {
-    return (
-      <div className="flex items-center justify-center gap-2 mb-8">
-        {STEPS.map((s, i) => {
-          const isCurrent = s === step;
-          const isPast = STEPS.indexOf(step) > i;
-          return (
-            <div key={s} className="flex items-center gap-2">
-              <div
-                className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold transition-all ${
-                  isCurrent
-                    ? 'gradient-bg text-white shadow-lg shadow-primary-500/30'
-                    : isPast
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-surface-800 text-surface-200/50'
-                }`}
-              >
-                {isPast ? <CheckIcon className="w-4 h-4" /> : i + 1}
-              </div>
-              <span
-                className={`text-sm hidden sm:inline ${
-                  isCurrent ? 'text-white font-medium' : isPast ? 'text-primary-400' : 'text-surface-200/50'
-                }`}
-              >
-                {stepLabels[s]}
-              </span>
-              {i < STEPS.length - 1 && (
-                <div
-                  className={`w-10 h-0.5 mx-1 rounded ${
-                    isPast ? 'bg-primary-500' : 'bg-surface-700'
-                  }`}
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
 
   /* ── handlers ── */
 
@@ -822,7 +779,7 @@ export default function StudioPage() {
   return (
     <main className="min-h-screen bg-surface-950 text-white">
       <div className="max-w-4xl mx-auto px-4 py-10 sm:py-16">
-        {StepIndicator()}
+        <StepIndicator currentStep={step} labels={stepLabels} />
         {step === 'upload' && UploadStep()}
         {step === 'settings' && SettingsStep()}
         {step === 'result' && ResultStep()}
