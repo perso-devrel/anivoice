@@ -213,7 +213,7 @@ export default function StudioPage() {
 
       // Create project record in DB
       const dbProject = await createProject({
-        title: selectedFile?.name || 'Untitled',
+        title: selectedFile?.name || t('studio.untitled'),
         originalFileName: selectedFile?.name,
         sourceLanguage,
         targetLanguage: targetLanguages.join(','),

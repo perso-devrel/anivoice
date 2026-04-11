@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useToastStore } from '../stores/toastStore';
 import type { ToastType } from '../stores/toastStore';
 import { XIcon, CheckmarkIcon, InfoIcon } from './icons';
@@ -16,6 +17,7 @@ const bgByType: Record<ToastType, string> = {
 };
 
 export default function ToastContainer() {
+  const { t } = useTranslation();
   const { toasts, removeToast } = useToastStore();
 
   if (toasts.length === 0) return null;
@@ -31,7 +33,7 @@ export default function ToastContainer() {
           <span className="text-sm">{toast.message}</span>
           <button
             onClick={() => removeToast(toast.id)}
-            aria-label="Close"
+            aria-label={t('common.close')}
             className="ml-2 opacity-70 hover:opacity-100 transition-opacity"
           >
             <XIcon className="w-4 h-4" />
