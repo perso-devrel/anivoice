@@ -10,6 +10,13 @@ import { CheckmarkIcon, UserIcon } from '../components/icons';
 
 type Tab = 'profile' | 'subscription' | 'billing' | 'language';
 
+const SETTINGS_TABS: { key: Tab; i18nKey: string }[] = [
+  { key: 'profile', i18nKey: 'settings.profile' },
+  { key: 'subscription', i18nKey: 'settings.subscription' },
+  { key: 'billing', i18nKey: 'settings.billing' },
+  { key: 'language', i18nKey: 'settings.language' },
+];
+
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
   usePageTitle('pageTitle.settings');
@@ -39,13 +46,6 @@ export default function SettingsPage() {
     setLanguage(lang);
     i18n.changeLanguage(lang);
   };
-
-  const tabs: { key: Tab; label: string }[] = [
-    { key: 'profile', label: t('settings.profile') },
-    { key: 'subscription', label: t('settings.subscription') },
-    { key: 'billing', label: t('settings.billing') },
-    { key: 'language', label: t('settings.language') },
-  ];
 
   const billingHistory = [
     {
@@ -79,7 +79,7 @@ export default function SettingsPage() {
 
         {/* Tabs */}
         <div className="flex gap-1 mb-8 p-1 bg-surface-900 rounded-xl overflow-x-auto">
-          {tabs.map((tab) => (
+          {SETTINGS_TABS.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
@@ -89,7 +89,7 @@ export default function SettingsPage() {
                   : 'text-gray-400 hover:text-white hover:bg-surface-800'
               }`}
             >
-              {tab.label}
+              {t(tab.i18nKey)}
             </button>
           ))}
         </div>
