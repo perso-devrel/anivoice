@@ -55,6 +55,13 @@ const STATUS_CONFIG: Record<
   },
 };
 
+const DASHBOARD_TABS: { key: FilterTab; i18nKey: string }[] = [
+  { key: 'all', i18nKey: 'common.all' },
+  { key: 'favorites', i18nKey: 'dashboard.favorites' },
+  { key: 'in-progress', i18nKey: 'dashboard.inProgress' },
+  { key: 'completed', i18nKey: 'dashboard.completed' },
+];
+
 const GRADIENT_PLACEHOLDERS = [
   'from-purple-600/30 to-blue-600/30',
   'from-pink-600/30 to-orange-600/30',
@@ -144,12 +151,7 @@ export default function DashboardPage() {
     }
   }
 
-  const tabs: { key: FilterTab; label: string }[] = [
-    { key: 'all', label: t('common.all') },
-    { key: 'favorites', label: t('dashboard.favorites') },
-    { key: 'in-progress', label: t('dashboard.inProgress') },
-    { key: 'completed', label: t('dashboard.completed') },
-  ];
+  const tabs = DASHBOARD_TABS.map(({ key, i18nKey }) => ({ key, label: t(i18nKey) }));
 
   return (
     <main className="min-h-screen bg-surface-950 pt-20 pb-12">
