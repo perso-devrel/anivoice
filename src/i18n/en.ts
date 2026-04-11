@@ -161,6 +161,7 @@ export default {
     noFileError: 'No file provided',
     noDubbingProjectId: 'Perso did not return a project id for this dubbing request.',
     noLipSyncProjectId: 'Perso did not return a project id for lip sync.',
+    translationFailed: 'Translation failed: {{reason}}',
     clipboardError: 'Failed to copy link to clipboard',
   },
   library: {

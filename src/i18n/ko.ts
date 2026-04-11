@@ -161,6 +161,7 @@ export default {
     noFileError: '파일이 선택되지 않았습니다',
     noDubbingProjectId: 'Perso에서 더빙 프로젝트 ID를 반환하지 않았습니다.',
     noLipSyncProjectId: 'Perso에서 립싱크 프로젝트 ID를 반환하지 않았습니다.',
+    translationFailed: '번역 실패: {{reason}}',
     clipboardError: '링크를 클립보드에 복사하지 못했습니다',
   },
   library: {

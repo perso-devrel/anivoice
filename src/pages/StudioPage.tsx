@@ -108,7 +108,7 @@ export default function StudioPage() {
         }
 
         if (prog.hasFailed) {
-          setError(`Translation failed: ${prog.progressReason}`);
+          setError(t('studio.translationFailed', { reason: prog.progressReason }));
           setLoadingProject(false);
           setIsProcessing(false);
           return;
@@ -138,7 +138,7 @@ export default function StudioPage() {
     }
 
     loadExistingProject();
-  }, [projectParam, spaceParam]);
+  }, [projectParam, spaceParam, t]);
 
   /* ── step indicator ── */
   const stepLabels: Record<Step, string> = {
