@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { listMyProjects, toggleFavorite, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
 import { formatSeconds } from '../utils/format';
-import { PlusIcon, AlertCircleIcon, CheckCircleIcon } from '../components/icons';
+import { PlusIcon, AlertCircleIcon, CheckCircleIcon, SearchIcon } from '../components/icons';
 
 const UsageChart = lazy(() => import('../components/UsageChart'));
 import { useAuthStore } from '../stores/authStore';
@@ -267,9 +267,7 @@ export default function DashboardPage() {
           </h2>
           <div className="flex flex-wrap items-center gap-3">
             <div className="relative">
-              <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z" />
-              </svg>
+              <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
@@ -392,9 +390,7 @@ export default function DashboardPage() {
         {!loading && !error && filteredProjects.length === 0 && projects.length > 0 && (
           <div className="glass rounded-2xl p-12 flex flex-col items-center justify-center text-center">
             <div className="w-20 h-20 mb-6 rounded-2xl bg-surface-800/80 flex items-center justify-center">
-              <svg className="w-10 h-10 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-              </svg>
+              <SearchIcon className="w-10 h-10 text-gray-500" />
             </div>
             <p className="text-gray-300 text-base font-medium mb-1">
               {t('dashboard.noFilterResults')}
