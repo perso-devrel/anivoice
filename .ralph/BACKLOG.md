@@ -176,6 +176,7 @@
 - [x] SettingsStep 3개 glass panel을 SettingsSection 내부 컴포넌트로 추출 (중복 className 제거) ← iter-180, #604, PR #605/#606
 - [x] OnboardingModal 중복 gradient 버튼 className을 PRIMARY_BUTTON_CLASS 상수로 추출 ← iter-181, #609, PR #610/#611
 - [x] AuthPage 중복 input className 3개를 AUTH_INPUT_CLASS 상수로 추출 ← iter-182, #614, PR #615/#616
+- [x] TestPage integration state 중복 input 3개를 config 배열 + .map()으로 교체 (INTEGRATION_INPUT_CLASS 추출) ← iter-183, #619, PR #620/#621
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
