@@ -22,7 +22,21 @@ import { useAuthStore } from '../stores/authStore';
 import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { getErrorMessage } from '../utils/format';
-import { getDownloadUrl, computeDubbingProgress, buildShareUrl, toggleArrayItem } from '../utils/studio';
+import {
+  getDownloadUrl,
+  computeDubbingProgress,
+  buildShareUrl,
+  toggleArrayItem,
+  PROGRESS_GET_SPACE,
+  PROGRESS_UPLOAD_START,
+  PROGRESS_UPLOAD_DONE,
+  PROGRESS_QUEUE_ENSURED,
+  PROGRESS_TRANSLATION_REQUESTED,
+  PROGRESS_POLL_COMPLETE,
+  PROGRESS_SCRIPT_FETCHED,
+  PROGRESS_LIP_SYNC_BASE,
+  PROGRESS_LIP_SYNC_SCALE,
+} from '../utils/studio';
 import { StepIndicator, type Step } from '../components/StepIndicator';
 import { SettingsStep } from '../components/SettingsStep';
 import { UploadStep } from '../components/UploadStep';
@@ -169,7 +183,7 @@ export default function StudioPage() {
       }
 
       // 1. Get user's space
-      setProgress(5);
+      setProgress(PROGRESS_GET_SPACE);
       const spaces = await listSpaces();
       if (spaces.length === 0) {
         throw new Error(t('studio.noWorkspaceError'));
@@ -178,23 +192,23 @@ export default function StudioPage() {
       setSpaceSeq(space.spaceSeq);
 
       // 2. Upload file
-      setProgress(10);
+      setProgress(PROGRESS_UPLOAD_START);
       let uploadedFile;
       if (selectedFile) {
         uploadedFile = await uploadVideoFile(space.spaceSeq, selectedFile);
       } else {
         throw new Error(t('studio.noFileError'));
       }
-      setProgress(30);
+      setProgress(PROGRESS_UPLOAD_DONE);
       uploadedFileRef.current = uploadedFile;
 
       // 3. Ensure the queue exists before the first translation request
-      setProgress(33);
+      setProgress(PROGRESS_QUEUE_ENSURED);
       await ensureSpaceQueue(space.spaceSeq);
 
       // 4. Request translation (dubbing)
       setProcessStage('dubbing');
-      setProgress(35);
+      setProgress(PROGRESS_TRANSLATION_REQUESTED);
       const projectIds = await requestTranslation(space.spaceSeq, {
         mediaSeq: uploadedFile.seq,
         isVideoProject: true,
@@ -231,11 +245,11 @@ export default function StudioPage() {
         }
       });
 
-      setProgress(90);
+      setProgress(PROGRESS_POLL_COMPLETE);
 
       // 6. Fetch script for editing
       setProcessStage('done');
-      setProgress(95);
+      setProgress(PROGRESS_SCRIPT_FETCHED);
       try {
         const script = await getScript(primaryProjectSeq, space.spaceSeq);
         setSentences(script.sentences);
@@ -310,7 +324,7 @@ export default function StudioPage() {
     if (!projectSeq || !spaceSeq) return;
     setProcessStage('lip-syncing');
     setIsProcessing(true);
-    setProgress(50);
+    setProgress(PROGRESS_LIP_SYNC_BASE);
     try {
       const lipSyncIds = await requestLipSync(projectSeq, spaceSeq);
       const lipSyncProjectSeq = lipSyncIds[0];
@@ -319,7 +333,7 @@ export default function StudioPage() {
       }
       // Poll lip sync project progress
       await pollProgress(lipSyncProjectSeq, spaceSeq, (p) => {
-        setProgress(50 + (p.progress * 0.5));
+        setProgress(PROGRESS_LIP_SYNC_BASE + p.progress * PROGRESS_LIP_SYNC_SCALE);
       });
       // Refresh download links
       const links = await getDownloadLinks(projectSeq, spaceSeq);
