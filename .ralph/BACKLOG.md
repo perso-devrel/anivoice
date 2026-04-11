@@ -181,6 +181,7 @@
 - [x] Footer 중복 링크 className 8개를 FOOTER_LINK_CLASS 상수로 추출 ← iter-185, #629, PR #630/#631
 - [x] SettingsPage 빌링 테이블 헤더 중복 className 3개를 TABLE_HEADER_CLASS 상수로 추출 ← iter-186, #634, PR #635/#636
 - [x] ResultStep 중복 muted text className 3개를 RESULT_MUTED_TEXT 상수로 추출 ← iter-187, #638, PR #639/#640
+- [x] AuthPage 누락 AUTH_INPUT_CLASS 수정 + AUTH_LABEL_CLASS 추출, Footer FOOTER_HEADING_CLASS/FOOTER_SECTION_CLASS 추출 ← iter-188, #643, PR #644/#645
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
