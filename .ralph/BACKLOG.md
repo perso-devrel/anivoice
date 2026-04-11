@@ -168,6 +168,7 @@
 - [x] DashboardPage 인라인 toolbar JSX를 DashboardToolbar 컴포넌트로 추출 (335→298줄) ← iter-172, #565, PR #566/#567
 - [x] LibraryPage 인라인 카드 JSX를 LibraryCard 컴포넌트로 추출 (285→219줄) ← iter-173, #570, PR #571/#572
 - [x] StudioPage 중복 배열 토글 패턴을 toggleArrayItem 유틸로 추출 + 5개 테스트 (372→378개) ← iter-174, #574, PR #575/#576
+- [x] DashboardPage 인라인 inProgressCount/completedCount filter를 countProjectStats 유틸로 추출 + 4개 테스트 (378→382개) ← iter-175, #579, PR #580/#581
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
