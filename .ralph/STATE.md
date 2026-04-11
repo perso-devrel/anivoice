@@ -3,15 +3,15 @@
 - **모드:** 무한 자율 (Ralph harness 구동 중)
 - **목표:** BACKLOG 의 P0 → P1 → 자가생성풀 순으로 끝없이 처리
 - **회귀 기준:** `node .ralph/test/dub-flow.mjs` 가 `ALL VIDEOS DUBBED SUCCESSFULLY` 출력 (exit 0), exit 78 = quota exceeded (외부 한도, 코드 회귀 아님)
-- **마지막 iteration:** #129 — DashboardPage 인라인 빈 상태 SVG를 공유 EmptyProjectsIcon으로 추출, dub-flow exit 77 upstream-down 지속
+- **마지막 iteration:** #130 — 6개 인라인 CSS 로딩 스피너를 공유 LoadingSpinner 컴포넌트로 추출, dub-flow exit 77 upstream-down 지속
 - **다음 루프가 기대하는 출발점:**
-  - P0 전부 완료, P1 전부 완료, P2 32개 + 자가생성 28개 완료
+  - P0 전부 완료, P1 전부 완료, P2 32개 + 자가생성 29개 완료
   - vitest 설정 완료, `npm run test`로 376개 유닛 테스트 실행 가능 (api/ 포함)
   - `npm run lint` → 0 errors, 0 warnings, 0 eslint-disable comments
   - `npm audit`: 9개 취약점 남음 (모두 @vercel/node 체인, breaking change 필요)
   - Perso API 500 상태 — exit 77 (upstream-down) / 78 (quota) 모두 외부 장애로 분류
   - 다음 P2 미완료: 다운로드 URL HEAD 검증, 다국어 회귀 (둘 다 API 필요)
-  - 메인 번들 257KB, StudioPage 19.0KB, DashboardPage 18.3KB, UsageChart 346KB (recharts lazy)
+  - 메인 번들 257KB, StudioPage 18.9KB, DashboardPage 18.3KB, UsageChart 346KB (recharts lazy)
   - TODO/FIXME/XXX 주석 0개, `any` 타입 0개
 - **알려진 잠재 이슈:**
   - Perso API 서버 에러 (500) + ENTERPRISE_QUOTA_EXCEEDED — 한도/서버 회복 시점 미정
