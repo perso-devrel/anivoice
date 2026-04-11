@@ -152,6 +152,7 @@
 - [x] formatCreditTimeMs 헬퍼 추출로 LibraryPage/LibraryDetailPage 중복 ms→s 변환 제거 (381→384 tests) ← iter-156, #486, PR #487/#488
 - [x] PricingPage 하드코딩 "CVC" 라벨을 i18n 키 pricing.cvc 로 교체 ← iter-157, #491, PR #492/#493
 - [x] PricingPage `as PlanType` 4개 + ResultStep `as` 1개 불필요한 type assertion 제거 (PlanConfig 인터페이스 도입) ← iter-158, #496, PR #497/#498
+- [x] StudioPage 하드코딩 `Translation failed` 에러를 i18n 키 `studio.translationFailed` 로 교체 ← iter-159, #501, PR #502/#503
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
