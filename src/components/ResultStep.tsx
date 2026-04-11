@@ -14,6 +14,8 @@ const PROGRESS_STAGE_I18N = [
   { key: 'lip-syncing', i18nKey: 'studio.progressLipSync' },
 ] as const;
 
+const RESULT_MUTED_TEXT = 'text-sm text-surface-200/60';
+
 const DOWNLOAD_BUTTONS = [
   { i18nKey: 'studio.downloadVideo', type: 'video' },
   { i18nKey: 'studio.downloadSubtitle', type: 'subtitle' },
@@ -101,7 +103,7 @@ export function ResultStep({
     return (
       <div className="max-w-lg mx-auto text-center py-12 space-y-4">
         <LoadingSpinner className="w-10 h-10 mx-auto border-primary-400" />
-        <p className="text-surface-200/60 text-sm">{t('studio.loadingProject')}</p>
+        <p className={RESULT_MUTED_TEXT}>{t('studio.loadingProject')}</p>
       </div>
     );
   }
@@ -121,7 +123,7 @@ export function ResultStep({
           />
         </div>
 
-        <p className="text-sm text-surface-200/60">
+        <p className={RESULT_MUTED_TEXT}>
           {Math.round(progress)}%
           {remainingMinutes !== null && remainingMinutes > 0 && (
             <span className="ml-2 text-surface-200/40">
@@ -151,7 +153,7 @@ export function ResultStep({
           <AlertCircleIcon className="w-8 h-8 text-red-400" />
         </div>
         <h2 className="text-xl font-bold text-red-400">{t('common.error')}</h2>
-        <p className="text-sm text-surface-200/60 break-words">{error}</p>
+        <p className={`${RESULT_MUTED_TEXT} break-words`}>{error}</p>
         <div className="flex gap-3 justify-center">
           <button
             type="button"
