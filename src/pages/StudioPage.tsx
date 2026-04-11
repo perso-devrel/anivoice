@@ -80,10 +80,10 @@ export default function StudioPage() {
   // Fetch tags on mount
   useEffect(() => { getTags().then(setTags).catch(() => {}); }, []);
 
-  // Load existing project from URL params (?project=SEQ&space=SEQ)
+  const projectParam = searchParams.get('project');
+  const spaceParam = searchParams.get('space');
+
   useEffect(() => {
-    const projectParam = searchParams.get('project');
-    const spaceParam = searchParams.get('space');
     if (!projectParam || !spaceParam) return;
 
     const pSeq = Number(projectParam);
@@ -146,7 +146,7 @@ export default function StudioPage() {
     }
 
     loadExistingProject();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [projectParam, spaceParam]);
 
   /* ── step indicator ── */
   const stepLabels: Record<Step, string> = {
