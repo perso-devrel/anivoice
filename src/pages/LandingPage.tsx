@@ -45,6 +45,7 @@ const PLAN_KEYS = [
   { nameKey: 'pricing.payPerUse.name', priceKey: 'pricing.payPerUse.price', featuresKey: 'pricing.payPerUse.features', highlight: false },
 ];
 
+const LANDING_SECTION_CLASS = "px-4 py-20 md:py-28 mx-auto";
 const SECTION_HEADING_CLASS = "text-3xl md:text-4xl font-bold text-center gradient-text";
 
 const WAVEFORM_ORIGINAL = [3, 5, 2, 6, 4, 7, 3, 5, 2, 4, 6, 3, 5, 7, 4];
@@ -294,7 +295,7 @@ export default function LandingPage() {
         {/* ============================================================ */}
         {/*  FEATURES                                                    */}
         {/* ============================================================ */}
-        <section className="px-4 py-20 md:py-28 max-w-6xl mx-auto">
+        <section className={`${LANDING_SECTION_CLASS} max-w-6xl`}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {FEATURE_KEYS.map((f) => (
               <FeatureCard
@@ -310,7 +311,7 @@ export default function LandingPage() {
         {/* ============================================================ */}
         {/*  HOW IT WORKS                                                */}
         {/* ============================================================ */}
-        <section className="px-4 py-20 md:py-28 max-w-5xl mx-auto">
+        <section className={`${LANDING_SECTION_CLASS} max-w-5xl`}>
           <h2 className={`${SECTION_HEADING_CLASS} mb-4`}>
             {t('landing.howItWorks')}
           </h2>
@@ -334,7 +335,7 @@ export default function LandingPage() {
         {/* ============================================================ */}
         {/*  SUPPORTED LANGUAGES                                         */}
         {/* ============================================================ */}
-        <section className="px-4 py-20 md:py-28 max-w-5xl mx-auto">
+        <section className={`${LANDING_SECTION_CLASS} max-w-5xl`}>
           <h2 className={`${SECTION_HEADING_CLASS} mb-14`}>
             {t('landing.supportedLangs')}
           </h2>
@@ -356,7 +357,7 @@ export default function LandingPage() {
         {/* ============================================================ */}
         {/*  PRICING                                                     */}
         {/* ============================================================ */}
-        <section className="px-4 py-20 md:py-28 max-w-6xl mx-auto">
+        <section className={`${LANDING_SECTION_CLASS} max-w-6xl`}>
           <h2 className={`${SECTION_HEADING_CLASS} mb-4`}>
             {t('pricing.title')}
           </h2>
@@ -381,7 +382,7 @@ export default function LandingPage() {
         {/* ============================================================ */}
         {/*  FAQ                                                         */}
         {/* ============================================================ */}
-        <section className="px-4 py-20 md:py-28 max-w-3xl mx-auto">
+        <section className={`${LANDING_SECTION_CLASS} max-w-3xl`}>
           <h2 className={`${SECTION_HEADING_CLASS} mb-14`}>
             {t('landing.faq')}
           </h2>
