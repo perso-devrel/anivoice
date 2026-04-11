@@ -2,32 +2,38 @@ import { useTranslation } from 'react-i18next';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { SpinnerIcon } from './icons';
 
+export interface CardForm {
+  number: string;
+  expiry: string;
+  cvc: string;
+}
+
 interface CheckoutModalProps {
   type: 'plan' | 'credit';
   label: string;
   price: string;
-  cardNumber: string;
-  cardExpiry: string;
-  cardCvc: string;
+  cardForm: CardForm;
   isProcessing: boolean;
-  onCardNumberChange: (value: string) => void;
-  onCardExpiryChange: (value: string) => void;
-  onCardCvcChange: (value: string) => void;
+  onCardFormChange: (field: keyof CardForm, value: string) => void;
   onCheckout: () => void;
   onClose: () => void;
 }
+
+const CARD_FIELDS: { key: keyof CardForm; labelKey: string; placeholder: string; fullWidth: boolean }[] = [
+  { key: 'number', labelKey: 'pricing.cardNumber', placeholder: '0000 0000 0000 0000', fullWidth: true },
+  { key: 'expiry', labelKey: 'pricing.expiry', placeholder: 'MM/YY', fullWidth: false },
+  { key: 'cvc', labelKey: 'pricing.cvc', placeholder: '123', fullWidth: false },
+];
+
+const INPUT_CLASS = 'w-full px-4 py-3 rounded-xl bg-surface-800 border border-surface-600 text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none transition-colors';
 
 export function CheckoutModal({
   type,
   label,
   price,
-  cardNumber,
-  cardExpiry,
-  cardCvc,
+  cardForm,
   isProcessing,
-  onCardNumberChange,
-  onCardExpiryChange,
-  onCardCvcChange,
+  onCardFormChange,
   onCheckout,
   onClose,
 }: CheckoutModalProps) {
@@ -55,39 +61,19 @@ export function CheckoutModal({
           {label} — <span className="text-white font-semibold">{price}</span>
         </p>
 
-        <div className="space-y-4 mb-6">
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">{t('pricing.cardNumber')}</label>
-            <input
-              type="text"
-              value={cardNumber}
-              onChange={(e) => onCardNumberChange(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-surface-800 border border-surface-600 text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none transition-colors"
-              placeholder="0000 0000 0000 0000"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">{t('pricing.expiry')}</label>
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          {CARD_FIELDS.map((field) => (
+            <div key={field.key} className={field.fullWidth ? 'col-span-2' : ''}>
+              <label className="block text-sm text-gray-400 mb-1">{t(field.labelKey)}</label>
               <input
                 type="text"
-                value={cardExpiry}
-                onChange={(e) => onCardExpiryChange(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-surface-800 border border-surface-600 text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none transition-colors"
-                placeholder="MM/YY"
+                value={cardForm[field.key]}
+                onChange={(e) => onCardFormChange(field.key, e.target.value)}
+                className={INPUT_CLASS}
+                placeholder={field.placeholder}
               />
             </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">{t('pricing.cvc')}</label>
-              <input
-                type="text"
-                value={cardCvc}
-                onChange={(e) => onCardCvcChange(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-surface-800 border border-surface-600 text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none transition-colors"
-                placeholder="123"
-              />
-            </div>
-          </div>
+          ))}
         </div>
 
         <div className="flex gap-3">
