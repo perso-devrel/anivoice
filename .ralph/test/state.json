@@ -1,168 +1,6 @@
 {
   "runs": [
     {
-      "ts": "2026-04-11T09:44:09.623Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T09:47:44.578Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T09:48:54.637Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T09:55:31.500Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T09:59:00.057Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:00:08.237Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:01:13.913Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:05:53.737Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:08:21.894Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:10:13.342Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:15:24.224Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:18:08.269Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:20:01.017Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:22:38.180Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:25:39.573Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:26:47.735Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:29:24.727Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:32:12.816Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:34:11.813Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:37:15.699Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:41:00.112Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:42:13.639Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:49:42.684Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:50:30.139Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:53:15.250Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:55:17.194Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
-      "ts": "2026-04-11T10:58:36.394Z",
-      "status": "upstream-down",
-      "exitCode": 77,
-      "endpoint": "GET /portal/api/v1/spaces"
-    },
-    {
       "ts": "2026-04-11T11:00:26.507Z",
       "status": "upstream-down",
       "exitCode": 77,
@@ -296,6 +134,168 @@
     },
     {
       "ts": "2026-04-11T11:54:30.048Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:58:07.847Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T11:59:20.299Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:05:13.973Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:07:46.877Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:09:54.566Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:14:35.084Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:16:26.260Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:18:38.314Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:23:56.457Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:26:17.025Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:28:01.403Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:30:33.972Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:32:58.911Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:34:49.684Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:38:35.956Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:42:17.425Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:43:25.864Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:47:19.093Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:50:48.003Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:51:57.375Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:54:42.707Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:57:31.092Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T12:59:41.219Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T13:02:14.922Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T13:04:56.408Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T13:06:59.162Z",
+      "status": "upstream-down",
+      "exitCode": 77,
+      "endpoint": "GET /portal/api/v1/spaces"
+    },
+    {
+      "ts": "2026-04-11T13:08:49.868Z",
       "status": "upstream-down",
       "exitCode": 77,
       "endpoint": "GET /portal/api/v1/spaces"
