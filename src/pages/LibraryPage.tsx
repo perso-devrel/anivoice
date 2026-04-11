@@ -67,7 +67,7 @@ export default function LibraryPage() {
     })();
 
     return () => { cancelled = true; };
-  }, [activeTag, languageFilter, sortMode, searchQuery]);
+  }, [activeTag, languageFilter, sortMode, searchQuery, t]);
 
   const languageOptions = ['all', 'ja', 'ko', 'en', 'es', 'pt', 'id', 'ar'];
 
