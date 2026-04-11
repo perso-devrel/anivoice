@@ -192,6 +192,7 @@
 - [x] StudioPage 진행률 매직 넘버 10개를 PROGRESS_* 상수로 추출 (studio.ts) ← iter-196, #680, PR #681/#682
 - [x] PricingPage 매직 넘버 14개를 pricing.ts 명명 상수로 추출 ← iter-197, #685, PR #686/#687
 - [x] SentenceEditList 매직 넘버 3을 MATCHING_RATE_GOOD_THRESHOLD 상수로 추출 ← iter-198, #690, PR #691/#692
+- [x] ProfileTab setTimeout 2000ms를 PROFILE_SAVE_DISPLAY_MS 상수로 추출 ← iter-199, #695, PR #696/#697
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
