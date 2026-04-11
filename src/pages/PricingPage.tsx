@@ -352,7 +352,7 @@ export default function PricingPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">CVC</label>
+                  <label className="block text-sm text-gray-400 mb-1">{t('pricing.cvc')}</label>
                   <input
                     type="text"
                     value={cardCvc}
