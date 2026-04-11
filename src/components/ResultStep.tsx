@@ -1,0 +1,238 @@
+import { useTranslation } from 'react-i18next';
+import { resolvePersoFileUrl } from '../services/persoApi';
+import type { Tag } from '../services/anivoiceApi';
+import type { PersoScriptSentence, PersoDownloadLinks } from '../types';
+import { PlayIcon, DownloadIcon, AlertCircleIcon, LoadingSpinner } from './icons';
+import { SentenceEditList } from './SentenceEditList';
+import { PublishSection } from './PublishSection';
+
+const STAGE_ORDER = ['uploading', 'dubbing', 'lip-syncing', 'done'] as const;
+
+const PROGRESS_STAGE_I18N = [
+  { key: 'uploading', i18nKey: 'studio.progressAnalyzing' },
+  { key: 'dubbing', i18nKey: 'studio.progressDubbing' },
+  { key: 'lip-syncing', i18nKey: 'studio.progressLipSync' },
+] as const;
+
+interface ResultStepProps {
+  loadingProject: boolean;
+  isProcessing: boolean;
+  processStage: 'uploading' | 'dubbing' | 'lip-syncing' | 'done';
+  progress: number;
+  remainingMinutes: number | null;
+  error: string | null;
+  downloadLinks: PersoDownloadLinks | null;
+  projectSeq: number | null;
+  spaceSeq: number | null;
+  withLipSync: boolean;
+  sentences: PersoScriptSentence[];
+  editingValues: Record<number, string>;
+  savingSentence: number | null;
+  isPublished: boolean;
+  isPublishing: boolean;
+  tags: Tag[];
+  selectedTags: number[];
+  dbProjectId: number | null;
+  linkCopied: boolean;
+  onRetry: () => void;
+  onGoBack: () => void;
+  onDownload: (type: 'video' | 'subtitle' | 'audio' | 'zip') => void;
+  onRequestLipSync: () => void;
+  onTagToggle: (tagId: number) => void;
+  onPublish: () => void;
+  onCopyShareLink: () => void;
+  onEditChange: (seq: number, value: string) => void;
+  onSaveSentence: (seq: number) => void;
+  onReset: () => void;
+}
+
+export function ResultStep({
+  loadingProject,
+  isProcessing,
+  processStage,
+  progress,
+  remainingMinutes,
+  error,
+  downloadLinks,
+  projectSeq,
+  spaceSeq,
+  withLipSync,
+  sentences,
+  editingValues,
+  savingSentence,
+  isPublished,
+  isPublishing,
+  tags,
+  selectedTags,
+  dbProjectId,
+  linkCopied,
+  onRetry,
+  onGoBack,
+  onDownload,
+  onRequestLipSync,
+  onTagToggle,
+  onPublish,
+  onCopyShareLink,
+  onEditChange,
+  onSaveSentence,
+  onReset,
+}: ResultStepProps) {
+  const { t } = useTranslation();
+
+  if (loadingProject) {
+    return (
+      <div className="max-w-lg mx-auto text-center py-12 space-y-4">
+        <LoadingSpinner className="w-10 h-10 mx-auto border-primary-400" />
+        <p className="text-surface-200/60 text-sm">{t('studio.loadingProject')}</p>
+      </div>
+    );
+  }
+
+  const progressLabels = PROGRESS_STAGE_I18N.map(({ key, i18nKey }) => ({ key, label: t(i18nKey) }));
+  const currentStageIdx = STAGE_ORDER.indexOf(processStage as typeof STAGE_ORDER[number]);
+
+  if (isProcessing) {
+    return (
+      <div className="max-w-lg mx-auto space-y-8 text-center py-12">
+        <h2 className="text-2xl font-bold gradient-text">{t('studio.processing')}</h2>
+
+        <div className="w-full bg-surface-800 rounded-full h-2 overflow-hidden">
+          <div
+            className="h-full gradient-bg rounded-full transition-all duration-700 ease-out"
+            style={{ width: `${Math.min(progress, 100)}%` }}
+          />
+        </div>
+
+        <p className="text-sm text-surface-200/60">
+          {Math.round(progress)}%
+          {remainingMinutes !== null && remainingMinutes > 0 && (
+            <span className="ml-2 text-surface-200/40">
+              {t('studio.remainingTime', { minutes: remainingMinutes })}
+            </span>
+          )}
+        </p>
+
+        <div className="flex justify-between text-xs text-surface-200/50">
+          {progressLabels.map(({ key, label }, i) => (
+            <span key={key} className={`transition-colors ${i <= currentStageIdx ? 'text-primary-400 font-medium' : ''}`}>
+              {i <= currentStageIdx && (
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary-400 mr-1.5 align-middle animate-pulse" />
+              )}
+              {label}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-lg mx-auto text-center py-12 space-y-4">
+        <div className="w-16 h-16 mx-auto rounded-full bg-red-500/10 flex items-center justify-center">
+          <AlertCircleIcon className="w-8 h-8 text-red-400" />
+        </div>
+        <h2 className="text-xl font-bold text-red-400">{t('common.error')}</h2>
+        <p className="text-sm text-surface-200/60 break-words">{error}</p>
+        <div className="flex gap-3 justify-center">
+          <button
+            type="button"
+            onClick={onGoBack}
+            className="px-4 py-2 rounded-lg border border-surface-700 text-sm text-surface-200/80 hover:text-white transition-colors"
+          >
+            {t('common.cancel')}
+          </button>
+          <button
+            type="button"
+            onClick={onRetry}
+            className="gradient-bg px-4 py-2 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity"
+          >
+            {t('common.retry')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-3xl mx-auto space-y-6">
+      <h2 className="text-2xl font-bold gradient-text text-center mb-2">{t('studio.resultTitle')}</h2>
+
+      <div className="glass rounded-2xl overflow-hidden">
+        {downloadLinks?.videoFile?.videoDownloadLink ? (
+          <video
+            src={resolvePersoFileUrl(downloadLinks.videoFile.videoDownloadLink)}
+            controls
+            className="w-full aspect-video bg-black"
+          />
+        ) : (
+          <div className="relative bg-black aspect-video flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm">
+              <PlayIcon className="w-8 h-8 text-white ml-1" />
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {([
+          { label: t('studio.downloadVideo'), type: 'video' as const, available: !!downloadLinks?.videoFile?.videoDownloadLink },
+          { label: t('studio.downloadSubtitle'), type: 'subtitle' as const, available: !!(downloadLinks?.srtFile?.translatedSubtitleDownloadLink || downloadLinks?.srtFile?.originalSubtitleDownloadLink) },
+          { label: t('studio.downloadAudio'), type: 'audio' as const, available: !!(downloadLinks?.audioFile?.voiceWithBackgroundAudioDownloadLink || downloadLinks?.audioFile?.voiceAudioDownloadLink) },
+          { label: t('studio.downloadZip'), type: 'zip' as const, available: !!downloadLinks?.zippedFileDownloadLink },
+        ]).map(({ label, type, available }) => (
+          <button
+            key={type}
+            type="button"
+            onClick={() => onDownload(type)}
+            disabled={!available}
+            className="glass rounded-xl px-4 py-3 flex items-center justify-center gap-2 text-sm text-surface-200/80 hover:text-white hover:border-primary-500/40 transition-colors disabled:opacity-30"
+          >
+            <DownloadIcon className="w-4 h-4" />
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {!withLipSync && projectSeq && spaceSeq && (
+        <button
+          type="button"
+          onClick={onRequestLipSync}
+          className="w-full glass rounded-xl px-4 py-3 text-sm text-accent-400 hover:text-white hover:border-accent-500/40 transition-colors"
+        >
+          {t('studio.progressLipSync')} {t('studio.proBadge')}
+        </button>
+      )}
+
+      <PublishSection
+        isPublished={isPublished}
+        isPublishing={isPublishing}
+        tags={tags}
+        selectedTags={selectedTags}
+        onTagToggle={onTagToggle}
+        dbProjectId={dbProjectId}
+        linkCopied={linkCopied}
+        onPublish={onPublish}
+        onCopyShareLink={onCopyShareLink}
+      />
+
+      <SentenceEditList
+        sentences={sentences}
+        editingValues={editingValues}
+        savingSentence={savingSentence}
+        onEditChange={onEditChange}
+        onSave={onSaveSentence}
+      />
+
+      <div className="text-center pt-4">
+        <button
+          type="button"
+          onClick={onReset}
+          className="text-sm text-primary-400 hover:text-primary-300 transition-colors"
+        >
+          + {t('dashboard.newProject')}
+        </button>
+      </div>
+    </div>
+  );
+}

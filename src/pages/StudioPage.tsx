@@ -23,20 +23,10 @@ import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { getErrorMessage } from '../utils/format';
 import { getDownloadUrl, computeDubbingProgress, buildShareUrl } from '../utils/studio';
-import { PlayIcon, DownloadIcon, AlertCircleIcon, LoadingSpinner } from '../components/icons';
-import { SentenceEditList } from '../components/SentenceEditList';
 import { StepIndicator, type Step } from '../components/StepIndicator';
-import { PublishSection } from '../components/PublishSection';
 import { SettingsStep } from '../components/SettingsStep';
 import { UploadStep } from '../components/UploadStep';
-
-const STAGE_ORDER = ['uploading', 'dubbing', 'lip-syncing', 'done'] as const;
-
-const PROGRESS_STAGE_I18N = [
-  { key: 'uploading', i18nKey: 'studio.progressAnalyzing' },
-  { key: 'dubbing', i18nKey: 'studio.progressDubbing' },
-  { key: 'lip-syncing', i18nKey: 'studio.progressLipSync' },
-] as const;
+import { ResultStep } from '../components/ResultStep';
 
 export default function StudioPage() {
   const { t } = useTranslation();
@@ -391,179 +381,6 @@ export default function StudioPage() {
     setStep('upload');
   }
 
-  /* ── step: result ── */
-
-  function ResultStep() {
-    if (loadingProject) {
-      return (
-        <div className="max-w-lg mx-auto text-center py-12 space-y-4">
-          <LoadingSpinner className="w-10 h-10 mx-auto border-primary-400" />
-          <p className="text-surface-200/60 text-sm">{t('studio.loadingProject')}</p>
-        </div>
-      );
-    }
-
-    const progressLabels = PROGRESS_STAGE_I18N.map(({ key, i18nKey }) => ({ key, label: t(i18nKey) }));
-    const currentStageIdx = STAGE_ORDER.indexOf(processStage as typeof STAGE_ORDER[number]);
-
-    if (isProcessing) {
-      return (
-        <div className="max-w-lg mx-auto space-y-8 text-center py-12">
-          <h2 className="text-2xl font-bold gradient-text">{t('studio.processing')}</h2>
-
-          <div className="w-full bg-surface-800 rounded-full h-2 overflow-hidden">
-            <div
-              className="h-full gradient-bg rounded-full transition-all duration-700 ease-out"
-              style={{ width: `${Math.min(progress, 100)}%` }}
-            />
-          </div>
-
-          <p className="text-sm text-surface-200/60">
-            {Math.round(progress)}%
-            {remainingMinutes !== null && remainingMinutes > 0 && (
-              <span className="ml-2 text-surface-200/40">
-                {t('studio.remainingTime', { minutes: remainingMinutes })}
-              </span>
-            )}
-          </p>
-
-          <div className="flex justify-between text-xs text-surface-200/50">
-            {progressLabels.map(({ key, label }, i) => (
-              <span key={key} className={`transition-colors ${i <= currentStageIdx ? 'text-primary-400 font-medium' : ''}`}>
-                {i <= currentStageIdx && (
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary-400 mr-1.5 align-middle animate-pulse" />
-                )}
-                {label}
-              </span>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    // Error
-    if (error) {
-      return (
-        <div className="max-w-lg mx-auto text-center py-12 space-y-4">
-          <div className="w-16 h-16 mx-auto rounded-full bg-red-500/10 flex items-center justify-center">
-            <AlertCircleIcon className="w-8 h-8 text-red-400" />
-          </div>
-          <h2 className="text-xl font-bold text-red-400">{t('common.error')}</h2>
-          <p className="text-sm text-surface-200/60 break-words">{error}</p>
-          <div className="flex gap-3 justify-center">
-            <button
-              type="button"
-              onClick={() => { setError(null); setStep('settings'); }}
-              className="px-4 py-2 rounded-lg border border-surface-700 text-sm text-surface-200/80 hover:text-white transition-colors"
-            >
-              {t('common.cancel')}
-            </button>
-            <button
-              type="button"
-              onClick={handleStartDubbing}
-              className="gradient-bg px-4 py-2 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity"
-            >
-              {t('common.retry')}
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    // Success
-    return (
-      <div className="max-w-3xl mx-auto space-y-6">
-        <h2 className="text-2xl font-bold gradient-text text-center mb-2">{t('studio.resultTitle')}</h2>
-
-        {/* video player */}
-        <div className="glass rounded-2xl overflow-hidden">
-          {downloadLinks?.videoFile?.videoDownloadLink ? (
-            <video
-              src={resolvePersoFileUrl(downloadLinks.videoFile.videoDownloadLink)}
-              controls
-              className="w-full aspect-video bg-black"
-            />
-          ) : (
-            <div className="relative bg-black aspect-video flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm">
-                <PlayIcon className="w-8 h-8 text-white ml-1" />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* download buttons */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {([
-            { label: t('studio.downloadVideo'), type: 'video' as const, available: !!downloadLinks?.videoFile?.videoDownloadLink },
-            { label: t('studio.downloadSubtitle'), type: 'subtitle' as const, available: !!(downloadLinks?.srtFile?.translatedSubtitleDownloadLink || downloadLinks?.srtFile?.originalSubtitleDownloadLink) },
-            { label: t('studio.downloadAudio'), type: 'audio' as const, available: !!(downloadLinks?.audioFile?.voiceWithBackgroundAudioDownloadLink || downloadLinks?.audioFile?.voiceAudioDownloadLink) },
-            { label: t('studio.downloadZip'), type: 'zip' as const, available: !!downloadLinks?.zippedFileDownloadLink },
-          ]).map(({ label, type, available }) => (
-            <button
-              key={type}
-              type="button"
-              onClick={() => handleDownload(type)}
-              disabled={!available}
-              className="glass rounded-xl px-4 py-3 flex items-center justify-center gap-2 text-sm text-surface-200/80 hover:text-white hover:border-primary-500/40 transition-colors disabled:opacity-30"
-            >
-              <DownloadIcon className="w-4 h-4" />
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* lip sync button (if not already applied) */}
-        {!withLipSync && projectSeq && spaceSeq && (
-          <button
-            type="button"
-            onClick={handleRequestLipSync}
-            className="w-full glass rounded-xl px-4 py-3 text-sm text-accent-400 hover:text-white hover:border-accent-500/40 transition-colors"
-          >
-            {t('studio.progressLipSync')} {t('studio.proBadge')}
-          </button>
-        )}
-
-        {/* publish section */}
-        <PublishSection
-          isPublished={isPublished}
-          isPublishing={isPublishing}
-          tags={tags}
-          selectedTags={selectedTags}
-          onTagToggle={(tagId) =>
-            setSelectedTags((prev) =>
-              prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
-            )
-          }
-          dbProjectId={dbProjectId}
-          linkCopied={linkCopied}
-          onPublish={handlePublish}
-          onCopyShareLink={handleCopyShareLink}
-        />
-
-        {/* translation edit */}
-        <SentenceEditList
-          sentences={sentences}
-          editingValues={editingValues}
-          savingSentence={savingSentence}
-          onEditChange={(seq, value) => setEditingValues((prev) => ({ ...prev, [seq]: value }))}
-          onSave={handleSaveSentence}
-        />
-
-        {/* new project */}
-        <div className="text-center pt-4">
-          <button
-            type="button"
-            onClick={handleResetProject}
-            className="text-sm text-primary-400 hover:text-primary-300 transition-colors"
-          >
-            + {t('dashboard.newProject')}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   function handleResetProject() {
     setStep('upload');
     setSelectedFile(null);
@@ -601,7 +418,43 @@ export default function StudioPage() {
             onStartDubbing={handleStartDubbing}
           />
         )}
-        {step === 'result' && ResultStep()}
+        {step === 'result' && (
+          <ResultStep
+            loadingProject={loadingProject}
+            isProcessing={isProcessing}
+            processStage={processStage}
+            progress={progress}
+            remainingMinutes={remainingMinutes}
+            error={error}
+            downloadLinks={downloadLinks}
+            projectSeq={projectSeq}
+            spaceSeq={spaceSeq}
+            withLipSync={withLipSync}
+            sentences={sentences}
+            editingValues={editingValues}
+            savingSentence={savingSentence}
+            isPublished={isPublished}
+            isPublishing={isPublishing}
+            tags={tags}
+            selectedTags={selectedTags}
+            dbProjectId={dbProjectId}
+            linkCopied={linkCopied}
+            onRetry={handleStartDubbing}
+            onGoBack={() => { setError(null); setStep('settings'); }}
+            onDownload={handleDownload}
+            onRequestLipSync={handleRequestLipSync}
+            onTagToggle={(tagId) =>
+              setSelectedTags((prev) =>
+                prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
+              )
+            }
+            onPublish={handlePublish}
+            onCopyShareLink={handleCopyShareLink}
+            onEditChange={(seq, value) => setEditingValues((prev) => ({ ...prev, [seq]: value }))}
+            onSaveSentence={handleSaveSentence}
+            onReset={handleResetProject}
+          />
+        )}
       </div>
     </main>
   );
