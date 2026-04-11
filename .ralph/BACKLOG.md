@@ -131,6 +131,7 @@
 - [x] UsageChart 인라인 객체 리터럴 5개를 모듈 수준 상수로 추출 (중복 tick 스타일 통합) ← iter-135, #382, PR #383/#384
 - [x] StudioPage stageOrder/progressLabels 인라인 배열을 모듈 수준 STAGE_ORDER/PROGRESS_STAGE_I18N 상수로 추출 ← iter-136, #387, PR #388/#389
 - [x] LibraryPage 인라인 languageOptions를 공유 LANGUAGE_KEYS 기반 모듈 수준 상수로 교체 ← iter-137, #392, PR #393/#394
+- [x] DashboardPage 인라인 tabs 배열을 모듈 수준 DASHBOARD_TABS 상수로 추출 ← iter-138, #397, PR #398/#399
 
 ## 자가 생성 풀
 BACKLOG 가 비면 다음 중 골라 채울 수 있다:
