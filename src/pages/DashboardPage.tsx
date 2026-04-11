@@ -62,6 +62,25 @@ const DASHBOARD_TABS: { key: FilterTab; i18nKey: string }[] = [
   { key: 'completed', i18nKey: 'dashboard.completed' },
 ];
 
+function StatCard({ icon, iconBg, label, value }: {
+  icon: React.ReactNode;
+  iconBg: string;
+  label: React.ReactNode;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="glass rounded-xl p-5 flex items-center gap-4">
+      <div className={`flex-shrink-0 w-11 h-11 rounded-lg ${iconBg} flex items-center justify-center`}>
+        {icon}
+      </div>
+      <div>
+        <p className="text-sm text-gray-400">{label}</p>
+        <p className="text-2xl font-bold text-white">{value}</p>
+      </div>
+    </div>
+  );
+}
+
 const GRADIENT_PLACEHOLDERS = [
   'from-purple-600/30 to-blue-600/30',
   'from-pink-600/30 to-orange-600/30',
@@ -182,51 +201,24 @@ export default function DashboardPage() {
 
         {/* Stats Row */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-          {/* Credits remaining */}
-          <div className="glass rounded-xl p-5 flex items-center gap-4">
-            <div className="flex-shrink-0 w-11 h-11 rounded-lg bg-primary-500/15 flex items-center justify-center">
-              <WalletIcon className="w-5 h-5 text-primary-400" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-400">
-                {t('dashboard.creditsRemaining')}
-                {user?.plan && <span className="ml-1 text-gray-500">({user.plan})</span>}
-              </p>
-              <p className="text-2xl font-bold text-white">
-                {loading ? '...' : user ? formatSeconds(user.creditSeconds, { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') }) : '--'}
-              </p>
-            </div>
-          </div>
-
-          {/* In progress */}
-          <div className="glass rounded-xl p-5 flex items-center gap-4">
-            <div className="flex-shrink-0 w-11 h-11 rounded-lg bg-accent-500/15 flex items-center justify-center">
-              <RefreshIcon className="w-5 h-5 text-accent-400" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-400">
-                {t('dashboard.inProgress')}
-              </p>
-              <p className="text-2xl font-bold text-white">
-                {loading ? '...' : inProgressCount}
-              </p>
-            </div>
-          </div>
-
-          {/* Completed */}
-          <div className="glass rounded-xl p-5 flex items-center gap-4">
-            <div className="flex-shrink-0 w-11 h-11 rounded-lg bg-green-500/15 flex items-center justify-center">
-              <CheckCircleIcon className="w-5 h-5 text-green-400" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-400">
-                {t('dashboard.completed')}
-              </p>
-              <p className="text-2xl font-bold text-white">
-                {loading ? '...' : completedCount}
-              </p>
-            </div>
-          </div>
+          <StatCard
+            icon={<WalletIcon className="w-5 h-5 text-primary-400" />}
+            iconBg="bg-primary-500/15"
+            label={<>{t('dashboard.creditsRemaining')}{user?.plan && <span className="ml-1 text-gray-500">({user.plan})</span>}</>}
+            value={loading ? '...' : user ? formatSeconds(user.creditSeconds, { hours: t('common.hours'), minutes: t('common.minutes'), seconds: t('common.seconds') }) : '--'}
+          />
+          <StatCard
+            icon={<RefreshIcon className="w-5 h-5 text-accent-400" />}
+            iconBg="bg-accent-500/15"
+            label={t('dashboard.inProgress')}
+            value={loading ? '...' : inProgressCount}
+          />
+          <StatCard
+            icon={<CheckCircleIcon className="w-5 h-5 text-green-400" />}
+            iconBg="bg-green-500/15"
+            label={t('dashboard.completed')}
+            value={loading ? '...' : completedCount}
+          />
         </div>
 
         {/* Usage Chart */}
