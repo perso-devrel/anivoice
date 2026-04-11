@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as api from '../services/persoApi';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { useClipboard } from '../hooks/useClipboard';
+import { getErrorMessage } from '../utils/format';
 
 const BASE = (import.meta.env.VITE_PERSO_PROXY_PATH || '/api/perso').replace(/\/+$/, '');
 
@@ -25,7 +26,7 @@ async function runTest(fn: () => Promise<unknown>): Promise<TestResult> {
     const data = await fn();
     return { success: true, data, duration: Math.round(performance.now() - start) };
   } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : String(e);
+    const msg = getErrorMessage(e);
     return { success: false, error: msg, duration: Math.round(performance.now() - start) };
   }
 }
@@ -838,7 +839,7 @@ export default function TestPage() {
                 } catch (e) {
                   return {
                     failedAsExpected: true,
-                    error: e instanceof Error ? e.message : String(e),
+                    error: getErrorMessage(e),
                     solution: 'Use target=dubbingVideo instead of target=video',
                   };
                 }
@@ -865,7 +866,7 @@ export default function TestPage() {
                 } catch (e) {
                   return {
                     failedAsExpected: true,
-                    error: e instanceof Error ? e.message : String(e),
+                    error: getErrorMessage(e),
                     solution: 'Download ZIP (target=all) and extract subtitles',
                   };
                 }
@@ -890,7 +891,7 @@ export default function TestPage() {
                     await axios.get(`${BASE}/video-translator/api/v1/projects/${projectSeq}/spaces/${spaceSeq}/download`, { params: { target: t } });
                     results[t] = '✅ Pass';
                   } catch (e) {
-                    results[t] = '❌ ' + (e instanceof Error ? e.message : String(e));
+                    results[t] = '❌ ' + getErrorMessage(e);
                   }
                 }
                 return results;
