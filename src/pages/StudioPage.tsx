@@ -24,10 +24,11 @@ import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../
 import { formatMs, getErrorMessage } from '../utils/format';
 import { getDownloadUrl, computeDubbingProgress, buildShareUrl } from '../utils/studio';
 import { FileIcon, PlayIcon, DownloadIcon, CheckIcon, SpinnerIcon, AlertCircleIcon, LinkIcon } from '../components/icons';
+import { LANGUAGE_KEYS } from '../constants';
 
 type Step = 'upload' | 'settings' | 'result';
 
-const LANGUAGES = ['auto', 'ja', 'ko', 'en', 'es', 'pt', 'id', 'ar'] as const;
+const STUDIO_LANGUAGES = ['auto', ...LANGUAGE_KEYS] as const;
 
 const SPEAKER_COLORS = ['#f472b6', '#a78bfa', '#38bdf8', '#34d399', '#fbbf24', '#fb923c'];
 
@@ -498,7 +499,7 @@ export default function StudioPage() {
             aria-label={t('studio.sourceLanguage')}
             className="w-full bg-surface-900 border border-surface-700 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary-500 transition-colors appearance-none"
           >
-            {LANGUAGES.map((lang) => (
+            {STUDIO_LANGUAGES.map((lang) => (
               <option key={lang} value={lang}>
                 {lang === 'auto' ? t('studio.autoDetect') : t(`languages.${lang}`)}
               </option>
@@ -520,7 +521,7 @@ export default function StudioPage() {
             )}
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {LANGUAGES.filter((l) => l !== 'auto' && l !== sourceLanguage).map((lang) => {
+            {STUDIO_LANGUAGES.filter((l) => l !== 'auto' && l !== sourceLanguage).map((lang) => {
               const checked = targetLanguages.includes(lang);
               return (
                 <label

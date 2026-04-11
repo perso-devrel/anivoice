@@ -3,16 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { UploadIcon, VoiceIcon, GlobeIcon, LipSyncIcon, EditIcon, SettingsIcon, DownloadIcon, PlayIcon, CheckmarkIcon, ChevronDownIcon } from '../components/icons';
-
-const LANGUAGES = [
-  { key: 'ja', flag: '🇯🇵' },
-  { key: 'ko', flag: '🇰🇷' },
-  { key: 'en', flag: '🇺🇸' },
-  { key: 'es', flag: '🇪🇸' },
-  { key: 'pt', flag: '🇧🇷' },
-  { key: 'id', flag: '🇮🇩' },
-  { key: 'ar', flag: '🇸🇦' },
-];
+import { SUPPORTED_LANGUAGES } from '../constants';
 
 const FAQ_KEYS = [
   { qKey: 'landing.faqVoiceQ', aKey: 'landing.faqVoiceA' },
@@ -310,7 +301,7 @@ export default function LandingPage() {
             {t('landing.supportedLangs')}
           </h2>
           <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-            {LANGUAGES.map((lang) => (
+            {SUPPORTED_LANGUAGES.map((lang) => (
               <div
                 key={lang.key}
                 className="glass rounded-2xl px-6 py-5 flex flex-col items-center gap-3 min-w-[100px] hover:scale-105 transition-transform duration-200"
