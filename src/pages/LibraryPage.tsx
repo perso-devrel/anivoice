@@ -6,6 +6,9 @@ import { getLibrary, getTags, type LibraryItem, type Tag } from '../services/ani
 import { formatSeconds, getErrorMessage } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
 import { SearchIcon, PlayIcon, ChevronDownIcon, ClockIcon, SpinnerIcon } from '../components/icons';
+import { LANGUAGE_KEYS } from '../constants';
+
+const LIBRARY_LANGUAGE_OPTIONS = ['all', ...LANGUAGE_KEYS] as const;
 
 const GRADIENT_PALETTES = [
   'from-primary-600 to-accent-600',
@@ -69,8 +72,6 @@ export default function LibraryPage() {
     return () => { cancelled = true; };
   }, [activeTag, languageFilter, sortMode, searchQuery, t]);
 
-  const languageOptions = ['all', 'ja', 'ko', 'en', 'es', 'pt', 'id', 'ar'];
-
   return (
     <main className="min-h-screen bg-surface-950 pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,7 +112,7 @@ export default function LibraryPage() {
                 aria-label={t('common.filterByLanguage')}
                 className="appearance-none w-full sm:w-44 px-4 py-2.5 pr-9 bg-surface-800 border border-surface-700 rounded-xl text-sm text-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors cursor-pointer"
               >
-                {languageOptions.map((lang) => (
+                {LIBRARY_LANGUAGE_OPTIONS.map((lang) => (
                   <option key={lang} value={lang}>
                     {lang === 'all' ? t('common.all') : t(`languages.${lang}`)}
                   </option>
