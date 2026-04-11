@@ -10,6 +10,12 @@ import { LANGUAGE_KEYS } from '../constants';
 
 const LIBRARY_LANGUAGE_OPTIONS = ['all', ...LANGUAGE_KEYS] as const;
 
+type SortMode = 'popular' | 'latest';
+const SORT_MODES: readonly { key: SortMode; i18nKey: string }[] = [
+  { key: 'popular', i18nKey: 'library.popular' },
+  { key: 'latest', i18nKey: 'library.latest' },
+];
+
 const GRADIENT_PALETTES = [
   'from-primary-600 to-accent-600',
   'from-accent-600 to-primary-500',
@@ -26,7 +32,7 @@ export default function LibraryPage() {
   usePageTitle('pageTitle.library');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTag, setActiveTag] = useState('all');
-  const [sortMode, setSortMode] = useState<'popular' | 'latest'>('popular');
+  const [sortMode, setSortMode] = useState<SortMode>('popular');
   const [languageFilter, setLanguageFilter] = useState('all');
 
   const [items, setItems] = useState<LibraryItem[]>([]);
@@ -155,26 +161,19 @@ export default function LibraryPage() {
 
             {/* Sort tabs */}
             <div className="flex bg-surface-800 rounded-xl p-1 shrink-0">
-              <button
-                onClick={() => setSortMode('popular')}
-                className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                  sortMode === 'popular'
-                    ? 'bg-surface-700 text-white'
-                    : 'text-gray-500 hover:text-gray-300'
-                }`}
-              >
-                {t('library.popular')}
-              </button>
-              <button
-                onClick={() => setSortMode('latest')}
-                className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                  sortMode === 'latest'
-                    ? 'bg-surface-700 text-white'
-                    : 'text-gray-500 hover:text-gray-300'
-                }`}
-              >
-                {t('library.latest')}
-              </button>
+              {SORT_MODES.map(({ key, i18nKey }) => (
+                <button
+                  key={key}
+                  onClick={() => setSortMode(key)}
+                  className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                    sortMode === key
+                      ? 'bg-surface-700 text-white'
+                      : 'text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  {t(i18nKey)}
+                </button>
+              ))}
             </div>
           </div>
         </div>
