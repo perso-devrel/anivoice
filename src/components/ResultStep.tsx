@@ -89,7 +89,7 @@ export function ResultStep({
   }
 
   const progressLabels = PROGRESS_STAGE_I18N.map(({ key, i18nKey }) => ({ key, label: t(i18nKey) }));
-  const currentStageIdx = STAGE_ORDER.indexOf(processStage as typeof STAGE_ORDER[number]);
+  const currentStageIdx = STAGE_ORDER.indexOf(processStage);
 
   if (isProcessing) {
     return (

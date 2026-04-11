@@ -19,11 +19,23 @@ interface ModalState {
   creditSeconds?: number;
 }
 
-const PLAN_CONFIGS = [
+interface PlanConfig {
+  nameKey: string;
+  id: string;
+  planType: PlanType;
+  price: string;
+  periodKey: string | null;
+  timeLabelKey: string;
+  creditSeconds: number;
+  featureKeys: string[];
+  highlighted: boolean;
+}
+
+const PLAN_CONFIGS: PlanConfig[] = [
   {
     nameKey: 'pricing.free',
     id: 'free',
-    planType: 'free' as PlanType,
+    planType: 'free',
     price: '$0',
     periodKey: null,
     timeLabelKey: 'pricing.freeTimeLabel',
@@ -34,7 +46,7 @@ const PLAN_CONFIGS = [
   {
     nameKey: 'pricing.basic',
     id: 'basic',
-    planType: 'basic' as PlanType,
+    planType: 'basic',
     price: '$4.99',
     periodKey: 'pricing.perMonth',
     timeLabelKey: 'pricing.basicTimeLabel',
@@ -45,7 +57,7 @@ const PLAN_CONFIGS = [
   {
     nameKey: 'pricing.pro',
     id: 'pro',
-    planType: 'pro' as PlanType,
+    planType: 'pro',
     price: '$14.99',
     periodKey: 'pricing.perMonth',
     timeLabelKey: 'pricing.proTimeLabel',
@@ -56,7 +68,7 @@ const PLAN_CONFIGS = [
   {
     nameKey: 'pricing.payPerUse',
     id: 'payPerUse',
-    planType: 'pay-per-use' as PlanType,
+    planType: 'pay-per-use',
     price: '$1.5',
     periodKey: 'pricing.perMinute',
     timeLabelKey: 'pricing.payPerUseTimeLabel',
@@ -85,7 +97,7 @@ export default function PricingPage() {
   const [cardCvc, setCardCvc] = useState('123');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSelectPlan = (plan: typeof PLAN_CONFIGS[number]) => {
+  const handleSelectPlan = (plan: PlanConfig) => {
     if (!user) {
       navigate('/login');
       return;
