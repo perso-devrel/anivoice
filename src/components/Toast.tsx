@@ -1,14 +1,10 @@
 import type { ReactNode } from 'react';
 import { useToastStore } from '../stores/toastStore';
 import type { ToastType } from '../stores/toastStore';
-import { XIcon } from './icons';
+import { XIcon, CheckmarkIcon } from './icons';
 
 const iconByType: Record<ToastType, ReactNode> = {
-  success: (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-    </svg>
-  ),
+  success: <CheckmarkIcon />,
   error: <XIcon />,
   info: (
     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
