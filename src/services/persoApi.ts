@@ -524,6 +524,7 @@ export async function getDownloadLinks(
     'dubbingVideo',
     'voiceAudio',
     'voicewithBackgroundAudio',
+    'subtitle',
     'all', // zip
   ];
 
