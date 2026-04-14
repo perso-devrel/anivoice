@@ -34,8 +34,15 @@ ralph-logs/
 .ralph/JOURNAL/
 .ralph/heartbeat
 .ralph/state.json
+.ralph/test/state.json
 .ralph/.runtime-prompt.md
 .ralph/scheduled.pid
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Vite dev cache
+.vite/
 
 # Auto-generated reports
 review.md
