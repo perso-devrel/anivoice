@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => {
     env.PERSO_API_BASE_URL || 'https://api.perso.ai'
   ).replace(/\/+$/, '');
   const persoApiKey = env.XP_API_KEY || env.VITE_PERSO_API_KEY;
+  const anivoiceApiTarget = env.VITE_ANIVOICE_API_URL || 'https://anivoice-lime.vercel.app';
 
   return {
     test: {
@@ -45,6 +46,11 @@ export default defineConfig(({ mode }) => {
               console.error(`[proxy] ERROR ${req.method} ${req.url}:`, err.message);
             });
           },
+        },
+        '/api': {
+          target: anivoiceApiTarget,
+          changeOrigin: true,
+          secure: false,
         },
       },
     },
