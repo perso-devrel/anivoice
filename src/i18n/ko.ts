@@ -16,6 +16,7 @@ export default {
     share: '공유',
     cancel: '취소',
     save: '저장',
+    reset: '수정',
     delete: '삭제',
     edit: '편집',
     preview: '미리보기',

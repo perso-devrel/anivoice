@@ -64,6 +64,8 @@ interface ResultStepProps {
   onCopyShareLink: () => void;
   onEditChange: (seq: number, value: string) => void;
   onSaveSentence: (seq: number) => void;
+  onResetSentence: (seq: number) => void;
+  resettingSentence: number | null;
   onReset: () => void;
 }
 
@@ -96,6 +98,8 @@ export function ResultStep({
   onCopyShareLink,
   onEditChange,
   onSaveSentence,
+  onResetSentence,
+  resettingSentence,
   onReset,
 }: ResultStepProps) {
   const { t } = useTranslation();
@@ -236,8 +240,10 @@ export function ResultStep({
         sentences={sentences}
         editingValues={editingValues}
         savingSentence={savingSentence}
+        resettingSentence={resettingSentence}
         onEditChange={onEditChange}
         onSave={onSaveSentence}
+        onReset={onResetSentence}
       />
 
       <div className="text-center pt-4">

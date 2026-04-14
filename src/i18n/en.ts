@@ -16,6 +16,7 @@ export default {
     share: 'Share',
     cancel: 'Cancel',
     save: 'Save',
+    reset: 'Revert',
     delete: 'Delete',
     edit: 'Edit',
     preview: 'Preview',

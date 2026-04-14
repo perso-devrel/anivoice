@@ -16,6 +16,7 @@ export default {
     share: '共有',
     cancel: 'キャンセル',
     save: '保存',
+    reset: '元に戻す',
     delete: '削除',
     edit: '編集',
     preview: 'プレビュー',

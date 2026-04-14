@@ -10,11 +10,13 @@ interface Props {
   sentences: PersoScriptSentence[];
   editingValues: Record<number, string>;
   savingSentence: number | null;
+  resettingSentence: number | null;
   onEditChange: (seq: number, value: string) => void;
   onSave: (seq: number) => void;
+  onReset: (seq: number) => void;
 }
 
-export function SentenceEditList({ sentences, editingValues, savingSentence, onEditChange, onSave }: Props) {
+export function SentenceEditList({ sentences, editingValues, savingSentence, resettingSentence, onEditChange, onSave, onReset }: Props) {
   const { t } = useTranslation();
 
   if (sentences.length === 0) return null;
@@ -27,6 +29,7 @@ export function SentenceEditList({ sentences, editingValues, savingSentence, onE
           const color = SPEAKER_COLORS[s.speakerOrderIndex % SPEAKER_COLORS.length];
           const isEditing = s.seq in editingValues;
           const isSaving = savingSentence === s.seq;
+          const isResetting = resettingSentence === s.seq;
 
           return (
             <div key={s.seq} className="bg-surface-900/60 rounded-xl p-4 space-y-2">
@@ -58,12 +61,21 @@ export function SentenceEditList({ sentences, editingValues, savingSentence, onE
                     <button
                       type="button"
                       onClick={() => onSave(s.seq)}
-                      disabled={isSaving}
+                      disabled={isSaving || isResetting}
                       className="px-3 py-2 rounded-lg gradient-bg text-white text-xs font-medium hover:opacity-90 disabled:opacity-40 transition-opacity"
                     >
                       {isSaving ? <SpinnerIcon className="w-3 h-3" /> : t('common.save')}
                     </button>
                   )}
+                  <button
+                    type="button"
+                    onClick={() => onReset(s.seq)}
+                    disabled={isSaving || isResetting}
+                    title={t('common.reset')}
+                    className="px-3 py-2 rounded-lg bg-surface-700 text-surface-200/70 text-xs font-medium hover:bg-surface-600 disabled:opacity-40 transition-colors"
+                  >
+                    {isResetting ? <SpinnerIcon className="w-3 h-3" /> : t('common.reset')}
+                  </button>
                 </div>
               </div>
             </div>

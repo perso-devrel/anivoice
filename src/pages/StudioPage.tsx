@@ -13,6 +13,7 @@ import {
   getProgress,
   translateSentence,
   generateSentenceAudio,
+  resetSentence,
   requestLipSync,
   getDownloadLinks,
   resolvePersoFileUrl,
@@ -68,6 +69,7 @@ export default function StudioPage() {
   const [sentences, setSentences] = useState<PersoScriptSentence[]>([]);
   const [editingValues, setEditingValues] = useState<Record<number, string>>({});
   const [savingSentence, setSavingSentence] = useState<number | null>(null);
+  const [resettingSentence, setResettingSentence] = useState<number | null>(null);
   const [loadingProject, setLoadingProject] = useState(false);
 
   // DB project tracking
@@ -293,6 +295,25 @@ export default function StudioPage() {
     }
   }, [selectedFile, sourceLanguage, targetLanguages, withLipSync, t]);
 
+  async function handleResetSentence(sentenceSeq: number) {
+    if (!projectSeq) return;
+    setResettingSentence(sentenceSeq);
+    try {
+      await resetSentence(projectSeq, sentenceSeq);
+      const script = await getScript(projectSeq, spaceSeq!);
+      setSentences(script.sentences);
+      setEditingValues((prev) => {
+        const next = { ...prev };
+        delete next[sentenceSeq];
+        return next;
+      });
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setResettingSentence(null);
+    }
+  }
+
   async function handleSaveSentence(sentenceSeq: number) {
     if (!projectSeq || !(sentenceSeq in editingValues)) return;
     setSavingSentence(sentenceSeq);
@@ -445,6 +466,7 @@ export default function StudioPage() {
             sentences={sentences}
             editingValues={editingValues}
             savingSentence={savingSentence}
+            resettingSentence={resettingSentence}
             isPublished={isPublished}
             isPublishing={isPublishing}
             tags={tags}
@@ -460,6 +482,7 @@ export default function StudioPage() {
             onCopyShareLink={handleCopyShareLink}
             onEditChange={(seq, value) => setEditingValues((prev) => ({ ...prev, [seq]: value }))}
             onSaveSentence={handleSaveSentence}
+            onResetSentence={handleResetSentence}
             onReset={handleResetProject}
           />
         )}
