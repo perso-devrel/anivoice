@@ -1,37 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
-  getPlanCredits,
-  PLAN_CREDITS,
   computeDeductSeconds,
   clampHistoryDays,
   mapHistoryRow,
 } from './credits';
-
-describe('getPlanCredits', () => {
-  it('returns 360000 for free plan', () => {
-    expect(getPlanCredits('free')).toBe(360000);
-  });
-
-  it('returns 1080000 for basic plan', () => {
-    expect(getPlanCredits('basic')).toBe(1080000);
-  });
-
-  it('returns 3600000 for pro plan', () => {
-    expect(getPlanCredits('pro')).toBe(3600000);
-  });
-
-  it('falls back to 60 for unknown plan', () => {
-    expect(getPlanCredits('enterprise')).toBe(60);
-  });
-
-  it('falls back to 60 for empty string', () => {
-    expect(getPlanCredits('')).toBe(60);
-  });
-
-  it('PLAN_CREDITS has exactly 3 entries', () => {
-    expect(Object.keys(PLAN_CREDITS)).toHaveLength(3);
-  });
-});
 
 describe('computeDeductSeconds', () => {
   it('converts ms to seconds (ceil) for 1 language', () => {

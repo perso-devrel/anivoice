@@ -1,7 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db, migrate } from '../_lib/db.js';
 import { verifyFirebaseToken, ensureUser, sendAuthAwareError } from '../_lib/auth.js';
-import { getPlanCredits } from '../_lib/credits.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -11,48 +10,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await migrate();
     await ensureUser(token);
 
-    const { seconds, plan, description } = req.body;
+    const { seconds, description } = req.body;
 
-    if (plan) {
-      const newCredits = getPlanCredits(plan);
-
-      await db.execute({
-        sql: "UPDATE users SET plan = ?, credit_seconds = ?, updated_at = datetime('now') WHERE id = ?",
-        args: [plan, newCredits, token.sub],
-      });
-
-      await db.execute({
-        sql: `INSERT INTO credit_transactions (user_id, type, amount_seconds, balance_after, description)
-              VALUES (?, 'plan_grant', ?, ?, ?)`,
-        args: [token.sub, newCredits, newCredits, `Plan change: ${plan}`],
-      });
-
-      return res.json({ plan, creditSeconds: newCredits });
+    if (!seconds || seconds <= 0) {
+      return res.status(400).json({ error: 'seconds required' });
     }
 
-    if (seconds && seconds > 0) {
-      // Credit purchase
-      await db.execute({
-        sql: "UPDATE users SET credit_seconds = credit_seconds + ?, updated_at = datetime('now') WHERE id = ?",
-        args: [seconds, token.sub],
-      });
+    await db.execute({
+      sql: "UPDATE users SET credit_seconds = credit_seconds + ?, updated_at = datetime('now') WHERE id = ?",
+      args: [seconds, token.sub],
+    });
 
-      const user = await db.execute({
-        sql: 'SELECT credit_seconds FROM users WHERE id = ?',
-        args: [token.sub],
-      });
-      const balanceAfter = Number(user.rows[0].credit_seconds);
+    const user = await db.execute({
+      sql: 'SELECT credit_seconds FROM users WHERE id = ?',
+      args: [token.sub],
+    });
+    const balanceAfter = Number(user.rows[0].credit_seconds);
 
-      await db.execute({
-        sql: `INSERT INTO credit_transactions (user_id, type, amount_seconds, balance_after, description)
-              VALUES (?, 'purchase', ?, ?, ?)`,
-        args: [token.sub, seconds, balanceAfter, description || `Purchased ${seconds}s`],
-      });
+    await db.execute({
+      sql: `INSERT INTO credit_transactions (user_id, type, amount_seconds, balance_after, description)
+            VALUES (?, 'purchase', ?, ?, ?)`,
+      args: [token.sub, seconds, balanceAfter, description || `Purchased ${seconds}s`],
+    });
 
-      return res.json({ creditSeconds: balanceAfter, added: seconds });
-    }
-
-    return res.status(400).json({ error: 'seconds or plan required' });
+    return res.json({ creditSeconds: balanceAfter, added: seconds });
   } catch (e) {
     return sendAuthAwareError(res, e);
   }

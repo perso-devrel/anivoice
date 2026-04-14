@@ -8,12 +8,7 @@ import { formatCreditTime } from '../utils/format';
 import { showToast } from '../stores/toastStore';
 import { ClockIcon } from '../components/icons';
 import { CheckoutModal, type CardForm } from '../components/CheckoutModal';
-import { PlanCard, type PlanConfig } from '../components/PlanCard';
-import type { PlanType } from '../types';
 import {
-  FREE_PLAN_CREDITS,
-  BASIC_PLAN_CREDITS,
-  PRO_PLAN_CREDITS,
   TIME_PACK_10_MIN_SECONDS,
   TIME_PACK_50_MIN_SECONDS,
   TIME_PACK_100_MIN_SECONDS,
@@ -22,68 +17,20 @@ import {
   TIME_PACK_100_MIN_PRICE,
   FAKE_PAYMENT_DELAY_MS,
   MOCK_CARD_DEFAULTS,
+  CREDIT_PRICE_PER_MINUTE_USD,
 } from '../utils/pricing';
 
 interface ModalState {
-  type: 'plan' | 'credit';
-  planType?: PlanType;
+  type: 'credit';
   label: string;
   price: string;
-  seconds?: number;
-  creditSeconds?: number;
+  seconds: number;
 }
-
-const PLAN_CONFIGS: PlanConfig[] = [
-  {
-    nameKey: 'pricing.free',
-    id: 'free',
-    planType: 'free',
-    price: '$0',
-    periodKey: null,
-    timeLabelKey: 'pricing.freeTimeLabel',
-    creditSeconds: FREE_PLAN_CREDITS,
-    featureKeys: ['pricing.freeFeatureMain', 'pricing.freeFeature2', 'pricing.freeFeature3'],
-    highlighted: false,
-  },
-  {
-    nameKey: 'pricing.basic',
-    id: 'basic',
-    planType: 'basic',
-    price: '$4.99',
-    periodKey: 'pricing.perMonth',
-    timeLabelKey: 'pricing.basicTimeLabel',
-    creditSeconds: BASIC_PLAN_CREDITS,
-    featureKeys: ['pricing.basicFeatureMain', 'pricing.basicFeature2', 'pricing.basicFeature3', 'pricing.basicFeature4'],
-    highlighted: false,
-  },
-  {
-    nameKey: 'pricing.pro',
-    id: 'pro',
-    planType: 'pro',
-    price: '$14.99',
-    periodKey: 'pricing.perMonth',
-    timeLabelKey: 'pricing.proTimeLabel',
-    creditSeconds: PRO_PLAN_CREDITS,
-    featureKeys: ['pricing.proFeatureMain', 'pricing.proFeature2', 'pricing.proFeature3', 'pricing.proFeature4', 'pricing.proFeature5'],
-    highlighted: true,
-  },
-  {
-    nameKey: 'pricing.payPerUse',
-    id: 'payPerUse',
-    planType: 'pay-per-use',
-    price: '$1.5',
-    periodKey: 'pricing.perMinute',
-    timeLabelKey: 'pricing.payPerUseTimeLabel',
-    creditSeconds: 0,
-    featureKeys: ['pricing.payPerUseFeatureMain', 'pricing.payPerUseFeature2', 'pricing.payPerUseFeature3'],
-    highlighted: false,
-  },
-];
 
 const TIME_PACKAGE_CONFIGS = [
   { seconds: TIME_PACK_10_MIN_SECONDS, labelKey: 'pricing.timePack10', price: `$${TIME_PACK_10_MIN_PRICE}`, priceNum: TIME_PACK_10_MIN_PRICE, savingsKey: '' },
-  { seconds: TIME_PACK_50_MIN_SECONDS, labelKey: 'pricing.timePack50', price: `$${TIME_PACK_50_MIN_PRICE}`, priceNum: TIME_PACK_50_MIN_PRICE, savingsKey: 'pricing.save17' },
-  { seconds: TIME_PACK_100_MIN_SECONDS, labelKey: 'pricing.timePack100', price: `$${TIME_PACK_100_MIN_PRICE}`, priceNum: TIME_PACK_100_MIN_PRICE, savingsKey: 'pricing.save40' },
+  { seconds: TIME_PACK_50_MIN_SECONDS, labelKey: 'pricing.timePack50', price: `$${TIME_PACK_50_MIN_PRICE}`, priceNum: TIME_PACK_50_MIN_PRICE, savingsKey: '' },
+  { seconds: TIME_PACK_100_MIN_SECONDS, labelKey: 'pricing.timePack100', price: `$${TIME_PACK_100_MIN_PRICE}`, priceNum: TIME_PACK_100_MIN_PRICE, savingsKey: '' },
 ];
 
 export default function PricingPage() {
@@ -98,23 +45,6 @@ export default function PricingPage() {
 
   const handleCardFormChange = (field: keyof CardForm, value: string) => {
     setCardForm((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSelectPlan = (plan: PlanConfig) => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-    if (user.plan === plan.planType) return;
-    const name = t(plan.nameKey);
-    const period = plan.periodKey ? t(plan.periodKey) : '';
-    setModal({
-      type: 'plan',
-      planType: plan.planType,
-      label: name,
-      price: plan.price + (period ? ` / ${period}` : ''),
-      creditSeconds: plan.creditSeconds,
-    });
   };
 
   const handleBuyTime = (pkg: typeof TIME_PACKAGE_CONFIGS[number]) => {
@@ -138,43 +68,31 @@ export default function PricingPage() {
     try {
       await new Promise((resolve) => setTimeout(resolve, FAKE_PAYMENT_DELAY_MS));
 
-      if (modal.type === 'plan' && modal.planType) {
-        const result = await purchaseCredits({ plan: modal.planType });
-        useAuthStore.getState().updatePlan(modal.planType, result.creditSeconds);
-      } else if (modal.type === 'credit' && modal.seconds) {
-        const result = await purchaseCredits({
-          seconds: modal.seconds,
-          description: t('pricing.creditRecharge', { amount: modal.label }),
-        });
-        useAuthStore.getState().setCreditSeconds(result.creditSeconds);
-      }
+      const result = await purchaseCredits({
+        seconds: modal.seconds,
+        description: t('pricing.creditRecharge', { amount: modal.label }),
+      });
+      useAuthStore.getState().setCreditSeconds(result.creditSeconds);
 
       setIsProcessing(false);
       setModal(null);
-      showToast(
-        modal.type === 'plan'
-          ? t('pricing.planChanged')
-          : t('pricing.creditsAdded', { amount: modal.label }),
-        'success'
-      );
+      showToast(t('pricing.creditsAdded', { amount: modal.label }), 'success');
     } catch {
       setIsProcessing(false);
       showToast(t('pricing.paymentError'));
     }
   };
 
-  const isCurrentPlan = (planType: PlanType) => user?.plan === planType;
-
   return (
     <main className="min-h-screen bg-surface-950 pt-24 pb-16 px-4">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold gradient-text mb-4">
             {t('pricing.title')}
           </h1>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            {t('pricing.subtitle')}
+            {t('pricing.creditOnlySubtitle', { price: CREDIT_PRICE_PER_MINUTE_USD })}
           </p>
           {user && (
             <p className="mt-4 text-sm text-gray-500">
@@ -183,60 +101,41 @@ export default function PricingPage() {
           )}
         </div>
 
-        {/* Plan Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-20">
-          {PLAN_CONFIGS.map((plan) => (
-            <PlanCard
-              key={plan.id}
-              plan={plan}
-              isCurrent={isCurrentPlan(plan.planType)}
-              onSelect={handleSelectPlan}
-            />
-          ))}
+        {/* Time Packages */}
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold gradient-text mb-3">
+            {t('pricing.creditPackages')}
+          </h2>
+          <p className="text-gray-400">
+            {t('pricing.creditSubtitle')}
+          </p>
         </div>
 
-        {/* Time Packages */}
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold gradient-text mb-3">
-              {t('pricing.creditPackages')}
-            </h2>
-            <p className="text-gray-400">
-              {t('pricing.creditSubtitle')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {TIME_PACKAGE_CONFIGS.map((pkg) => (
-              <div
-                key={pkg.seconds}
-                className="glass rounded-2xl border border-surface-700 p-6 flex flex-col items-center text-center hover:border-primary-500/50 transition-colors"
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
-                  <ClockIcon className="w-6 h-6 text-primary-400" />
-                </div>
-
-                <p className="text-2xl font-bold text-white mb-1">
-                  {t(pkg.labelKey)}
-                </p>
-                <p className="text-3xl font-bold gradient-text mb-2">
-                  {pkg.price}
-                </p>
-                {pkg.savingsKey && (
-                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-accent-500/20 text-accent-400 mb-4">
-                    {t(pkg.savingsKey)}
-                  </span>
-                )}
-
-                <button
-                  onClick={() => handleBuyTime(pkg)}
-                  className="mt-auto w-full py-3 rounded-xl border border-surface-600 text-gray-300 font-medium hover:border-primary-500 hover:text-white transition-colors"
-                >
-                  {t('common.buy')}
-                </button>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {TIME_PACKAGE_CONFIGS.map((pkg) => (
+            <div
+              key={pkg.seconds}
+              className="glass rounded-2xl border border-surface-700 p-6 flex flex-col items-center text-center hover:border-primary-500/50 transition-colors"
+            >
+              <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
+                <ClockIcon className="w-6 h-6 text-primary-400" />
               </div>
-            ))}
-          </div>
+
+              <p className="text-2xl font-bold text-white mb-1">
+                {t(pkg.labelKey)}
+              </p>
+              <p className="text-3xl font-bold gradient-text mb-6">
+                {pkg.price}
+              </p>
+
+              <button
+                onClick={() => handleBuyTime(pkg)}
+                className="mt-auto w-full py-3 rounded-xl border border-surface-600 text-gray-300 font-medium hover:border-primary-500 hover:text-white transition-colors"
+              >
+                {t('common.buy')}
+              </button>
+            </div>
+          ))}
         </div>
 
         {/* Bottom CTA */}

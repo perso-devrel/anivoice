@@ -88,7 +88,6 @@ export default function SettingsPage() {
         {/* Subscription Tab */}
         {activeTab === 'subscription' && (
           <SubscriptionTab
-            plan={user?.plan || 'Free'}
             creditSeconds={user?.creditSeconds || 0}
           />
         )}

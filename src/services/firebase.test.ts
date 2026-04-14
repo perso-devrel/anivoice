@@ -40,7 +40,7 @@ describe('firebase mock auth', () => {
       const user = await signInWithEmail('dervel@estsoft.com', 'dervel!!');
       expect(user.email).toBe('dervel@estsoft.com');
       expect(user.displayName).toBe('Dervel');
-      expect(user.plan).toBe('pro');
+      expect(user.plan).toBe('free');
     });
 
     it('persists user to localStorage', async () => {
@@ -68,7 +68,7 @@ describe('firebase mock auth', () => {
       expect(user.email).toBe('new@example.com');
       expect(user.displayName).toBe('NewUser');
       expect(user.plan).toBe('free');
-      expect(user.creditSeconds).toBe(360000);
+      expect(user.creditSeconds).toBe(0);
     });
 
     it('persists new user to localStorage', async () => {

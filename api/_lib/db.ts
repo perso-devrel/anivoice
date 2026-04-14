@@ -13,7 +13,7 @@ export async function migrate() {
       display_name TEXT NOT NULL DEFAULT '',
       photo_url TEXT,
       plan TEXT NOT NULL DEFAULT 'free',
-      credit_seconds INTEGER NOT NULL DEFAULT 360000,
+      credit_seconds INTEGER NOT NULL DEFAULT 0,
       language TEXT NOT NULL DEFAULT 'ko',
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -83,8 +83,7 @@ export async function migrate() {
       ('slice-of-life', '일상', 'Slice of Life'),
       ('mecha', '메카', 'Mecha');
 
-    -- One-time seed migration: bump free users still at old default (60s) to 100 hours.
-    -- Users who already dubbed (credit_seconds != 60) are unaffected.
-    UPDATE users SET credit_seconds = 360000 WHERE plan = 'free' AND credit_seconds = 60;
+    -- Credit-only model: reset any plan-granted default credits to 0 for new signups.
+    -- Existing users with purchased credits are unaffected (balance stays as-is).
   `);
 }
