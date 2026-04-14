@@ -210,7 +210,7 @@ export default function StudioPage() {
       setProcessStage('dubbing');
       setProgress(PROGRESS_TRANSLATION_REQUESTED);
       const projectIds = await requestTranslation(space.spaceSeq, {
-        mediaSeq: uploadedFile.seq,
+        mediaSeq: Number(uploadedFile.seq),
         isVideoProject: true,
         sourceLanguageCode: sourceLanguage === 'auto' ? undefined : sourceLanguage,
         targetLanguageCodes: targetLanguages,

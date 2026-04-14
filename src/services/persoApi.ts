@@ -209,7 +209,7 @@ export async function registerVideo(
 ): Promise<PersoUploadedFile> {
   return retryWithBackoff(async () => {
     const { data } = await api.put('/file/api/upload/video', {
-      spaceSeq,
+      spaceSeq: Number(spaceSeq),
       fileUrl,
       fileName,
     });
