@@ -28,11 +28,17 @@ dist-ssr
 .env.local
 .env.*.local
 
-# Ralph loop logs
+# Ralph loop logs & runtime files
 ralph-logs/
 .ralph/logs/
+.ralph/JOURNAL/
 .ralph/heartbeat
 .ralph/state.json
+.ralph/.runtime-prompt.md
+.ralph/scheduled.pid
+
+# Auto-generated reports
+review.md
 
 # Test fixtures (large binary files, kept locally only)
 # 루트 한정 — .ralph/test/ 같은 다른 경로의 test 디렉토리는 제외하지 않음
