@@ -11,7 +11,7 @@ export interface User {
 
 export type PlanType = 'free' | 'basic' | 'pro' | 'pay-per-use';
 
-export type SupportedLanguage = 'ja' | 'ko' | 'en' | 'es' | 'pt' | 'id' | 'ar';
+export type SupportedLanguage = 'ja' | 'ko' | 'en' | 'es' | 'pt' | 'id' | 'ar' | 'zh';
 
 export type ProjectStatus = 'uploading' | 'analyzing' | 'dubbing' | 'lip-syncing' | 'completed' | 'failed';
 

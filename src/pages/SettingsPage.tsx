@@ -26,9 +26,11 @@ const BILLING_HISTORY_ENTRIES = [
 
 const TABLE_HEADER_CLASS = 'text-left text-sm font-medium text-gray-400 pb-3';
 
-const LANGUAGE_OPTIONS: { code: 'ko' | 'en'; emoji: string; label: string; subtitleKey: string }[] = [
+const LANGUAGE_OPTIONS: { code: 'ko' | 'en' | 'ja' | 'zh'; emoji: string; label: string; subtitleKey: string }[] = [
   { code: 'ko', emoji: '🇰🇷', label: '한국어', subtitleKey: 'settings.langKoreanSub' },
   { code: 'en', emoji: '🇺🇸', label: 'English', subtitleKey: 'settings.langEnglishSub' },
+  { code: 'ja', emoji: '🇯🇵', label: '日本語', subtitleKey: 'settings.langJapaneseSub' },
+  { code: 'zh', emoji: '🇨🇳', label: '中文', subtitleKey: 'settings.langChineseSub' },
 ];
 
 export default function SettingsPage() {
@@ -39,7 +41,7 @@ export default function SettingsPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
 
-  const handleLanguageChange = (lang: 'ko' | 'en') => {
+  const handleLanguageChange = (lang: 'ko' | 'en' | 'ja' | 'zh') => {
     setLanguage(lang);
     i18n.changeLanguage(lang);
   };
