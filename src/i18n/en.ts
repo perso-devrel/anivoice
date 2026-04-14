@@ -217,6 +217,8 @@ export default {
     languageHint: 'All menus and text will be displayed in the selected language',
     langKoreanSub: 'Korean',
     langEnglishSub: 'English',
+    langJapaneseSub: 'Japanese',
+    langChineseSub: 'Chinese',
   },
   pricing: {
     title: 'Pricing',

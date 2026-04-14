@@ -1,11 +1,13 @@
 import { create } from 'zustand';
 
+type UILanguage = 'ko' | 'en' | 'ja' | 'zh';
+
 interface UIState {
   sidebarOpen: boolean;
-  language: 'ko' | 'en';
+  language: UILanguage;
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
-  setLanguage: (lang: 'ko' | 'en') => void;
+  setLanguage: (lang: UILanguage) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({

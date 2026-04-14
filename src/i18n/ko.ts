@@ -217,6 +217,8 @@ export default {
     languageHint: '모든 메뉴와 텍스트가 선택한 언어로 표시됩니다',
     langKoreanSub: 'Korean',
     langEnglishSub: '영어',
+    langJapaneseSub: '일본어',
+    langChineseSub: '중국어',
   },
   pricing: {
     title: '요금제',
