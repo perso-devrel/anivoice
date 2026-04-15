@@ -5,7 +5,6 @@ const mockUser = {
   id: 'u1',
   email: 'test@example.com',
   displayName: 'Test',
-  plan: 'free' as const,
   creditSeconds: 1000,
   language: 'ko' as const,
   createdAt: '2026-01-01',
@@ -38,19 +37,6 @@ describe('authStore', () => {
   it('setLoading updates loading state', () => {
     useAuthStore.getState().setLoading(false);
     expect(useAuthStore.getState().isLoading).toBe(false);
-  });
-
-  it('updatePlan updates plan and credits when user exists', () => {
-    useAuthStore.getState().setUser(mockUser);
-    useAuthStore.getState().updatePlan('pro', 5000);
-    const user = useAuthStore.getState().user!;
-    expect(user.plan).toBe('pro');
-    expect(user.creditSeconds).toBe(5000);
-  });
-
-  it('updatePlan is a no-op when user is null', () => {
-    useAuthStore.getState().updatePlan('pro', 5000);
-    expect(useAuthStore.getState().user).toBeNull();
   });
 
   it('setCreditSeconds updates credits when user exists', () => {

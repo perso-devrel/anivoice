@@ -65,7 +65,6 @@ export function mapUserRow(row: Record<string, unknown>) {
     email: row.email,
     displayName: row.display_name,
     photoURL: row.photo_url,
-    plan: row.plan,
     creditSeconds: row.credit_seconds,
     language: row.language,
     createdAt: row.created_at,

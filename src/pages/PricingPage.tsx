@@ -21,7 +21,6 @@ import {
 } from '../utils/pricing';
 
 interface ModalState {
-  type: 'credit';
   label: string;
   price: string;
   seconds: number;
@@ -54,7 +53,6 @@ export default function PricingPage() {
     }
     const label = t(pkg.labelKey);
     setModal({
-      type: 'credit',
       label: t('pricing.dubbingTimeLabel', { amount: label }),
       price: pkg.price,
       seconds: pkg.seconds,
@@ -152,7 +150,6 @@ export default function PricingPage() {
 
       {modal && (
         <CheckoutModal
-          type={modal.type}
           label={modal.label}
           price={modal.price}
           cardForm={cardForm}

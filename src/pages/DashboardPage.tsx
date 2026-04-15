@@ -169,7 +169,7 @@ export default function DashboardPage() {
           <StatCard
             icon={<WalletIcon className="w-5 h-5 text-primary-400" />}
             iconBg="bg-primary-500/15"
-            label={<>{t('dashboard.creditsRemaining')}{user?.plan && <span className="ml-1 text-gray-500">({user.plan})</span>}</>}
+            label={t('dashboard.creditsRemaining')}
             value={loading ? '...' : user ? formatCreditTime(user.creditSeconds, t) : '--'}
           />
           <StatCard

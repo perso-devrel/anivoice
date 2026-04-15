@@ -183,7 +183,6 @@ describe('mapUserRow', () => {
     email: 'test@example.com',
     display_name: 'Test User',
     photo_url: 'https://example.com/photo.jpg',
-    plan: 'free',
     credit_seconds: 360000,
     language: 'ko',
     created_at: '2026-04-01',
@@ -195,7 +194,6 @@ describe('mapUserRow', () => {
     expect(result.email).toBe('test@example.com');
     expect(result.displayName).toBe('Test User');
     expect(result.photoURL).toBe('https://example.com/photo.jpg');
-    expect(result.plan).toBe('free');
     expect(result.creditSeconds).toBe(360000);
     expect(result.language).toBe('ko');
     expect(result.createdAt).toBe('2026-04-01');

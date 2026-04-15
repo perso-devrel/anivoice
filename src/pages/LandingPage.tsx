@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
-import { UploadIcon, VoiceIcon, GlobeIcon, LipSyncIcon, EditIcon, SettingsIcon, DownloadIcon, PlayIcon, CheckmarkIcon, ChevronDownIcon } from '../components/icons';
+import { UploadIcon, VoiceIcon, GlobeIcon, LipSyncIcon, EditIcon, SettingsIcon, DownloadIcon, PlayIcon, ChevronDownIcon, ClockIcon } from '../components/icons';
 import { SUPPORTED_LANGUAGES } from '../constants';
+import { CREDIT_PRICE_PER_MINUTE_USD, TIME_PACK_10_MIN_SECONDS, TIME_PACK_50_MIN_SECONDS, TIME_PACK_100_MIN_SECONDS, TIME_PACK_10_MIN_PRICE, TIME_PACK_50_MIN_PRICE, TIME_PACK_100_MIN_PRICE } from '../utils/pricing';
 
 const FAQ_KEYS = [
   { qKey: 'landing.faqVoiceQ', aKey: 'landing.faqVoiceA' },
@@ -38,11 +39,10 @@ const STEP_ICONS: Record<string, React.ReactNode> = {
   download: <DownloadIcon className="w-10 h-10" />,
 };
 
-const PLAN_KEYS = [
-  { nameKey: 'pricing.free.name', priceKey: 'pricing.free.price', featuresKey: 'pricing.free.features', highlight: false },
-  { nameKey: 'pricing.basic.name', priceKey: 'pricing.basic.price', featuresKey: 'pricing.basic.features', highlight: false },
-  { nameKey: 'pricing.pro.name', priceKey: 'pricing.pro.price', featuresKey: 'pricing.pro.features', highlight: true },
-  { nameKey: 'pricing.payPerUse.name', priceKey: 'pricing.payPerUse.price', featuresKey: 'pricing.payPerUse.features', highlight: false },
+const CREDIT_PACKS = [
+  { seconds: TIME_PACK_10_MIN_SECONDS, labelKey: 'pricing.timePack10', price: TIME_PACK_10_MIN_PRICE },
+  { seconds: TIME_PACK_50_MIN_SECONDS, labelKey: 'pricing.timePack50', price: TIME_PACK_50_MIN_PRICE },
+  { seconds: TIME_PACK_100_MIN_SECONDS, labelKey: 'pricing.timePack100', price: TIME_PACK_100_MIN_PRICE },
 ];
 
 const LANDING_SECTION_CLASS = "px-4 py-20 md:py-28 mx-auto";
@@ -143,57 +143,25 @@ function StepCard({
   );
 }
 
-function PricingCard({
-  name,
+function CreditPackCard({
+  label,
   price,
-  features,
-  highlight,
-  selectLabel,
-  popularLabel,
 }: {
-  name: string;
-  price: string;
-  features: string[];
-  highlight: boolean;
-  selectLabel: string;
-  popularLabel?: string;
+  label: string;
+  price: number;
 }) {
   return (
-    <div
-      className={`rounded-2xl p-6 flex flex-col relative transition-transform duration-300 hover:scale-[1.03] ${
-        highlight
-          ? 'gradient-bg shadow-2xl shadow-primary-500/20 ring-2 ring-primary-400/50'
-          : 'glass'
-      }`}
-    >
-      {highlight && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-500 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
-          {popularLabel}
-        </span>
-      )}
-      <h3 className="text-xl font-bold mb-1 text-white">
-        {name}
-      </h3>
-      <p className={`text-3xl font-extrabold mb-6 ${highlight ? 'text-white' : 'gradient-text'}`}>
-        {price}
-      </p>
-      <ul className="space-y-3 mb-8 flex-1">
-        {features.map((f, i) => (
-          <li key={i} className="flex items-start gap-2 text-sm">
-            <CheckmarkIcon className="w-5 h-5 text-primary-400 shrink-0" />
-            <span className={highlight ? 'text-white/90' : 'text-gray-300'}>{f}</span>
-          </li>
-        ))}
-      </ul>
+    <div className="glass rounded-2xl p-6 flex flex-col items-center text-center hover:scale-[1.03] transition-transform duration-300">
+      <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
+        <ClockIcon className="w-6 h-6 text-primary-400" />
+      </div>
+      <p className="text-2xl font-bold text-white mb-1">{label}</p>
+      <p className="text-3xl font-bold gradient-text mb-6">${price}</p>
       <Link
-        to="/signup"
-        className={`block text-center py-3 px-6 rounded-xl font-semibold text-sm transition-all duration-200 ${
-          highlight
-            ? 'bg-white text-primary-600 hover:bg-gray-100'
-            : 'border border-primary-500/50 text-primary-400 hover:bg-primary-500/10'
-        }`}
+        to="/pricing"
+        className="mt-auto w-full text-center py-3 rounded-xl border border-surface-600 text-gray-300 font-medium hover:border-primary-500 hover:text-white transition-colors"
       >
-        {selectLabel}
+        {label}
       </Link>
     </div>
   );
@@ -357,23 +325,19 @@ export default function LandingPage() {
         {/* ============================================================ */}
         {/*  PRICING                                                     */}
         {/* ============================================================ */}
-        <section className={`${LANDING_SECTION_CLASS} max-w-6xl`}>
+        <section className={`${LANDING_SECTION_CLASS} max-w-4xl`}>
           <h2 className={`${SECTION_HEADING_CLASS} mb-4`}>
             {t('pricing.title')}
           </h2>
           <p className="text-gray-400 text-center mb-14 max-w-lg mx-auto">
-            {t('pricing.subtitle')}
+            {t('pricing.creditOnlySubtitle', { price: CREDIT_PRICE_PER_MINUTE_USD })}
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PLAN_KEYS.map((plan) => (
-              <PricingCard
-                key={plan.nameKey}
-                name={t(plan.nameKey)}
-                price={t(plan.priceKey)}
-                features={t(plan.featuresKey, { returnObjects: true }) as string[]}
-                highlight={plan.highlight}
-                selectLabel={t('pricing.selectPlan')}
-                popularLabel={plan.highlight ? t('landing.popular') : undefined}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {CREDIT_PACKS.map((pack) => (
+              <CreditPackCard
+                key={pack.seconds}
+                label={t(pack.labelKey)}
+                price={pack.price}
               />
             ))}
           </div>

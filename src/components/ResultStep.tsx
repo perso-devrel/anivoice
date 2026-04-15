@@ -220,7 +220,7 @@ export function ResultStep({
           onClick={onRequestLipSync}
           className="w-full glass rounded-xl px-4 py-3 text-sm text-accent-400 hover:text-white hover:border-accent-500/40 transition-colors"
         >
-          {t('studio.progressLipSync')} {t('studio.proBadge')}
+          {t('studio.progressLipSync')}
         </button>
       )}
 

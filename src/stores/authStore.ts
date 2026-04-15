@@ -1,12 +1,11 @@
 import { create } from 'zustand';
-import type { User, PlanType } from '../types';
+import type { User } from '../types';
 
 interface AuthState {
   user: User | null;
   isLoading: boolean;
   setUser: (user: User | null) => void;
   setLoading: (loading: boolean) => void;
-  updatePlan: (plan: PlanType, creditSeconds: number) => void;
   setCreditSeconds: (seconds: number) => void;
   addCreditSeconds: (seconds: number) => void;
 }
@@ -16,12 +15,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: true,
   setUser: (user) => set({ user, isLoading: false }),
   setLoading: (isLoading) => set({ isLoading }),
-  updatePlan: (plan, creditSeconds) => {
-    const { user } = get();
-    if (user) {
-      set({ user: { ...user, plan, creditSeconds } });
-    }
-  },
   setCreditSeconds: (creditSeconds) => {
     const { user } = get();
     if (user) {

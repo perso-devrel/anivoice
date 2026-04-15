@@ -9,7 +9,6 @@ export interface CardForm {
 }
 
 interface CheckoutModalProps {
-  type: 'plan' | 'credit';
   label: string;
   price: string;
   cardForm: CardForm;
@@ -28,7 +27,6 @@ const CARD_FIELDS: { key: keyof CardForm; labelKey: string; placeholder: string;
 const INPUT_CLASS = 'w-full px-4 py-3 rounded-xl bg-surface-800 border border-surface-600 text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none transition-colors';
 
 export function CheckoutModal({
-  type,
   label,
   price,
   cardForm,
@@ -55,7 +53,7 @@ export function CheckoutModal({
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="text-xl font-bold text-white mb-1">
-          {type === 'plan' ? t('pricing.changePlan') : t('pricing.buyCredits')}
+          {t('pricing.buyCredits')}
         </h3>
         <p className="text-gray-400 mb-6">
           {label} — <span className="text-white font-semibold">{price}</span>

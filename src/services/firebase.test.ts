@@ -40,7 +40,6 @@ describe('firebase mock auth', () => {
       const user = await signInWithEmail('dervel@estsoft.com', 'dervel!!');
       expect(user.email).toBe('dervel@estsoft.com');
       expect(user.displayName).toBe('Dervel');
-      expect(user.plan).toBe('free');
     });
 
     it('persists user to localStorage', async () => {
@@ -67,7 +66,6 @@ describe('firebase mock auth', () => {
       const user = await signUpWithEmail('new@example.com', 'pass123', 'NewUser');
       expect(user.email).toBe('new@example.com');
       expect(user.displayName).toBe('NewUser');
-      expect(user.plan).toBe('free');
       expect(user.creditSeconds).toBe(0);
     });
 
@@ -108,7 +106,7 @@ describe('firebase mock auth', () => {
     it('clears auth store user', async () => {
       useAuthStore.getState().setUser({
         id: 'x', email: 'x', displayName: 'x',
-        plan: 'free', creditSeconds: 0, language: 'ko', createdAt: '',
+        creditSeconds: 0, language: 'ko', createdAt: '',
       });
       await signOut();
       expect(useAuthStore.getState().user).toBeNull();
@@ -121,7 +119,7 @@ describe('firebase mock auth', () => {
         'anivoice_mock_user',
         JSON.stringify({
           id: 'u1', email: 'a@b.com', displayName: 'A',
-          plan: 'free', creditSeconds: 100, language: 'ko', createdAt: '',
+          creditSeconds: 100, language: 'ko', createdAt: '',
         }),
       );
       initAuthListener();
@@ -139,7 +137,7 @@ describe('firebase mock auth', () => {
       await signInWithEmail('dervel@estsoft.com', 'dervel!!');
       useAuthStore.getState().setUser({
         id: 'mock-001', email: 'dervel@estsoft.com', displayName: 'Dervel',
-        plan: 'pro', creditSeconds: 3600000, language: 'ko', createdAt: '',
+        creditSeconds: 3600000, language: 'ko', createdAt: '',
       });
       await updateProfile('NewName');
       const stored = JSON.parse(storage.get('anivoice_mock_user')!);
