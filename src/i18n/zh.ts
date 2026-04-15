@@ -144,6 +144,7 @@ export default {
     downloadAudio: '下载音频（WAV）',
     downloadZip: 'ZIP（全部）',
     editTranslation: '编辑翻译',
+    applyEdits: '将修改应用到视频',
     excludeSegment: '排除此片段',
     lockTranslation: '锁定翻译',
     lipSyncProRequired: '应用口型同步',

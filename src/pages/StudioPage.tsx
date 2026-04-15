@@ -12,7 +12,6 @@ import {
   getScript,
   getProgress,
   translateSentence,
-  generateSentenceAudio,
   requestProofread,
   requestLipSync,
   getDownloadLinks,
@@ -312,10 +311,8 @@ export default function StudioPage() {
     setSavingSentence(sentenceSeq);
     try {
       const newText = editingValues[sentenceSeq];
-      // Update translation text
+      // Update translation text on server
       await translateSentence(projectSeq, sentenceSeq, newText);
-      // Regenerate audio for this sentence
-      await generateSentenceAudio(projectSeq, sentenceSeq, newText);
 
       setSentences((prev) =>
         prev.map((s) =>
@@ -347,6 +344,27 @@ export default function StudioPage() {
       setIsProcessing(false);
     } finally {
       setSavingSentence(null);
+    }
+  }
+
+  async function handleApplyEdits() {
+    if (!projectSeq || !spaceSeq) return;
+    setProcessStage('re-dubbing');
+    setIsProcessing(true);
+    setProgress(0);
+    try {
+      await requestProofread(projectSeq, spaceSeq);
+      await pollProgress(projectSeq, spaceSeq, (p) => {
+        setProgress(p.progress);
+      });
+      const links = await getDownloadLinks(projectSeq, spaceSeq);
+      setDownloadLinks(links);
+      setProcessStage('done');
+      setProgress(100);
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setIsProcessing(false);
     }
   }
 
@@ -490,6 +508,7 @@ export default function StudioPage() {
             onCopyShareLink={handleCopyShareLink}
             onEditChange={(seq, value) => setEditingValues((prev) => ({ ...prev, [seq]: value }))}
             onSaveSentence={handleSaveSentence}
+            onApplyEdits={handleApplyEdits}
             onReset={handleResetProject}
           />
         )}

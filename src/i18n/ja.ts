@@ -144,6 +144,7 @@ export default {
     downloadAudio: '音声をダウンロード（WAV）',
     downloadZip: 'ZIP（すべて）',
     editTranslation: '翻訳を編集',
+    applyEdits: '編集内容を動画に適用',
     excludeSegment: 'このセグメントを除外',
     lockTranslation: '翻訳をロック',
     lipSyncProRequired: 'リップシンク適用',

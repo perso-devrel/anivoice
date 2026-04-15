@@ -144,6 +144,7 @@ export default {
     downloadAudio: 'Download audio (WAV)',
     downloadZip: 'ZIP (All)',
     editTranslation: 'Edit translation',
+    applyEdits: 'Apply edits to video',
     excludeSegment: 'Exclude segment',
     lockTranslation: 'Lock translation',
     lipSyncProRequired: 'Apply lip-sync',

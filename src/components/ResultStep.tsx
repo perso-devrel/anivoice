@@ -65,6 +65,7 @@ interface ResultStepProps {
   onCopyShareLink: () => void;
   onEditChange: (seq: number, value: string) => void;
   onSaveSentence: (seq: number) => void;
+  onApplyEdits: () => void;
   onReset: () => void;
 }
 
@@ -97,6 +98,7 @@ export function ResultStep({
   onCopyShareLink,
   onEditChange,
   onSaveSentence,
+  onApplyEdits,
   onReset,
 }: ResultStepProps) {
   const { t } = useTranslation();
@@ -240,6 +242,17 @@ export function ResultStep({
         onEditChange={onEditChange}
         onSave={onSaveSentence}
       />
+
+      {sentences.length > 0 && (
+        <button
+          type="button"
+          onClick={onApplyEdits}
+          disabled={isProcessing}
+          className="w-full gradient-bg py-3 rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          {t('studio.applyEdits')}
+        </button>
+      )}
 
       <div className="text-center pt-4">
         <button

@@ -144,6 +144,7 @@ export default {
     downloadAudio: '오디오 다운로드 (WAV)',
     downloadZip: 'ZIP (전체)',
     editTranslation: '번역 수정',
+    applyEdits: '수정사항 영상에 적용하기',
     excludeSegment: '이 구간 제외',
     lockTranslation: '번역 잠금',
     lipSyncProRequired: '립싱크 적용',
