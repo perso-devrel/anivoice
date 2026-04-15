@@ -52,7 +52,6 @@ interface DbUser {
   email: string;
   displayName: string;
   photoURL?: string;
-  plan: string;
   creditSeconds: number;
   language: string;
   createdAt: string;
@@ -136,7 +135,7 @@ export async function deductCredits(projectId: number, durationMs: number, langu
   return data;
 }
 
-export async function purchaseCredits(params: { seconds?: number; plan?: string; description?: string }): Promise<{ creditSeconds: number }> {
+export async function purchaseCredits(params: { seconds?: number; description?: string }): Promise<{ creditSeconds: number }> {
   const { data } = await api.post('/credits/purchase', params);
   return data;
 }
