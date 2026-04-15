@@ -15,8 +15,8 @@ interface FirebaseTokenPayload {
  */
 export async function ensureUser(token: FirebaseTokenPayload): Promise<void> {
   await db.execute({
-    sql: `INSERT INTO users (id, email, display_name, photo_url, plan, credit_seconds)
-          VALUES (?, ?, ?, ?, 'free', 360000)
+    sql: `INSERT INTO users (id, email, display_name, photo_url, credit_seconds)
+          VALUES (?, ?, ?, ?, 0)
           ON CONFLICT(id) DO NOTHING`,
     args: [token.sub, token.email || '', token.name || '', token.picture || null],
   });

@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db, migrate } from '../../_lib/db.js';
-import { verifyFirebaseToken, sendAuthAwareError } from '../../_lib/auth.js';
+import { verifyFirebaseToken, ensureUser, sendAuthAwareError } from '../../_lib/auth.js';
 import {
   buildOwnershipQuery,
   buildPublishUpdateQuery,
@@ -17,6 +17,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const token = await verifyFirebaseToken(req);
     await migrate();
+    await ensureUser(token);
 
     const { tagIds = [], isPublic = true } = req.body;
 

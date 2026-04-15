@@ -82,6 +82,6 @@ describe('buildLibraryQuery', () => {
 
   it('handles sort=popular', () => {
     const { sql } = buildLibraryQuery({ sort: 'popular' });
-    expect(sql).toContain('ORDER BY p.created_at DESC');
+    expect(sql).toContain('ORDER BY p.is_favorite DESC, p.created_at DESC');
   });
 });

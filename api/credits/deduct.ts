@@ -12,6 +12,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await ensureUser(token);
 
     const { projectId, durationMs, languageCount = 1 } = req.body;
+
+    if (!durationMs || typeof durationMs !== 'number' || durationMs <= 0) {
+      return res.status(400).json({ error: 'durationMs must be a positive number' });
+    }
+
     const seconds = computeDeductSeconds(durationMs, languageCount);
 
     // Atomic deduct: only succeeds if enough credits
@@ -30,6 +35,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       sql: 'SELECT credit_seconds FROM users WHERE id = ?',
       args: [token.sub],
     });
+    if (user.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
     const balanceAfter = Number(user.rows[0].credit_seconds);
 
     // Record transaction
