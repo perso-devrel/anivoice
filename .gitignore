@@ -39,7 +39,7 @@ ralph-logs/
 .ralph/scheduled.pid
 
 # Claude Code local settings
-.claude/settings.local.json
+.claude/
 
 # Vite dev cache
 .vite/
@@ -50,3 +50,6 @@ review.md
 # Test fixtures (large binary files, kept locally only)
 # 루트 한정 — .ralph/test/ 같은 다른 경로의 test 디렉토리는 제외하지 않음
 /test/
+
+# Test media files (dev-only, large binaries)
+public/test_*
