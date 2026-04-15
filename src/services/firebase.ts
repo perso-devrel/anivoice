@@ -5,6 +5,28 @@ const FIREBASE_CONFIGURED =
   import.meta.env.VITE_FIREBASE_API_KEY &&
   import.meta.env.VITE_FIREBASE_API_KEY !== 'your_firebase_key';
 
+/**
+ * After authenticating, sync the store with the DB user record
+ * (which has the real credit balance). Uses dynamic import to
+ * avoid circular dependency with anivoiceApi.ts.
+ */
+async function syncUserFromDb(): Promise<void> {
+  try {
+    const { getMe } = await import('./anivoiceApi.js');
+    const dbUser = await getMe();
+    const { user } = useAuthStore.getState();
+    if (user) {
+      useAuthStore.getState().setUser({
+        ...user,
+        creditSeconds: dbUser.creditSeconds,
+        language: (dbUser.language as User['language']) || user.language,
+      });
+    }
+  } catch {
+    // API not available (e.g. offline, no backend) — keep Firebase-only data
+  }
+}
+
 // ── Mock auth (when Firebase is not configured) ──
 
 const MOCK_ACCOUNTS: Record<string, { password: string; user: User }> = {
@@ -84,6 +106,7 @@ function mockInitAuthListener() {
   const { setUser } = useAuthStore.getState();
   const user = getMockUser();
   setUser(user);
+  if (user) syncUserFromDb();
 }
 
 async function mockUpdateProfile(displayName: string) {
@@ -162,6 +185,7 @@ if (FIREBASE_CONFIGURED) {
     setLoading(true);
     firebaseAuth.onAuthStateChanged(auth, (fbUser) => {
       setUser(fbUser ? mapFirebaseUser(fbUser) : null);
+      if (fbUser) syncUserFromDb();
     });
   };
 
