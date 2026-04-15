@@ -48,7 +48,7 @@ export function buildLibraryQuery(params: LibraryQueryParams): {
   sql += ` GROUP BY p.id`;
 
   if (sort === 'popular') {
-    sql += ` ORDER BY p.created_at DESC`;
+    sql += ` ORDER BY p.is_favorite DESC, p.created_at DESC`;
   } else {
     sql += ` ORDER BY p.created_at DESC`;
   }

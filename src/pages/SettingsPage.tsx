@@ -6,6 +6,7 @@ import { useUIStore } from '../stores/uiStore';
 import { useAuthStore } from '../stores/authStore';
 import { signOut } from '../services/firebase';
 import { getCreditTransactions, type CreditTransaction } from '../services/anivoiceApi';
+import { CREDIT_PRICE_PER_MINUTE_USD } from '../utils/pricing';
 import { CheckmarkIcon } from '../components/icons';
 import { ProfileTab } from '../components/ProfileTab';
 import { SubscriptionTab } from '../components/SubscriptionTab';
@@ -18,8 +19,6 @@ const SETTINGS_TABS: { key: Tab; i18nKey: string }[] = [
   { key: 'billing', i18nKey: 'settings.billing' },
   { key: 'language', i18nKey: 'settings.language' },
 ];
-
-const CREDIT_PRICE_PER_MINUTE_USD = 1;
 
 function formatTxAmount(amountSeconds: number): string {
   const minutes = Math.abs(amountSeconds) / 60;

@@ -37,10 +37,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       createdAt: String(row.created_at),
     }));
 
-    return res.json({
-      transactions,
-      total: Number(countResult.rows[0].total),
-    });
+    const total = countResult.rows.length > 0 ? Number(countResult.rows[0].total) : 0;
+
+    return res.json({ transactions, total });
   } catch (e) {
     return sendAuthAwareError(res, e);
   }

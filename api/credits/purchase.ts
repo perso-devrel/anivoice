@@ -25,6 +25,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       sql: 'SELECT credit_seconds FROM users WHERE id = ?',
       args: [token.sub],
     });
+    if (user.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
     const balanceAfter = Number(user.rows[0].credit_seconds);
 
     await db.execute({
