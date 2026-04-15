@@ -42,8 +42,35 @@ export function sendAuthAwareError(res: VercelResponse, e: unknown): void {
   }
 }
 
+const GOOGLE_CERTS_URL =
+  'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com';
+
+let cachedCerts: Record<string, string> | null = null;
+let cachedCertsExpiry = 0;
+
+async function getGoogleCerts(): Promise<Record<string, string>> {
+  const now = Date.now();
+  if (cachedCerts && now < cachedCertsExpiry) return cachedCerts;
+
+  const res = await fetch(GOOGLE_CERTS_URL);
+  if (!res.ok) throw new Error(`Failed to fetch Google certs: ${res.status}`);
+
+  const cacheControl = res.headers.get('cache-control') || '';
+  const maxAgeMatch = cacheControl.match(/max-age=(\d+)/);
+  const maxAge = maxAgeMatch ? parseInt(maxAgeMatch[1], 10) * 1000 : 3600_000;
+
+  cachedCerts = await res.json() as Record<string, string>;
+  cachedCertsExpiry = now + maxAge;
+  return cachedCerts;
+}
+
+function base64urlDecode(str: string): Buffer {
+  const padded = str + '='.repeat((4 - (str.length % 4)) % 4);
+  return Buffer.from(padded, 'base64');
+}
+
 /**
- * Verify Firebase ID token using Google's public keys.
+ * Verify Firebase ID token using Google's public X.509 certificates.
  * Lightweight alternative to firebase-admin (avoids ~1MB cold start).
  */
 export async function verifyFirebaseToken(req: VercelRequest): Promise<FirebaseTokenPayload> {
@@ -59,21 +86,47 @@ export async function verifyFirebaseToken(req: VercelRequest): Promise<FirebaseT
     throw new Error('FIREBASE_PROJECT_ID not configured');
   }
 
-  // Decode JWT payload without verification for the claims
   const parts = idToken.split('.');
   if (parts.length !== 3) throw new Error('Invalid token format');
 
-  const payload = JSON.parse(
-    Buffer.from(parts[1], 'base64url').toString('utf8')
+  // Decode header to get key ID
+  const jwtHeader = JSON.parse(
+    base64urlDecode(parts[0]).toString('utf8')
   ) as Record<string, unknown>;
 
-  // Basic validation
+  const kid = jwtHeader.kid as string | undefined;
+  if (!kid) throw new Error('Token header missing kid');
+  if (jwtHeader.alg !== 'RS256') throw new Error('Unsupported algorithm');
+
+  // Verify signature with Google's public certificate
+  const certs = await getGoogleCerts();
+  const cert = certs[kid];
+  if (!cert) throw new Error('Token signed with unknown key');
+
+  const crypto = await import('crypto');
+  const signatureValid = crypto.createVerify('RSA-SHA256')
+    .update(`${parts[0]}.${parts[1]}`)
+    .verify(cert, base64urlDecode(parts[2]));
+
+  if (!signatureValid) throw new Error('Token signature verification failed');
+
+  // Decode and validate claims
+  const payload = JSON.parse(
+    base64urlDecode(parts[1]).toString('utf8')
+  ) as Record<string, unknown>;
+
   const now = Math.floor(Date.now() / 1000);
   if (typeof payload.exp === 'number' && payload.exp < now) {
     throw new Error('Token expired');
   }
+  if (typeof payload.iat === 'number' && payload.iat > now + 60) {
+    throw new Error('Token issued in the future');
+  }
   if (payload.aud !== projectId) {
     throw new Error('Token audience mismatch');
+  }
+  if (payload.iss !== `https://securetoken.google.com/${projectId}`) {
+    throw new Error('Token issuer mismatch');
   }
   if (typeof payload.sub !== 'string' || !payload.sub) {
     throw new Error('Token missing subject');

@@ -30,12 +30,12 @@ async function syncUserFromDb(): Promise<void> {
 // ── Mock auth (when Firebase is not configured) ──
 
 const MOCK_ACCOUNTS: Record<string, { password: string; user: User }> = {
-  'dervel@estsoft.com': {
-    password: 'dervel!!',
+  'demo@example.com': {
+    password: 'demo1234',
     user: {
       id: 'mock-001',
-      email: 'dervel@estsoft.com',
-      displayName: 'Dervel',
+      email: 'demo@example.com',
+      displayName: 'Demo User',
       creditSeconds: 0,
       language: 'ko',
       createdAt: '2026-01-01T00:00:00Z',
@@ -92,7 +92,7 @@ async function mockSignUpWithEmail(email: string, password: string, displayName:
 
 async function mockSignInWithGoogle(): Promise<User> {
   // In mock mode, just sign in as the default account
-  const defaultAccount = MOCK_ACCOUNTS['dervel@estsoft.com'];
+  const defaultAccount = MOCK_ACCOUNTS['demo@example.com'];
   setMockUser(defaultAccount.user);
   return defaultAccount.user;
 }

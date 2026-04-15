@@ -37,19 +37,19 @@ beforeEach(() => {
 describe('firebase mock auth', () => {
   describe('signInWithEmail', () => {
     it('signs in with valid credentials', async () => {
-      const user = await signInWithEmail('dervel@estsoft.com', 'dervel!!');
-      expect(user.email).toBe('dervel@estsoft.com');
-      expect(user.displayName).toBe('Dervel');
+      const user = await signInWithEmail('demo@example.com', 'demo1234');
+      expect(user.email).toBe('demo@example.com');
+      expect(user.displayName).toBe('Demo User');
     });
 
     it('persists user to localStorage', async () => {
-      await signInWithEmail('dervel@estsoft.com', 'dervel!!');
+      await signInWithEmail('demo@example.com', 'demo1234');
       const stored = JSON.parse(storage.get('anivoice_mock_user')!);
-      expect(stored.email).toBe('dervel@estsoft.com');
+      expect(stored.email).toBe('demo@example.com');
     });
 
     it('rejects wrong password', async () => {
-      await expect(signInWithEmail('dervel@estsoft.com', 'wrong')).rejects.toThrow(
+      await expect(signInWithEmail('demo@example.com', 'wrong')).rejects.toThrow(
         'auth/invalid-credential',
       );
     });
@@ -77,7 +77,7 @@ describe('firebase mock auth', () => {
 
     it('rejects duplicate email', async () => {
       await expect(
-        signUpWithEmail('dervel@estsoft.com', 'pass', 'Dup'),
+        signUpWithEmail('demo@example.com', 'pass', 'Dup'),
       ).rejects.toThrow('auth/email-already-in-use');
     });
   });
@@ -85,8 +85,8 @@ describe('firebase mock auth', () => {
   describe('signInWithGoogle', () => {
     it('returns default mock account', async () => {
       const user = await signInWithGoogle();
-      expect(user.email).toBe('dervel@estsoft.com');
-      expect(user.displayName).toBe('Dervel');
+      expect(user.email).toBe('demo@example.com');
+      expect(user.displayName).toBe('Demo User');
     });
 
     it('persists user to localStorage', async () => {
@@ -97,7 +97,7 @@ describe('firebase mock auth', () => {
 
   describe('signOut', () => {
     it('removes user from localStorage', async () => {
-      await signInWithEmail('dervel@estsoft.com', 'dervel!!');
+      await signInWithEmail('demo@example.com', 'demo1234');
       expect(storage.has('anivoice_mock_user')).toBe(true);
       await signOut();
       expect(storage.has('anivoice_mock_user')).toBe(false);
@@ -134,9 +134,9 @@ describe('firebase mock auth', () => {
 
   describe('updateProfile', () => {
     it('updates displayName for signed-in user', async () => {
-      await signInWithEmail('dervel@estsoft.com', 'dervel!!');
+      await signInWithEmail('demo@example.com', 'demo1234');
       useAuthStore.getState().setUser({
-        id: 'mock-001', email: 'dervel@estsoft.com', displayName: 'Dervel',
+        id: 'mock-001', email: 'demo@example.com', displayName: 'Demo User',
         creditSeconds: 3600000, language: 'ko', createdAt: '',
       });
       await updateProfile('NewName');
