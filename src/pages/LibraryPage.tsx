@@ -18,12 +18,12 @@ const SORT_MODES: readonly { key: SortMode; i18nKey: string }[] = [
 const GRADIENT_PALETTES = [
   'from-primary-600 to-accent-600',
   'from-accent-600 to-primary-500',
-  'from-primary-500 to-accent-500',
+  'from-primary-500 to-amber-500',
   'from-accent-500 to-primary-600',
-  'from-primary-600 to-accent-500',
-  'from-accent-600 to-primary-600',
+  'from-primary-600 to-rose-500',
+  'from-amber-600 to-primary-600',
   'from-primary-500 to-accent-600',
-  'from-accent-500 to-primary-500',
+  'from-rose-500 to-primary-500',
 ];
 
 export default function LibraryPage() {

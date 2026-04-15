@@ -1,9 +1,26 @@
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
+import crypto from 'crypto';
 
 vi.mock('./db.js', () => ({
   db: {
     execute: vi.fn().mockResolvedValue({ rows: [] }),
   },
+}));
+
+// Generate RSA key pair for test JWT signing
+const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+  modulusLength: 2048,
+  publicKeyEncoding: { type: 'spki', format: 'pem' },
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+});
+
+const TEST_KID = 'test-key-1';
+
+// Mock fetch to return our test public key as a Google cert
+vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+  ok: true,
+  headers: { get: () => 'max-age=3600' },
+  json: () => Promise.resolve({ [TEST_KID]: publicKey }),
 }));
 
 let unauthorized: typeof import('./auth').unauthorized;
@@ -23,10 +40,38 @@ beforeAll(async () => {
   ensureUser = mod.ensureUser;
 });
 
-function makeJwt(payload: Record<string, unknown>): string {
+const PROJECT_ID = 'test-project-123';
+
+function makeSignedJwt(payload: Record<string, unknown>, kid = TEST_KID): string {
+  const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT', kid })).toString('base64url');
+  const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const signature = crypto.createSign('RSA-SHA256')
+    .update(`${header}.${body}`)
+    .sign(privateKey);
+  return `${header}.${body}.${signature.toString('base64url')}`;
+}
+
+function makeUnsignedJwt(payload: Record<string, unknown>): string {
+  const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT', kid: TEST_KID })).toString('base64url');
+  const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  return `${header}.${body}.fakesig`;
+}
+
+function makeJwtNoKid(payload: Record<string, unknown>): string {
   const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
   const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
   return `${header}.${body}.fakesig`;
+}
+
+function validPayload(overrides: Record<string, unknown> = {}) {
+  return {
+    sub: 'user-1',
+    aud: PROJECT_ID,
+    iss: `https://securetoken.google.com/${PROJECT_ID}`,
+    exp: Math.floor(Date.now() / 1000) + 3600,
+    iat: Math.floor(Date.now() / 1000) - 60,
+    ...overrides,
+  };
 }
 
 function mockRequest(authHeader?: string) {
@@ -165,31 +210,21 @@ describe('sendAuthAwareError', () => {
 });
 
 describe('verifyFirebaseToken', () => {
-  const PROJECT_ID = 'test-project-123';
-  let origEnv: string | undefined;
-
   beforeEach(() => {
-    origEnv = process.env.FIREBASE_PROJECT_ID;
     process.env.FIREBASE_PROJECT_ID = PROJECT_ID;
   });
 
   afterEach(() => {
-    if (origEnv !== undefined) {
-      process.env.FIREBASE_PROJECT_ID = origEnv;
-    } else {
-      delete process.env.FIREBASE_PROJECT_ID;
-    }
+    delete process.env.FIREBASE_PROJECT_ID;
+    delete process.env.VITE_FIREBASE_PROJECT_ID;
   });
 
-  it('parses a valid token', async () => {
-    const token = makeJwt({
-      sub: 'user-1',
+  it('parses a valid signed token', async () => {
+    const token = makeSignedJwt(validPayload({
       email: 'a@b.com',
       name: 'Test',
       picture: 'https://img/1',
-      aud: PROJECT_ID,
-      exp: Math.floor(Date.now() / 1000) + 3600,
-    });
+    }));
     const result = await verifyFirebaseToken(mockRequest(`Bearer ${token}`));
     expect(result).toEqual({
       sub: 'user-1',
@@ -211,60 +246,61 @@ describe('verifyFirebaseToken', () => {
     await expect(verifyFirebaseToken(mockRequest('Bearer abc.def'))).rejects.toThrow('Invalid token format');
   });
 
+  it('throws on missing kid in header', async () => {
+    const token = makeJwtNoKid(validPayload());
+    await expect(verifyFirebaseToken(mockRequest(`Bearer ${token}`))).rejects.toThrow('missing kid');
+  });
+
+  it('throws on invalid signature', async () => {
+    const token = makeUnsignedJwt(validPayload());
+    await expect(verifyFirebaseToken(mockRequest(`Bearer ${token}`))).rejects.toThrow('signature');
+  });
+
   it('throws on expired token', async () => {
-    const token = makeJwt({
-      sub: 'user-1',
-      aud: PROJECT_ID,
+    const token = makeSignedJwt(validPayload({
       exp: Math.floor(Date.now() / 1000) - 100,
-    });
+    }));
     await expect(verifyFirebaseToken(mockRequest(`Bearer ${token}`))).rejects.toThrow('expired');
   });
 
   it('throws on audience mismatch', async () => {
-    const token = makeJwt({
-      sub: 'user-1',
-      aud: 'wrong-project',
-      exp: Math.floor(Date.now() / 1000) + 3600,
-    });
+    const token = makeSignedJwt(validPayload({ aud: 'wrong-project' }));
     await expect(verifyFirebaseToken(mockRequest(`Bearer ${token}`))).rejects.toThrow('audience');
   });
 
+  it('throws on issuer mismatch', async () => {
+    const token = makeSignedJwt(validPayload({ iss: 'https://evil.com' }));
+    await expect(verifyFirebaseToken(mockRequest(`Bearer ${token}`))).rejects.toThrow('issuer');
+  });
+
   it('throws on missing subject', async () => {
-    const token = makeJwt({
-      aud: PROJECT_ID,
-      exp: Math.floor(Date.now() / 1000) + 3600,
-    });
+    const payload = validPayload();
+    delete (payload as Record<string, unknown>).sub;
+    const token = makeSignedJwt(payload);
     await expect(verifyFirebaseToken(mockRequest(`Bearer ${token}`))).rejects.toThrow('subject');
   });
 
   it('throws on empty string subject', async () => {
-    const token = makeJwt({
-      sub: '',
-      aud: PROJECT_ID,
-      exp: Math.floor(Date.now() / 1000) + 3600,
-    });
+    const token = makeSignedJwt(validPayload({ sub: '' }));
     await expect(verifyFirebaseToken(mockRequest(`Bearer ${token}`))).rejects.toThrow('subject');
   });
 
   it('throws when FIREBASE_PROJECT_ID is not configured', async () => {
     delete process.env.FIREBASE_PROJECT_ID;
     delete process.env.VITE_FIREBASE_PROJECT_ID;
-    const token = makeJwt({ sub: 'user-1', aud: 'x', exp: Math.floor(Date.now() / 1000) + 3600 });
+    const token = makeSignedJwt(validPayload());
     await expect(verifyFirebaseToken(mockRequest(`Bearer ${token}`))).rejects.toThrow('PROJECT_ID');
   });
 
-  it('accepts token without exp (no expiry check)', async () => {
-    const token = makeJwt({ sub: 'user-1', aud: PROJECT_ID });
-    const result = await verifyFirebaseToken(mockRequest(`Bearer ${token}`));
-    expect(result.sub).toBe('user-1');
+  it('throws on future iat', async () => {
+    const token = makeSignedJwt(validPayload({
+      iat: Math.floor(Date.now() / 1000) + 300,
+    }));
+    await expect(verifyFirebaseToken(mockRequest(`Bearer ${token}`))).rejects.toThrow('future');
   });
 
   it('returns undefined for missing optional fields', async () => {
-    const token = makeJwt({
-      sub: 'user-1',
-      aud: PROJECT_ID,
-      exp: Math.floor(Date.now() / 1000) + 3600,
-    });
+    const token = makeSignedJwt(validPayload());
     const result = await verifyFirebaseToken(mockRequest(`Bearer ${token}`));
     expect(result.email).toBeUndefined();
     expect(result.name).toBeUndefined();
@@ -273,15 +309,19 @@ describe('verifyFirebaseToken', () => {
 
   it('falls back to VITE_FIREBASE_PROJECT_ID', async () => {
     delete process.env.FIREBASE_PROJECT_ID;
-    process.env.VITE_FIREBASE_PROJECT_ID = 'vite-project';
-    const token = makeJwt({
-      sub: 'user-1',
-      aud: 'vite-project',
-      exp: Math.floor(Date.now() / 1000) + 3600,
-    });
+    const viteProjectId = 'vite-project';
+    process.env.VITE_FIREBASE_PROJECT_ID = viteProjectId;
+    const token = makeSignedJwt(validPayload({
+      aud: viteProjectId,
+      iss: `https://securetoken.google.com/${viteProjectId}`,
+    }));
     const result = await verifyFirebaseToken(mockRequest(`Bearer ${token}`));
     expect(result.sub).toBe('user-1');
-    delete process.env.VITE_FIREBASE_PROJECT_ID;
+  });
+
+  it('throws on unknown kid', async () => {
+    const token = makeSignedJwt(validPayload(), 'unknown-key-id');
+    await expect(verifyFirebaseToken(mockRequest(`Bearer ${token}`))).rejects.toThrow('unknown key');
   });
 });
 

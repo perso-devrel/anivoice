@@ -52,11 +52,11 @@ function StatCard({ icon, iconBg, label, value }: {
 }
 
 const GRADIENT_PLACEHOLDERS = [
-  'from-purple-600/30 to-blue-600/30',
-  'from-pink-600/30 to-orange-600/30',
-  'from-cyan-600/30 to-green-600/30',
-  'from-indigo-600/30 to-pink-600/30',
-  'from-amber-600/30 to-red-600/30',
+  'from-orange-600/30 to-amber-600/30',
+  'from-rose-600/30 to-orange-600/30',
+  'from-cyan-600/30 to-teal-600/30',
+  'from-amber-600/30 to-rose-600/30',
+  'from-slate-600/30 to-cyan-600/30',
 ];
 
 export default function DashboardPage() {

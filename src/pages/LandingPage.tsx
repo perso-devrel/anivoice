@@ -221,8 +221,8 @@ export default function LandingPage() {
     <main className="min-h-screen bg-gray-950 text-gray-100 overflow-x-hidden">
       {/* Decorative gradient orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-primary-600/10 blur-[120px]" />
-        <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] rounded-full bg-accent-600/10 blur-[120px]" />
+        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-primary-600/8 blur-[120px]" />
+        <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] rounded-full bg-accent-600/6 blur-[120px]" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full bg-primary-500/5 blur-[100px]" />
       </div>
 
