@@ -227,31 +227,6 @@ export async function uploadVideoFile(
   return registerVideo(spaceSeq, fileUrl, file.name);
 }
 
-export async function uploadExternalVideo(
-  spaceSeq: number,
-  url: string,
-  lang: string = 'ko'
-): Promise<PersoUploadedFile> {
-  const { data } = await api.put('/file/api/upload/video/external', {
-    space_seq: spaceSeq,
-    url,
-    lang,
-  });
-  return data;
-}
-
-export async function getExternalMetadata(
-  spaceSeq: number,
-  url: string,
-  lang: string = 'ko'
-) {
-  const { data } = await api.post('/file/api/v1/video-translator/external/metadata', {
-    space_seq: spaceSeq,
-    url,
-    lang,
-  });
-  return data;
-}
 
 interface TranslateRequest {
   mediaSeq: number;
