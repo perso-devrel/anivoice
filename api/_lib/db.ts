@@ -12,7 +12,6 @@ export async function migrate() {
       email TEXT NOT NULL,
       display_name TEXT NOT NULL DEFAULT '',
       photo_url TEXT,
-      plan TEXT NOT NULL DEFAULT 'free',
       credit_seconds INTEGER NOT NULL DEFAULT 0,
       language TEXT NOT NULL DEFAULT 'ko',
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
@@ -83,7 +82,7 @@ export async function migrate() {
       ('slice-of-life', '일상', 'Slice of Life'),
       ('mecha', '메카', 'Mecha');
 
-    -- Credit-only model: reset any plan-granted default credits to 0 for new signups.
-    -- Existing users with purchased credits are unaffected (balance stays as-is).
+    -- Drop legacy plan column if it still exists (SQLite: re-create is not needed,
+    -- but we tolerate its presence for existing DBs — new tables omit it).
   `);
 }

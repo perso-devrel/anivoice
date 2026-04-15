@@ -3,13 +3,10 @@ export interface User {
   email: string;
   displayName: string;
   photoURL?: string;
-  plan: PlanType;
   creditSeconds: number;
   language: SupportedLanguage;
   createdAt: string;
 }
-
-export type PlanType = 'free' | 'basic' | 'pro' | 'pay-per-use';
 
 export type SupportedLanguage = 'ja' | 'ko' | 'en' | 'es' | 'pt' | 'id' | 'ar' | 'zh';
 
