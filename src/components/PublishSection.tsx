@@ -28,22 +28,27 @@ export function PublishSection({
   const { t } = useTranslation();
 
   return (
-    <div className="glass rounded-2xl p-5 space-y-4">
-      <h3 className="text-base font-semibold text-surface-200/90">
-        {isPublished ? t('studio.publishedTitle') : t('studio.publishTitle')}
-      </h3>
+    <div className="border-t border-ink/15 pt-5 space-y-4">
+      <div className="flex items-baseline justify-between">
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+          {isPublished ? 'Published · 公開' : 'Publish · 公開'}
+        </span>
+        {isPublished && (
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
+            {t('studio.publishedMessage')}
+          </span>
+        )}
+      </div>
+
       {isPublished ? (
-        <div className="space-y-3">
-          <p className="text-sm text-green-400">{t('studio.publishedMessage')}</p>
-          <button
-            type="button"
-            onClick={onCopyShareLink}
-            className="w-full glass rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 text-sm text-surface-200/80 hover:text-white hover:border-primary-500/40 transition-colors"
-          >
-            <LinkIcon />
-            {linkCopied ? t('studio.linkCopied') : t('studio.copyShareLink')}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={onCopyShareLink}
+          className="w-full border border-ink/30 px-4 py-3 flex items-center justify-center gap-2 font-mono text-[12px] uppercase tracking-[0.18em] text-ink hover:bg-ink hover:text-cream transition-colors"
+        >
+          <LinkIcon />
+          {linkCopied ? t('studio.linkCopied') : t('studio.copyShareLink')}
+        </button>
       ) : (
         <>
           {tags.length > 0 && (
@@ -55,10 +60,10 @@ export function PublishSection({
                     key={tag.id}
                     type="button"
                     onClick={() => onTagToggle(tag.id)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                    className={`px-3 py-1.5 border font-mono text-[11px] uppercase tracking-[0.18em] transition-colors ${
                       isSelected
-                        ? 'border-primary-500 bg-primary-500/15 text-primary-400'
-                        : 'border-surface-700 bg-surface-900/50 text-surface-200/60 hover:border-surface-200/30'
+                        ? 'border-ink bg-ink text-cream'
+                        : 'border-ink/30 text-ink-soft hover:border-ink hover:text-ink'
                     }`}
                   >
                     {tag.displayNameKo}
@@ -71,9 +76,14 @@ export function PublishSection({
             type="button"
             onClick={onPublish}
             disabled={!dbProjectId || isPublishing}
-            className="w-full gradient-bg py-2.5 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-40"
+            className="w-full bg-ink text-cream py-3 font-mono text-[12px] uppercase tracking-[0.22em] hover:bg-cinnabar transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3"
           >
-            {isPublishing ? <SpinnerIcon className="w-4 h-4 mx-auto" /> : t('studio.publishTitle')}
+            {isPublishing ? <SpinnerIcon className="w-4 h-4" /> : (
+              <>
+                {t('studio.publishTitle')}
+                <span>→</span>
+              </>
+            )}
           </button>
         </>
       )}

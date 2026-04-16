@@ -33,13 +33,13 @@ function getTxTypeKey(type: string): string {
   return 'settings.txTypeUnknown';
 }
 
-const TABLE_HEADER_CLASS = 'text-left text-sm font-medium text-gray-400 pb-3';
+const TABLE_HEADER_CLASS = 'text-left font-mono text-[11px] uppercase tracking-[0.18em] text-ink-mute pb-3';
 
-const LANGUAGE_OPTIONS: { code: 'ko' | 'en' | 'ja' | 'zh'; emoji: string; label: string; subtitleKey: string }[] = [
-  { code: 'ko', emoji: '🇰🇷', label: '한국어', subtitleKey: 'settings.langKoreanSub' },
-  { code: 'en', emoji: '🇺🇸', label: 'English', subtitleKey: 'settings.langEnglishSub' },
-  { code: 'ja', emoji: '🇯🇵', label: '日本語', subtitleKey: 'settings.langJapaneseSub' },
-  { code: 'zh', emoji: '🇨🇳', label: '中文', subtitleKey: 'settings.langChineseSub' },
+const LANGUAGE_OPTIONS: { code: 'ko' | 'en' | 'ja' | 'zh'; native: string; latin: string; subtitleKey: string }[] = [
+  { code: 'ko', native: '한국어', latin: 'Korean', subtitleKey: 'settings.langKoreanSub' },
+  { code: 'en', native: 'English', latin: 'English', subtitleKey: 'settings.langEnglishSub' },
+  { code: 'ja', native: '日本語', latin: 'Japanese', subtitleKey: 'settings.langJapaneseSub' },
+  { code: 'zh', native: '中文', latin: 'Chinese', subtitleKey: 'settings.langChineseSub' },
 ];
 
 export default function SettingsPage() {
@@ -69,27 +69,45 @@ export default function SettingsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-surface-950 pt-24 pb-16 px-4">
-      <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <h1 className="text-3xl font-bold gradient-text mb-2">
-          {t('settings.title')}
-        </h1>
-        <p className="text-gray-400 mb-8">{t('settings.subtitle')}</p>
+    <main className="min-h-screen bg-cream text-ink pt-20 md:pt-24 pb-16">
+      <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-12">
+        {/* Masthead */}
+        <header className="border-t border-ink pt-6 mb-10">
+          <div className="flex items-baseline justify-between mb-3">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+              Console — Settings · 設定
+            </span>
+            <span className="font-mono text-[11px] tracking-widest text-ink-mute hidden sm:inline">
+              {new Date().toISOString().split('T')[0]}
+            </span>
+          </div>
+          <h1 className="font-display text-5xl md:text-6xl text-ink leading-[1.02] tracking-tight">
+            {t('settings.title')}
+          </h1>
+          <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-ink-soft mt-3">
+            {t('settings.subtitle')}
+          </p>
+        </header>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-8 p-1 bg-surface-900 rounded-xl overflow-x-auto">
-          {SETTINGS_TABS.map((tab) => (
+        <div className="border-t border-b border-ink/15 mb-8 flex overflow-x-auto">
+          {SETTINGS_TABS.map((tab, i) => (
             <button
               key={tab.key}
               onClick={() => handleTabChange(tab.key)}
-              className={`flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+              className={`px-5 py-4 font-mono text-[11px] uppercase tracking-[0.22em] whitespace-nowrap transition-colors relative ${
+                i > 0 ? 'border-l border-ink/15' : ''
+              } ${
                 activeTab === tab.key
-                  ? 'gradient-bg text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white hover:bg-surface-800'
+                  ? 'text-cinnabar'
+                  : 'text-ink-mute hover:text-ink'
               }`}
             >
+              <span className="text-ink-mute mr-2">{String(i + 1).padStart(2, '0')}</span>
               {t(tab.i18nKey)}
+              {activeTab === tab.key && (
+                <span className="absolute bottom-0 left-0 right-0 h-px bg-cinnabar" />
+              )}
             </button>
           ))}
         </div>
@@ -111,30 +129,37 @@ export default function SettingsPage() {
 
         {/* Billing Tab */}
         {activeTab === 'billing' && (
-          <div className="glass rounded-2xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">
+          <div className="border-t border-ink pt-6">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+              Ledger · 帳簿
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl text-ink mt-2 mb-6">
               {t('settings.paymentHistory')}
             </h2>
 
             {txLoading ? (
-              <p className="text-gray-400 text-sm py-8 text-center">{t('settings.loadingTransactions')}</p>
+              <p className="font-mono text-[12px] uppercase tracking-[0.22em] text-ink-mute py-12 text-center">
+                {t('settings.loadingTransactions')}
+              </p>
             ) : transactions.length === 0 ? (
-              <p className="text-gray-400 text-sm py-8 text-center">{t('settings.noTransactions')}</p>
+              <p className="font-mono text-[12px] uppercase tracking-[0.22em] text-ink-mute py-12 text-center">
+                {t('settings.noTransactions')}
+              </p>
             ) : (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto border-t border-ink/15">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-surface-700">
-                      <th className={`${TABLE_HEADER_CLASS} pr-4`}>
+                    <tr className="border-b border-ink/15">
+                      <th className={`${TABLE_HEADER_CLASS} pr-4 pt-4`}>
                         {t('settings.date')}
                       </th>
-                      <th className={`${TABLE_HEADER_CLASS} pr-4`}>
+                      <th className={`${TABLE_HEADER_CLASS} pr-4 pt-4`}>
                         {t('settings.description')}
                       </th>
-                      <th className={`${TABLE_HEADER_CLASS} pr-4`}>
+                      <th className={`${TABLE_HEADER_CLASS} pr-4 pt-4`}>
                         {t('settings.amount')}
                       </th>
-                      <th className={TABLE_HEADER_CLASS}>
+                      <th className={`${TABLE_HEADER_CLASS} pt-4`}>
                         {t('settings.status')}
                       </th>
                     </tr>
@@ -143,19 +168,19 @@ export default function SettingsPage() {
                     {transactions.map((tx) => (
                       <tr
                         key={tx.id}
-                        className="border-b border-surface-800 last:border-0"
+                        className="border-b border-ink/10 last:border-0"
                       >
-                        <td className="py-4 pr-4 text-sm text-gray-300">
+                        <td className="py-4 pr-4 font-mono text-[12px] text-ink-soft">
                           {tx.createdAt.slice(0, 10)}
                         </td>
-                        <td className="py-4 pr-4 text-sm text-white">
+                        <td className="py-4 pr-4 text-[14px] text-ink">
                           {t(getTxTypeKey(tx.type))}
                         </td>
-                        <td className={`py-4 pr-4 text-sm font-medium ${tx.amountSeconds > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        <td className={`py-4 pr-4 font-mono text-[13px] ${tx.amountSeconds > 0 ? 'text-ink' : 'text-cinnabar'}`}>
                           {formatTxAmount(tx.amountSeconds)}
                         </td>
                         <td className="py-4">
-                          <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400">
+                          <span className="px-2 py-0.5 border border-ink font-mono text-[10px] uppercase tracking-[0.18em] text-ink">
                             {t('settings.paid')}
                           </span>
                         </td>
@@ -170,46 +195,53 @@ export default function SettingsPage() {
 
         {/* Language Tab */}
         {activeTab === 'language' && (
-          <div className="glass rounded-2xl p-6 space-y-4">
-            <h2 className="text-xl font-semibold text-white mb-2">
+          <div className="border-t border-ink pt-6">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+              Locale · 言語
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl text-ink mt-2 mb-2">
               {t('settings.selectLanguage')}
             </h2>
-            <p className="text-sm text-gray-400 mb-6">
+            <p className="text-ink-soft text-sm mb-8">
               {t('settings.languageHint')}
             </p>
 
-            <div className="space-y-3">
-              {LANGUAGE_OPTIONS.map((opt) => (
-                <button
-                  key={opt.code}
-                  onClick={() => handleLanguageChange(opt.code)}
-                  className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all ${
-                    language === opt.code
-                      ? 'border-primary-500 bg-primary-500/10'
-                      : 'border-surface-700 bg-surface-900 hover:border-surface-600'
-                  }`}
-                >
-                  <span className="text-2xl">{opt.emoji}</span>
-                  <div className="text-left">
-                    <p className="text-white font-medium">{opt.label}</p>
-                    <p className="text-sm text-gray-400">{t(opt.subtitleKey)}</p>
-                  </div>
-                  {language === opt.code && (
-                    <CheckmarkIcon className="w-5 h-5 text-primary-400 ml-auto" />
-                  )}
-                </button>
-              ))}
+            <div className="border-t border-ink/15 divide-y divide-ink/15">
+              {LANGUAGE_OPTIONS.map((opt) => {
+                const active = language === opt.code;
+                return (
+                  <button
+                    key={opt.code}
+                    onClick={() => handleLanguageChange(opt.code)}
+                    className={`w-full flex items-center gap-5 py-5 text-left transition-colors group ${
+                      active ? 'text-ink' : 'text-ink-soft hover:text-ink'
+                    }`}
+                  >
+                    <span className={`font-mono text-[11px] uppercase tracking-[0.22em] ${active ? 'text-cinnabar' : 'text-ink-mute'}`}>
+                      {opt.code.toUpperCase()}
+                    </span>
+                    <div className="flex-1">
+                      <p className="font-display text-2xl text-ink">{opt.native}</p>
+                      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-mute mt-1">
+                        {opt.latin} · {t(opt.subtitleKey)}
+                      </p>
+                    </div>
+                    {active && <CheckmarkIcon className="w-5 h-5 text-ink" />}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
+
         {/* Logout */}
-        <div className="mt-8 pt-8 border-t border-surface-800">
+        <div className="mt-12 pt-6 border-t border-ink/15">
           <button
             onClick={async () => {
               await signOut();
               navigate('/');
             }}
-            className="px-6 py-3 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors text-sm font-medium"
+            className="px-5 py-3 border border-cinnabar text-cinnabar font-mono text-[12px] uppercase tracking-[0.18em] hover:bg-cinnabar hover:text-cream transition-colors"
           >
             {t('common.logout')}
           </button>

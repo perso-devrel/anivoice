@@ -461,8 +461,8 @@ export default function StudioPage() {
   /* ── render ── */
 
   return (
-    <main className="min-h-screen bg-surface-950 text-white">
-      <div className="max-w-4xl mx-auto px-4 py-10 sm:py-16">
+    <main className="min-h-screen bg-cream text-ink pt-20 md:pt-24 pb-16">
+      <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-12">
         <StepIndicator currentStep={step} labels={stepLabels} />
         {step === 'upload' && <UploadStep onFileChange={handleFileChange} />}
         {step === 'settings' && (

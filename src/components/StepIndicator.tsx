@@ -10,41 +10,29 @@ interface StepIndicatorProps {
 }
 
 export function StepIndicator({ currentStep, labels }: StepIndicatorProps) {
+  const currentIdx = STEPS.indexOf(currentStep);
   return (
-    <div className="flex items-center justify-center gap-2 mb-8">
-      {STEPS.map((s, i) => {
-        const isCurrent = s === currentStep;
-        const isPast = STEPS.indexOf(currentStep) > i;
-        return (
-          <div key={s} className="flex items-center gap-2">
-            <div
-              className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold transition-all ${
-                isCurrent
-                  ? 'gradient-bg text-white shadow-lg shadow-primary-500/30'
-                  : isPast
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-surface-800 text-surface-200/50'
-              }`}
-            >
-              {isPast ? <CheckIcon className="w-4 h-4" /> : i + 1}
+    <div className="border-t border-ink mb-12">
+      <div className="grid grid-cols-3 divide-x divide-ink/15">
+        {STEPS.map((s, i) => {
+          const isCurrent = s === currentStep;
+          const isPast = currentIdx > i;
+          const tone = isCurrent ? 'text-cinnabar' : isPast ? 'text-ink' : 'text-ink-mute';
+          const numTone = isCurrent || isPast ? 'text-ink' : 'text-ink-mute';
+          return (
+            <div key={s} className="px-5 pt-5 pb-6">
+              <div className="flex items-baseline justify-between mb-3">
+                <span className={`font-mono text-[11px] uppercase tracking-[0.22em] ${tone}`}>
+                  Step {String(i + 1).padStart(2, '0')}
+                </span>
+                {isPast && <CheckIcon className="w-3 h-3 text-ink" />}
+                {isCurrent && <span className="w-1.5 h-1.5 rounded-full bg-cinnabar animate-pulse" />}
+              </div>
+              <p className={`font-display text-xl ${numTone}`}>{labels[s]}</p>
             </div>
-            <span
-              className={`text-sm hidden sm:inline ${
-                isCurrent ? 'text-white font-medium' : isPast ? 'text-primary-400' : 'text-surface-200/50'
-              }`}
-            >
-              {labels[s]}
-            </span>
-            {i < STEPS.length - 1 && (
-              <div
-                className={`w-10 h-0.5 mx-1 rounded ${
-                  isPast ? 'bg-primary-500' : 'bg-surface-700'
-                }`}
-              />
-            )}
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

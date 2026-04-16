@@ -8,37 +8,40 @@ interface SubscriptionTabProps {
 
 export function SubscriptionTab({ creditSeconds }: SubscriptionTabProps) {
   const { t } = useTranslation();
+  const hasCredits = creditSeconds > 0;
 
   return (
-    <div className="glass rounded-2xl p-6 space-y-6">
-      <h2 className="text-xl font-semibold text-white">
-        {t('settings.creditBalance')}
-      </h2>
+    <div className="border-t border-ink pt-6 space-y-8">
+      <div>
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+          Credits · 貯蔵
+        </span>
+        <h2 className="font-display text-3xl md:text-4xl text-ink mt-2">
+          {t('settings.creditBalance')}
+        </h2>
+      </div>
 
-      <div className="rounded-xl border border-surface-700 bg-surface-900 p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <p className="text-sm text-gray-400 mb-1">{t('common.credits')}</p>
-            <p className="text-3xl font-bold text-white">
-              {formatCreditTime(creditSeconds, t)}
-            </p>
-          </div>
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-            creditSeconds > 0
-              ? 'bg-primary-500/20 text-primary-400'
-              : 'bg-surface-700 text-gray-400'
-          }`}>
-            {creditSeconds > 0 ? t('settings.active') : t('settings.noCredits')}
+      <div className="border-t border-b border-ink/15 py-8">
+        <div className="flex items-baseline justify-between mb-3">
+          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+            {t('common.credits')}
+          </span>
+          <span className={`font-mono text-[11px] uppercase tracking-[0.18em] ${hasCredits ? 'text-ink' : 'text-cinnabar'}`}>
+            · {hasCredits ? t('settings.active') : t('settings.noCredits')}
           </span>
         </div>
-
-        <Link
-          to="/pricing"
-          className="inline-block w-full text-center px-6 py-3 rounded-xl bg-primary-500 text-white font-medium hover:bg-primary-600 transition-colors"
-        >
-          {t('settings.rechargeCredits')}
-        </Link>
+        <p className="font-display text-5xl md:text-6xl text-ink leading-none">
+          {formatCreditTime(creditSeconds, t)}
+        </p>
       </div>
+
+      <Link
+        to="/pricing"
+        className="inline-flex items-baseline gap-3 bg-ink text-cream px-6 py-3 font-mono text-[12px] uppercase tracking-[0.22em] hover:bg-cinnabar transition-colors"
+      >
+        {t('settings.rechargeCredits')}
+        <span>→</span>
+      </Link>
     </div>
   );
 }

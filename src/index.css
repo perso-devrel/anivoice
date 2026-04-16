@@ -1,85 +1,49 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-50: #fff7ed;
-  --color-primary-100: #ffedd5;
-  --color-primary-200: #fed7aa;
-  --color-primary-300: #fdba74;
-  --color-primary-400: #fb923c;
-  --color-primary-500: #f97316;
-  --color-primary-600: #ea580c;
-  --color-primary-700: #c2410c;
-  --color-primary-800: #9a3412;
-  --color-primary-900: #7c2d12;
+  /* === Editorial / cinematic palette === */
+  --color-cream: #f4efe6;
+  --color-paper: #ebe4d6;
+  --color-paper-deep: #ddd4c2;
+  --color-ink: #1a1815;
+  --color-ink-soft: #5a544b;
+  --color-ink-mute: #8a8377;
+  --color-rule: #1a1815;
+  --color-cinnabar: #a8362a;
+  --color-cinnabar-deep: #8a2a20;
+  --color-sumi: #2b2724;
 
-  --color-accent-50: #fff1f2;
-  --color-accent-100: #ffe4e6;
-  --color-accent-200: #fecdd3;
-  --color-accent-300: #fda4af;
-  --color-accent-400: #fb7185;
-  --color-accent-500: #f43f5e;
-  --color-accent-600: #e11d48;
-  --color-accent-700: #be123c;
-  --color-accent-800: #9f1239;
-  --color-accent-900: #881337;
-
-  --color-surface-50: #f8fafc;
-  --color-surface-100: #f1f5f9;
-  --color-surface-200: #e2e8f0;
-  --color-surface-700: #334155;
-  --color-surface-800: #1e293b;
-  --color-surface-850: #162032;
-  --color-surface-900: #0f172a;
-  --color-surface-950: #020617;
+  /* === Typography === */
+  --font-display: "Fraunces", "Noto Serif JP", "Noto Serif KR", ui-serif, Georgia, serif;
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Noto Sans KR", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-jp: "Noto Serif JP", "Fraunces", serif;
 }
 
 @layer base {
+  html {
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background-color: var(--color-cream);
+  }
+
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--color-surface-700) transparent;
+    scrollbar-color: var(--color-ink-mute) transparent;
   }
 
   ::selection {
-    background-color: var(--color-primary-500);
-    color: white;
+    background-color: var(--color-ink);
+    color: var(--color-cream);
   }
 
   body {
     margin: 0;
+    font-feature-settings: "ss01", "cv11";
   }
 }
 
 @layer utilities {
-  .gradient-text {
-    background: linear-gradient(135deg, var(--color-primary-400), var(--color-accent-400));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .gradient-bg {
-    background: linear-gradient(135deg, var(--color-primary-600), var(--color-accent-600));
-  }
-
-  .gradient-border {
-    border-image: linear-gradient(135deg, var(--color-primary-500), var(--color-accent-500)) 1;
-  }
-
-  .glass {
-    background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(148, 163, 184, 0.1);
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-  }
-
   @keyframes fadeSlideIn {
     from { opacity: 0; transform: translateY(-8px); }
     to { opacity: 1; transform: translateY(0); }

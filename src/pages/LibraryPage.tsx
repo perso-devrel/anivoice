@@ -15,17 +15,6 @@ const SORT_MODES: readonly { key: SortMode; i18nKey: string }[] = [
   { key: 'latest', i18nKey: 'library.latest' },
 ];
 
-const GRADIENT_PALETTES = [
-  'from-primary-600 to-accent-600',
-  'from-accent-600 to-primary-500',
-  'from-primary-500 to-amber-500',
-  'from-accent-500 to-primary-600',
-  'from-primary-600 to-rose-500',
-  'from-amber-600 to-primary-600',
-  'from-primary-500 to-accent-600',
-  'from-rose-500 to-primary-500',
-];
-
 export default function LibraryPage() {
   const { t } = useTranslation();
   usePageTitle('pageTitle.library');
@@ -40,14 +29,12 @@ export default function LibraryPage() {
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState(0);
 
-  // Fetch tags on mount
   useEffect(() => {
     getTags()
       .then(setTags)
       .catch(() => { /* tags are optional */ });
   }, []);
 
-  // Fetch library items when filters change
   useEffect(() => {
     let cancelled = false;
 
@@ -78,130 +65,143 @@ export default function LibraryPage() {
   }, [activeTag, languageFilter, sortMode, searchQuery, t]);
 
   return (
-    <main className="min-h-screen bg-surface-950 pt-24 pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-cream pt-20 md:pt-28 pb-24">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text mb-3">
-            {t('library.title')}
-          </h1>
-          <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
-            {t('library.subtitle')}
-          </p>
+        <div className="grid grid-cols-12 gap-6 mb-14">
+          <div className="col-span-12 md:col-span-4">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+              文庫 — Catalogue
+            </span>
+            <h1 className="font-display text-5xl md:text-7xl text-ink leading-[1.02] tracking-tight mt-3">
+              {t('library.title')}
+            </h1>
+          </div>
+          <div className="col-span-12 md:col-span-8 md:pl-12 flex md:items-end">
+            <p className="text-ink-soft text-lg leading-relaxed max-w-xl">
+              {t('library.subtitle')}
+            </p>
+          </div>
         </div>
 
         {/* Filter Bar */}
-        <div className="glass rounded-2xl p-4 sm:p-6 mb-8 space-y-4">
-          {/* Top row: search + language */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            {/* Search */}
-            <div className="relative flex-1">
-              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-500">
-                <SearchIcon />
+        <div className="border-t border-ink pt-6 mb-10">
+          <div className="flex flex-col gap-5">
+            {/* Top row: search + language */}
+            <div className="flex flex-col sm:flex-row gap-5">
+              <div className="relative flex-1">
+                <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none text-ink-mute">
+                  <SearchIcon />
+                </div>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={`${t('common.search')}...`}
+                  aria-label={t('common.search')}
+                  className="w-full pl-7 pr-2 py-2 bg-transparent border-b border-ink/30 text-ink placeholder-ink-mute focus:outline-none focus:border-cinnabar transition-colors text-[15px]"
+                />
               </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={`${t('common.search')}...`}
-                aria-label={t('common.search')}
-                className="w-full pl-10 pr-4 py-2.5 bg-surface-800 border border-surface-700 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
-              />
+
+              <div className="relative">
+                <select
+                  value={languageFilter}
+                  onChange={(e) => setLanguageFilter(e.target.value)}
+                  aria-label={t('common.filterByLanguage')}
+                  className="appearance-none w-full sm:w-48 pl-0 pr-7 py-2 bg-transparent border-b border-ink/30 text-ink focus:outline-none focus:border-cinnabar transition-colors cursor-pointer font-mono text-[12px] uppercase tracking-[0.18em]"
+                >
+                  {LIBRARY_LANGUAGE_OPTIONS.map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang === 'all' ? t('common.all') : t(`languages.${lang}`)}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pointer-events-none text-ink-mute">
+                  <ChevronDownIcon />
+                </div>
+              </div>
             </div>
 
-            {/* Language filter */}
-            <div className="relative">
-              <select
-                value={languageFilter}
-                onChange={(e) => setLanguageFilter(e.target.value)}
-                aria-label={t('common.filterByLanguage')}
-                className="appearance-none w-full sm:w-44 px-4 py-2.5 pr-9 bg-surface-800 border border-surface-700 rounded-xl text-sm text-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors cursor-pointer"
-              >
-                {LIBRARY_LANGUAGE_OPTIONS.map((lang) => (
-                  <option key={lang} value={lang}>
-                    {lang === 'all' ? t('common.all') : t(`languages.${lang}`)}
-                  </option>
+            {/* Bottom row: tag pills + sort */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex flex-wrap gap-x-5 gap-y-2">
+                {[{ id: 'all', name: 'all', label: t('common.all') },
+                  ...tags.map((tag) => ({ id: String(tag.id), name: tag.name, label: tag.displayNameKo })),
+                ].map((tag) => {
+                  const isActive = activeTag === tag.name;
+                  return (
+                    <button
+                      key={tag.id}
+                      onClick={() => setActiveTag(tag.name)}
+                      className={`font-mono text-[12px] uppercase tracking-[0.18em] pb-1 transition-colors ${
+                        isActive
+                          ? 'text-cinnabar border-b border-cinnabar'
+                          : 'text-ink-mute hover:text-ink border-b border-transparent'
+                      }`}
+                    >
+                      {tag.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="flex gap-4 shrink-0">
+                {SORT_MODES.map(({ key, i18nKey }) => (
+                  <button
+                    key={key}
+                    onClick={() => setSortMode(key)}
+                    className={`font-mono text-[12px] uppercase tracking-[0.18em] pb-1 transition-colors ${
+                      sortMode === key
+                        ? 'text-ink border-b border-ink'
+                        : 'text-ink-mute hover:text-ink border-b border-transparent'
+                    }`}
+                  >
+                    {t(i18nKey)}
+                  </button>
                 ))}
-              </select>
-              <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-500">
-                <ChevronDownIcon />
               </div>
-            </div>
-          </div>
-
-          {/* Bottom row: tag tabs + sort */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            {/* Tag pills */}
-            <div className="flex flex-wrap gap-2">
-              {[{ id: 'all', name: 'all', label: t('common.all') },
-                ...tags.map((tag) => ({ id: String(tag.id), name: tag.name, label: tag.displayNameKo })),
-              ].map((tag) => (
-                <button
-                  key={tag.id}
-                  onClick={() => setActiveTag(tag.name)}
-                  className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                    activeTag === tag.name
-                      ? 'gradient-bg text-white shadow-lg shadow-primary-500/20'
-                      : 'bg-surface-800 text-gray-400 hover:text-white hover:bg-surface-700'
-                  }`}
-                >
-                  {tag.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Sort tabs */}
-            <div className="flex bg-surface-800 rounded-xl p-1 shrink-0">
-              {SORT_MODES.map(({ key, i18nKey }) => (
-                <button
-                  key={key}
-                  onClick={() => setSortMode(key)}
-                  className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                    sortMode === key
-                      ? 'bg-surface-700 text-white'
-                      : 'text-gray-500 hover:text-gray-300'
-                  }`}
-                >
-                  {t(i18nKey)}
-                </button>
-              ))}
             </div>
           </div>
         </div>
 
         {/* Loading */}
         {loading && (
-          <div className="text-center py-20">
-            <SpinnerIcon className="w-8 h-8 text-primary-400 mx-auto mb-4" />
-            <p className="text-gray-500">{t('common.loading')}</p>
+          <div className="text-center py-24">
+            <SpinnerIcon className="w-6 h-6 text-ink mx-auto mb-4" />
+            <p className="font-mono text-[12px] uppercase tracking-[0.22em] text-ink-mute">
+              {t('common.loading')}
+            </p>
           </div>
         )}
 
         {/* Error */}
         {!loading && error && (
-          <div className="text-center py-20 text-red-400">
-            <p className="text-lg">{error}</p>
+          <div className="text-center py-24">
+            <p className="text-cinnabar text-lg">{error}</p>
           </div>
         )}
 
         {/* Empty state */}
         {!loading && !error && items.length === 0 && (
-          <div className="text-center py-20 text-gray-500">
-            <p className="text-lg">{t('library.emptyState')}</p>
+          <div className="text-center py-24">
+            <p className="font-display text-2xl text-ink-soft">{t('library.emptyState')}</p>
           </div>
         )}
 
         {/* Card Grid */}
         {!loading && !error && items.length > 0 && (
           <>
-            <p className="text-sm text-gray-500 mb-4">{t('library.totalCount', { count: total })}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {items.map((item, index) => (
-                <LibraryCard
-                  key={item.id}
-                  item={item}
-                  gradient={GRADIENT_PALETTES[index % GRADIENT_PALETTES.length]}
-                />
+            <div className="flex items-baseline justify-between border-b border-ink/15 pb-3 mb-8">
+              <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+                {t('library.totalCount', { count: total })}
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute hidden sm:inline">
+                Sorted · {t(SORT_MODES.find((m) => m.key === sortMode)!.i18nKey)}
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
+              {items.map((item) => (
+                <LibraryCard key={item.id} item={item} />
               ))}
             </div>
           </>

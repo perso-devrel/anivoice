@@ -4,10 +4,16 @@ import type { CreditHistoryDay } from '../services/anivoiceApi';
 import { formatChartDay } from '../utils/format';
 
 const CHART_MARGIN = { top: 4, right: 8, bottom: 0, left: 0 };
-const AXIS_TICK_STYLE = { fill: '#6b7280', fontSize: 11 };
-const TOOLTIP_CONTENT_STYLE = { background: '#1e1e2e', border: '1px solid #333', borderRadius: 8, fontSize: 12 };
-const TOOLTIP_LABEL_STYLE = { color: '#9ca3af' };
-const TOOLTIP_ITEM_STYLE = { color: '#fb923c' };
+const AXIS_TICK_STYLE = { fill: '#8a8377', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' };
+const TOOLTIP_CONTENT_STYLE = {
+  background: '#f4efe6',
+  border: '1px solid #1a1815',
+  borderRadius: 0,
+  fontSize: 12,
+  fontFamily: 'JetBrains Mono, monospace',
+};
+const TOOLTIP_LABEL_STYLE = { color: '#5a544b' };
+const TOOLTIP_ITEM_STYLE = { color: '#a8362a' };
 
 function formatTooltipLabel(label: unknown): string {
   return String(label);
@@ -18,7 +24,7 @@ export default function UsageChart({ data }: { data: CreditHistoryDay[] }) {
 
   if (data.length === 0) {
     return (
-      <p className="text-sm text-gray-500 text-center py-8">
+      <p className="font-mono text-[12px] uppercase tracking-[0.22em] text-ink-mute text-center py-10">
         {t('dashboard.noUsageData')}
       </p>
     );
@@ -27,12 +33,12 @@ export default function UsageChart({ data }: { data: CreditHistoryDay[] }) {
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data} margin={CHART_MARGIN}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3a" vertical={false} />
+        <CartesianGrid strokeDasharray="2 4" stroke="#1a1815" strokeOpacity={0.15} vertical={false} />
         <XAxis
           dataKey="day"
           tickFormatter={formatChartDay}
           tick={AXIS_TICK_STYLE}
-          axisLine={false}
+          axisLine={{ stroke: '#1a1815', strokeOpacity: 0.4 }}
           tickLine={false}
         />
         <YAxis
@@ -45,10 +51,11 @@ export default function UsageChart({ data }: { data: CreditHistoryDay[] }) {
           contentStyle={TOOLTIP_CONTENT_STYLE}
           labelStyle={TOOLTIP_LABEL_STYLE}
           itemStyle={TOOLTIP_ITEM_STYLE}
+          cursor={{ fill: '#1a1815', fillOpacity: 0.05 }}
           formatter={(value) => [`${value}s`, t('dashboard.usageSeconds')]}
           labelFormatter={formatTooltipLabel}
         />
-        <Bar dataKey="usedSeconds" fill="#f97316" radius={[4, 4, 0, 0]} maxBarSize={32} />
+        <Bar dataKey="usedSeconds" fill="#1a1815" maxBarSize={28} />
       </BarChart>
     </ResponsiveContainer>
   );

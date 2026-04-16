@@ -82,32 +82,32 @@ describe('mapDbStatus', () => {
 });
 
 describe('getProgressBarColor', () => {
-  it('returns yellow for analyzing', () => {
-    expect(getProgressBarColor('analyzing')).toBe('bg-yellow-400');
+  it('returns ink for analyzing', () => {
+    expect(getProgressBarColor('analyzing')).toBe('bg-ink');
   });
 
-  it('returns yellow for uploading', () => {
-    expect(getProgressBarColor('uploading')).toBe('bg-yellow-400');
+  it('returns ink for uploading', () => {
+    expect(getProgressBarColor('uploading')).toBe('bg-ink');
   });
 
-  it('returns blue for dubbing', () => {
-    expect(getProgressBarColor('dubbing')).toBe('bg-blue-400');
+  it('returns ink for dubbing', () => {
+    expect(getProgressBarColor('dubbing')).toBe('bg-ink');
   });
 
-  it('returns blue for lip-syncing', () => {
-    expect(getProgressBarColor('lip-syncing')).toBe('bg-blue-400');
+  it('returns ink for lip-syncing', () => {
+    expect(getProgressBarColor('lip-syncing')).toBe('bg-ink');
   });
 
-  it('returns green for completed', () => {
-    expect(getProgressBarColor('completed')).toBe('bg-green-400');
+  it('returns ink for completed', () => {
+    expect(getProgressBarColor('completed')).toBe('bg-ink');
   });
 
-  it('returns red for failed', () => {
-    expect(getProgressBarColor('failed')).toBe('bg-red-400');
+  it('returns cinnabar for failed', () => {
+    expect(getProgressBarColor('failed')).toBe('bg-cinnabar');
   });
 
-  it('returns primary for unknown status', () => {
-    expect(getProgressBarColor('unknown' as never)).toBe('bg-primary-400');
+  it('returns ink for unknown status', () => {
+    expect(getProgressBarColor('unknown' as never)).toBe('bg-ink');
   });
 });
 

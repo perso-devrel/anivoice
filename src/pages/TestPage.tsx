@@ -6,7 +6,7 @@ import { useClipboard } from '../hooks/useClipboard';
 import { getErrorMessage } from '../utils/format';
 
 const BASE = (import.meta.env.VITE_PERSO_PROXY_PATH || '/api/perso').replace(/\/+$/, '');
-const INTEGRATION_INPUT_CLASS = 'w-24 bg-surface-900 border border-surface-700 rounded px-2 py-1 text-white text-xs';
+const INTEGRATION_INPUT_CLASS = 'w-24 bg-transparent border-b border-ink/30 px-1 py-0.5 text-ink text-xs font-mono focus:outline-none focus:border-cinnabar';
 
 // ── Types ──
 
@@ -33,22 +33,20 @@ async function runTest(fn: () => Promise<unknown>): Promise<TestResult> {
 }
 
 function statusDot(s: TestStatus) {
-  if (s === 'pass') return 'bg-green-500';
-  if (s === 'fail') return 'bg-red-500';
-  if (s === 'running') return 'bg-yellow-500 animate-pulse';
-  return 'bg-gray-600';
+  if (s === 'pass') return 'bg-ink';
+  if (s === 'fail') return 'bg-cinnabar';
+  if (s === 'running') return 'bg-cinnabar animate-pulse';
+  return 'bg-ink/20';
 }
 
 function statusLabel(s: TestStatus) {
-  if (s === 'pass') return 'Pass';
-  if (s === 'fail') return 'Fail';
-  if (s === 'running') return 'Running...';
-  return 'Idle';
+  if (s === 'pass') return 'PASS';
+  if (s === 'fail') return 'FAIL';
+  if (s === 'running') return 'RUN';
+  return 'IDLE';
 }
 
-/** Pretty-print docExpected: parse JSON lines, pass through the rest */
 function formatDocExpected(raw: string): string {
-  // Try parsing each line individually
   const lines = raw.split('\n');
   const formatted: string[] = [];
   for (const line of lines) {
@@ -68,10 +66,10 @@ function CopyButton({ text }: { text: string }) {
   const { copied, copy } = useClipboard(1500);
   return (
     <button
-      className="text-[10px] text-gray-500 hover:text-white px-2 py-0.5 rounded bg-surface-800 border border-surface-700"
+      className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-mute hover:text-ink px-2 py-0.5 border border-ink/20"
       onClick={() => copy(text)}
     >
-      {copied ? 'Copied!' : 'Copy'}
+      {copied ? 'Copied' : 'Copy'}
     </button>
   );
 }
@@ -86,39 +84,35 @@ function ResultBlock({ result, docExpected, issues }: {
   const json = JSON.stringify(result.data ?? result.error, null, 2);
   return (
     <div className="mt-3 space-y-2">
-      {/* Status summary */}
       <div className="flex items-center gap-2">
-        <button className="text-xs text-gray-400 hover:text-white" onClick={() => setOpen(!open)}>
-          {open ? '▼' : '▶'} {result.success ? '✅ Pass' : '❌ Fail'} ({result.duration}ms)
+        <button className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft hover:text-ink" onClick={() => setOpen(!open)}>
+          {open ? '▼' : '▶'} {result.success ? 'Pass' : 'Fail'} · {result.duration}ms
         </button>
         <CopyButton text={json} />
       </div>
 
       {open && (
-        <div className="space-y-2">
-          {/* Actual response */}
+        <div className="space-y-3">
           <div>
-            <p className="text-[10px] font-semibold text-primary-400 mb-1">📦 Actual Response</p>
-            <pre className="bg-surface-900 rounded-lg p-3 text-xs overflow-auto max-h-48 text-gray-300 whitespace-pre-wrap break-all border border-surface-700">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink mb-1">Actual Response</p>
+            <pre className="bg-paper p-3 text-xs overflow-auto max-h-48 text-ink whitespace-pre-wrap break-all border border-ink/15 font-mono">
               {json}
             </pre>
           </div>
 
-          {/* Doc expected */}
           {docExpected && (
             <div>
-              <p className="text-[10px] font-semibold text-accent-400 mb-1">📄 Doc Expected</p>
-              <pre className="bg-accent-900/20 rounded-lg p-3 text-xs overflow-auto max-h-36 text-accent-300 border border-accent-500/20 leading-relaxed">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cinnabar mb-1">Doc Expected</p>
+              <pre className="bg-cream p-3 text-xs overflow-auto max-h-36 text-ink-soft border border-cinnabar/30 leading-relaxed font-mono">
                 {formatDocExpected(docExpected)}
               </pre>
             </div>
           )}
 
-          {/* Issues */}
           {issues && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
-              <p className="text-[10px] font-semibold text-red-400 mb-1">⚠️ Known Issues</p>
-              <p className="text-xs text-red-300">{issues}</p>
+            <div className="border border-cinnabar/40 p-3 bg-cream">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cinnabar mb-1">Known Issues</p>
+              <p className="text-xs text-ink">{issues}</p>
             </div>
           )}
         </div>
@@ -139,22 +133,22 @@ function TestRow({ label, description, endpoint, status, result, onRun, docExpec
   children?: React.ReactNode;
 }) {
   return (
-    <div className="border-b border-surface-700/50 py-4 last:border-b-0">
+    <div className="border-b border-ink/15 py-4 last:border-b-0">
       <div className="flex items-start gap-3">
-        <span className={`w-2.5 h-2.5 rounded-full shrink-0 mt-1 ${statusDot(status)}`} />
+        <span className={`w-2 h-2 shrink-0 mt-1.5 ${statusDot(status)}`} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-medium text-white">{label}</span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-surface-800 text-gray-500 font-mono">{statusLabel(status)}</span>
+            <span className="text-[14px] text-ink">{label}</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-mute border border-ink/15 px-1.5 py-0.5">{statusLabel(status)}</span>
           </div>
-          <p className="text-xs text-gray-500 mt-0.5">{description}</p>
-          <code className="text-[10px] text-primary-400/70 font-mono">{endpoint}</code>
+          <p className="text-[12px] text-ink-soft mt-1">{description}</p>
+          <code className="font-mono text-[10px] text-cinnabar/80 break-all">{endpoint}</code>
         </div>
         {children}
         <button
           onClick={onRun}
           disabled={status === 'running'}
-          className="px-3 py-1.5 text-xs rounded-lg gradient-bg hover:opacity-90 disabled:opacity-50 text-white font-medium shrink-0"
+          className="px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.18em] bg-ink text-cream hover:bg-cinnabar disabled:opacity-40 transition-colors shrink-0"
         >
           Run
         </button>
@@ -172,16 +166,18 @@ function Section({ title, description, num, children }: {
 }) {
   const [open, setOpen] = useState(true);
   return (
-    <div className="glass rounded-2xl p-5 mb-4">
-      <button className="flex items-center gap-3 w-full text-left" onClick={() => setOpen(!open)}>
-        <span className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center text-white text-sm font-bold shrink-0">{num}</span>
+    <div className="border-t border-ink/15 py-5 mb-2">
+      <button className="flex items-center gap-4 w-full text-left" onClick={() => setOpen(!open)}>
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute shrink-0">
+          §{String(num).padStart(2, '0')}
+        </span>
         <div className="flex-1">
-          <h2 className="text-lg font-semibold text-white">{title}</h2>
-          <p className="text-xs text-gray-500">{description}</p>
+          <h2 className="font-display text-xl text-ink">{title}</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-mute mt-1">{description}</p>
         </div>
-        <span className="text-gray-500 text-sm">{open ? '▼' : '▶'}</span>
+        <span className="font-mono text-[11px] text-ink-mute">{open ? '▼' : '▶'}</span>
       </button>
-      {open && <div className="mt-4 ml-11">{children}</div>}
+      {open && <div className="mt-4 pl-10">{children}</div>}
     </div>
   );
 }
@@ -222,7 +218,6 @@ export default function TestPage() {
   const failCount = allKeys.filter(k => statuses[k] === 'fail').length;
   const runningCount = allKeys.filter(k => statuses[k] === 'running').length;
 
-  // ── Run All ──
   const runAll = async () => {
     const s1a = await run('listSpaces', async () => {
       const spaces = await api.listSpaces();
@@ -247,39 +242,72 @@ export default function TestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-950 text-white">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-2">
-          <div>
-            <h1 className="text-2xl font-bold gradient-text">Perso API Test Tool</h1>
-            <p className="text-sm text-gray-400 mt-1">Test all endpoints against the live API and compare with documentation</p>
+    <main className="min-h-screen bg-cream text-ink pt-20 md:pt-24 pb-16">
+      <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-12">
+        {/* Masthead */}
+        <header className="border-t border-ink pt-6 mb-8">
+          <div className="flex items-baseline justify-between mb-3">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+              Lab — Diagnostics · 検査
+            </span>
+            <span className="font-mono text-[11px] tracking-widest text-ink-mute hidden sm:inline">
+              {new Date().toISOString().split('T')[0]}
+            </span>
           </div>
-          <button onClick={runAll} className="px-5 py-2.5 rounded-xl gradient-bg font-medium text-sm">
-            Run all
-          </button>
-        </div>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div>
+              <h1 className="font-display text-4xl md:text-5xl text-ink leading-[1.02] tracking-tight">
+                Perso API Test Tool
+              </h1>
+              <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-ink-soft mt-3">
+                Live endpoint validation · doc parity check
+              </p>
+            </div>
+            <button
+              onClick={runAll}
+              className="bg-ink text-cream px-6 py-3 font-mono text-[12px] uppercase tracking-[0.22em] hover:bg-cinnabar transition-colors self-start md:self-auto"
+            >
+              Run All →
+            </button>
+          </div>
+        </header>
 
         {/* Summary */}
-        <div className="flex gap-4 mb-4 text-sm flex-wrap">
-          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-green-500" /> {passCount} passed</span>
-          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-red-500" /> {failCount} failed</span>
-          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-yellow-500" /> {runningCount} running</span>
+        <div className="grid grid-cols-3 border-t border-l border-ink/15 mb-6">
+          {[
+            { label: 'Passed', value: passCount, dot: 'bg-ink' },
+            { label: 'Failed', value: failCount, dot: 'bg-cinnabar' },
+            { label: 'Running', value: runningCount, dot: 'bg-cinnabar animate-pulse' },
+          ].map(({ label, value, dot }) => (
+            <div key={label} className="border-r border-b border-ink/15 px-5 py-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute mb-2 flex items-center gap-2">
+                <span className={`w-1.5 h-1.5 ${dot}`} />
+                {label}
+              </p>
+              <p className="font-display text-3xl text-ink leading-none">{value}</p>
+            </div>
+          ))}
         </div>
 
         {/* Integration state */}
-        <div className="glass rounded-xl p-4 mb-4">
-          <p className="text-xs text-gray-400 mb-2">🔗 Integration state (previous test results feed into the next test)</p>
-          <div className="flex flex-wrap gap-3 text-sm">
+        <div className="border border-ink/15 px-5 py-4 mb-6">
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute mb-3">
+            Integration State · 連携
+          </p>
+          <div className="flex flex-wrap gap-5">
             {[
               { label: 'spaceSeq', value: spaceSeq, onChange: setSpaceSeq },
               { label: 'mediaSeq', value: mediaSeq, onChange: setMediaSeq },
               { label: 'projectSeq', value: projectSeq, onChange: setProjectSeq },
             ].map(({ label, value, onChange }) => (
-              <label key={label} className="flex items-center gap-2 text-gray-400">
-                <span className="text-[10px] bg-surface-800 px-1.5 py-0.5 rounded">{label}</span>
-                <input type="number" value={value ?? ''} onChange={e => onChange(e.target.value ? Number(e.target.value) : null)}
-                  className={INTEGRATION_INPUT_CLASS} />
+              <label key={label} className="flex items-center gap-2 text-ink-soft">
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-mute">{label}</span>
+                <input
+                  type="number"
+                  value={value ?? ''}
+                  onChange={e => onChange(e.target.value ? Number(e.target.value) : null)}
+                  className={INTEGRATION_INPUT_CLASS}
+                />
               </label>
             ))}
           </div>
@@ -376,7 +404,7 @@ export default function TestPage() {
                 setMediaSeq(r.seq);
                 return r;
               }); } }} />
-            {selectedFile && <span className="text-xs text-gray-500 shrink-0">{selectedFile.name}</span>}
+            {selectedFile && <span className="font-mono text-[11px] text-ink-mute shrink-0">{selectedFile.name}</span>}
           </TestRow>
 
           <TestRow
@@ -418,7 +446,7 @@ export default function TestPage() {
         </Section>
 
         {/* ── 3. Translation (Dubbing) API ── */}
-        <Section title="Translation (Dubbing) API" description="Translate and dub videos in multiple languages — the core API" num={3}>
+        <Section title="Translation (Dubbing) API" description="Translate and dub videos in multiple languages" num={3}>
           <TestRow
             label="Initialize queue"
             description="Queue must be initialized before translation requests. Auto-creates if absent."
@@ -466,8 +494,8 @@ export default function TestPage() {
             }}
           >
             {progressLog.length > 0 && (
-              <div className="mt-2 bg-surface-900 rounded-lg p-2 max-h-24 overflow-auto w-full">
-                {progressLog.map((l, i) => <div key={i} className="text-[10px] text-gray-400 font-mono">{l}</div>)}
+              <div className="mt-2 bg-paper border border-ink/15 p-2 max-h-24 overflow-auto w-full">
+                {progressLog.map((l, i) => <div key={i} className="font-mono text-[10px] text-ink-soft">{l}</div>)}
               </div>
             )}
           </TestRow>
@@ -540,9 +568,12 @@ export default function TestPage() {
               run('translateSentence', () => api.translateSentence(projectSeq!, sentenceSeq!, sentenceText || 'Hello world'));
             }}
           >
-            <input value={sentenceText} onChange={e => setSentenceText(e.target.value)}
-              className="w-40 bg-surface-900 border border-surface-700 rounded px-2 py-1 text-xs text-white shrink-0"
-              placeholder="Edited translation text" />
+            <input
+              value={sentenceText}
+              onChange={e => setSentenceText(e.target.value)}
+              className="w-40 bg-transparent border-b border-ink/30 px-1 py-1 text-xs text-ink shrink-0 font-mono focus:outline-none focus:border-cinnabar"
+              placeholder="Edited text"
+            />
           </TestRow>
 
           <TestRow
@@ -645,9 +676,9 @@ export default function TestPage() {
           ))}
 
           {videoUrl && (
-            <div className="mt-3 p-3 bg-surface-900 rounded-lg">
-              <p className="text-xs text-primary-400 mb-2">🎬 Dubbed Video Playback</p>
-              <video src={videoUrl} controls className="w-full max-w-lg rounded-lg bg-black" />
+            <div className="mt-3 p-3 border border-ink/15 bg-paper">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cinnabar mb-2">Dubbed Video Playback</p>
+              <video src={videoUrl} controls className="w-full max-w-lg bg-black" />
             </div>
           )}
         </Section>
@@ -886,9 +917,9 @@ export default function TestPage() {
                 for (const t of targets) {
                   try {
                     await axios.get(`${BASE}/video-translator/api/v1/projects/${projectSeq}/spaces/${spaceSeq}/download`, { params: { target: t } });
-                    results[t] = '✅ Pass';
+                    results[t] = 'Pass';
                   } catch (e) {
-                    results[t] = '❌ ' + getErrorMessage(e);
+                    results[t] = 'Fail · ' + getErrorMessage(e);
                   }
                 }
                 return results;
@@ -897,12 +928,12 @@ export default function TestPage() {
           />
         </Section>
 
-        <div className="text-center text-xs text-gray-600 py-8">
-          AniVoice Perso API Test Tool — {allKeys.length} tests registered
+        <div className="text-center font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute py-10 border-t border-ink/15 mt-8">
+          AniVoice Perso API Test Tool · {allKeys.length} tests registered
           <br />
-          <span className="text-gray-700">This page is for testing only. To remove, delete TestPage.tsx and the /test route in App.tsx.</span>
+          <span className="text-ink/30 normal-case tracking-normal">For testing only. To remove, delete TestPage.tsx and the /test route.</span>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -10,10 +10,16 @@ const iconByType: Record<ToastType, ReactNode> = {
   info: <InfoIcon />,
 };
 
-const bgByType: Record<ToastType, string> = {
-  success: 'bg-green-500/90',
-  error: 'bg-red-500/90',
-  info: 'bg-primary-500/90',
+const styleByType: Record<ToastType, string> = {
+  success: 'bg-ink text-cream border-ink',
+  error: 'bg-cinnabar text-cream border-cinnabar',
+  info: 'bg-cream text-ink border-ink',
+};
+
+const labelByType: Record<ToastType, string> = {
+  success: 'OK',
+  error: 'ERR',
+  info: 'INFO',
 };
 
 export default function ToastContainer() {
@@ -27,16 +33,19 @@ export default function ToastContainer() {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`pointer-events-auto flex items-center gap-2 px-5 py-3 rounded-xl text-white font-medium shadow-lg backdrop-blur-sm animate-[fadeSlideIn_0.3s_ease-out] ${bgByType[toast.type]}`}
+          className={`pointer-events-auto flex items-center gap-3 px-5 py-3 border animate-[fadeSlideIn_0.3s_ease-out] ${styleByType[toast.type]}`}
         >
-          {iconByType[toast.type]}
-          <span className="text-sm">{toast.message}</span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] opacity-70">
+            {labelByType[toast.type]}
+          </span>
+          <span className="opacity-80">{iconByType[toast.type]}</span>
+          <span className="text-[13px]">{toast.message}</span>
           <button
             onClick={() => removeToast(toast.id)}
             aria-label={t('common.close')}
-            className="ml-2 opacity-70 hover:opacity-100 transition-opacity"
+            className="ml-2 opacity-60 hover:opacity-100 transition-opacity"
           >
-            <XIcon className="w-4 h-4" />
+            <XIcon className="w-3.5 h-3.5" />
           </button>
         </div>
       ))}

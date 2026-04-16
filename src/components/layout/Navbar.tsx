@@ -37,48 +37,55 @@ export default function Navbar() {
   const navLinks = NAV_LINK_KEYS.filter((link) => !link.authOnly || user);
 
   return (
-    <nav className="glass fixed top-0 left-0 right-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-cream/95 backdrop-blur-[2px] border-b border-ink/10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center text-white font-bold text-sm">
-              A
-            </div>
-            <span className="text-xl font-bold gradient-text">
-              {t('common.appName')}
+          <Link to="/" className="flex items-baseline gap-2 group">
+            <span className="font-display text-[1.6rem] leading-none tracking-tight text-ink italic">
+              Ani
+            </span>
+            <span className="font-display text-[1.6rem] leading-none tracking-tight text-ink">
+              Voice
+            </span>
+            <span className="hidden sm:inline font-jp text-xs text-ink-mute ml-1 translate-y-[-2px]">
+              声
             </span>
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`text-sm font-medium transition-colors ${
-                  location.pathname === link.to
-                    ? 'text-primary-400'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                {t(link.labelKey)}
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center gap-9">
+            {navLinks.map((link) => {
+              const active = location.pathname === link.to;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`relative text-[13px] tracking-wide uppercase font-mono transition-colors ${
+                    active ? 'text-ink' : 'text-ink-soft hover:text-ink'
+                  }`}
+                >
+                  {t(link.labelKey)}
+                  {active && (
+                    <span className="absolute -bottom-1.5 left-0 right-0 h-px bg-cinnabar" />
+                  )}
+                </Link>
+              );
+            })}
           </div>
 
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-5">
             <button
               onClick={toggleLang}
-              className="text-sm text-gray-400 hover:text-white px-2 py-1 rounded transition-colors"
+              className="text-[12px] tracking-widest font-mono text-ink-soft hover:text-ink transition-colors"
             >
               {language === 'ko' ? 'EN' : 'KO'}
             </button>
             {user ? (
               <Link
                 to="/settings"
-                className="flex items-center gap-2 text-sm text-gray-300 hover:text-white"
+                className="flex items-center gap-2 text-sm text-ink-soft hover:text-ink"
               >
-                <div className="w-8 h-8 rounded-full bg-surface-700 flex items-center justify-center">
+                <div className="w-8 h-8 border border-ink/30 flex items-center justify-center font-display text-sm text-ink">
                   {user.displayName[0]}
                 </div>
               </Link>
@@ -86,13 +93,13 @@ export default function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="text-sm text-gray-300 hover:text-white transition-colors"
+                  className="text-[13px] font-mono uppercase tracking-wide text-ink-soft hover:text-ink transition-colors"
                 >
                   {t('common.login')}
                 </Link>
                 <Link
                   to="/signup"
-                  className="text-sm px-4 py-2 rounded-lg gradient-bg text-white font-medium hover:opacity-90 transition-opacity"
+                  className="text-[13px] font-mono uppercase tracking-wide px-4 py-2 bg-ink text-cream hover:bg-cinnabar transition-colors"
                 >
                   {t('common.signup')}
                 </Link>
@@ -102,7 +109,7 @@ export default function Navbar() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden text-gray-400 hover:text-white"
+            className="md:hidden text-ink"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? t('common.close') : t('common.menu')}
           >
@@ -116,26 +123,26 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <nav className="md:hidden border-t border-surface-700 py-4 space-y-2" aria-label={t('common.menu')}>
+          <nav className="md:hidden border-t border-ink/10 py-5 space-y-1" aria-label={t('common.menu')}>
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-surface-800 rounded-lg"
+                className="block px-2 py-2.5 text-sm text-ink hover:bg-paper transition-colors"
               >
                 {t(link.labelKey)}
               </Link>
             ))}
-            <div className="flex items-center gap-3 px-3 pt-2 border-t border-surface-700 mt-2">
-              <button onClick={toggleLang} className="text-sm text-gray-400">
+            <div className="flex items-center gap-4 px-2 pt-3 border-t border-ink/10 mt-2">
+              <button onClick={toggleLang} className="text-[12px] font-mono uppercase tracking-widest text-ink-soft">
                 {language === 'ko' ? 'English' : '한국어'}
               </button>
               {!user && (
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-sm text-primary-400"
+                  className="text-[12px] font-mono uppercase tracking-widest text-cinnabar"
                 >
                   {t('common.login')}
                 </Link>

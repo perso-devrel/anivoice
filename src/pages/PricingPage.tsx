@@ -6,7 +6,6 @@ import { useAuthStore } from '../stores/authStore';
 import { purchaseCredits } from '../services/anivoiceApi';
 import { formatCreditTime } from '../utils/format';
 import { showToast } from '../stores/toastStore';
-import { ClockIcon } from '../components/icons';
 import { CheckoutModal, type CardForm } from '../components/CheckoutModal';
 import {
   TIME_PACK_10_MIN_SECONDS,
@@ -82,68 +81,85 @@ export default function PricingPage() {
   };
 
   return (
-    <main className="min-h-screen bg-surface-950 pt-24 pb-16 px-4">
-      <div className="max-w-4xl mx-auto">
+    <main className="min-h-screen bg-cream pt-20 md:pt-28 pb-24 px-5 sm:px-8 lg:px-12">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold gradient-text mb-4">
-            {t('pricing.title')}
-          </h1>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            {t('pricing.creditOnlySubtitle', { price: CREDIT_PRICE_PER_MINUTE_USD })}
-          </p>
-          {user && (
-            <p className="mt-4 text-sm text-gray-500">
-              {t('pricing.remainingTime')} <span className="text-primary-400 font-medium">{formatCreditTime(user.creditSeconds, t)}</span>
-            </p>
-          )}
+        <div className="grid grid-cols-12 gap-6 mb-16 md:mb-24">
+          <div className="col-span-12 md:col-span-3">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+              料金 — Pricing
+            </span>
+            <h1 className="font-display text-5xl md:text-7xl text-ink leading-[1.02] tracking-tight mt-3">
+              {t('pricing.title')}
+            </h1>
+          </div>
+          <div className="col-span-12 md:col-span-9 md:pl-12 flex md:items-end">
+            <div>
+              <p className="text-lg text-ink-soft leading-relaxed max-w-xl">
+                {t('pricing.creditOnlySubtitle', { price: CREDIT_PRICE_PER_MINUTE_USD })}
+              </p>
+              {user && (
+                <p className="mt-6 font-mono text-[12px] uppercase tracking-[0.18em] text-ink-mute">
+                  {t('pricing.remainingTime')}{' '}
+                  <span className="text-cinnabar">{formatCreditTime(user.creditSeconds, t)}</span>
+                </p>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* Time Packages */}
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold gradient-text mb-3">
-            {t('pricing.creditPackages')}
-          </h2>
-          <p className="text-gray-400">
-            {t('pricing.creditSubtitle')}
-          </p>
+        {/* Section header */}
+        <div className="border-t border-ink pt-10 mb-10">
+          <div className="flex items-baseline justify-between">
+            <h2 className="font-display text-2xl md:text-3xl text-ink">
+              {t('pricing.creditPackages')}
+            </h2>
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+              {t('pricing.creditSubtitle')}
+            </span>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {TIME_PACKAGE_CONFIGS.map((pkg) => (
+        {/* Packages — grid of newspaper boxes */}
+        <div className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-ink/15">
+          {TIME_PACKAGE_CONFIGS.map((pkg, i) => (
             <div
               key={pkg.seconds}
-              className="glass rounded-2xl border border-surface-700 p-6 flex flex-col items-center text-center hover:border-primary-500/50 transition-colors"
+              className="border-r border-b border-ink/15 px-8 py-12 flex flex-col bg-cream"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
-                <ClockIcon className="w-6 h-6 text-primary-400" />
+              <div className="flex items-baseline justify-between mb-10">
+                <span className="font-mono text-cinnabar text-sm tracking-widest">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+                  Pack
+                </span>
               </div>
-
-              <p className="text-2xl font-bold text-white mb-1">
+              <p className="font-display text-2xl text-ink mb-3">
                 {t(pkg.labelKey)}
               </p>
-              <p className="text-3xl font-bold gradient-text mb-6">
+              <p className="font-display text-6xl md:text-7xl text-ink leading-none mb-10">
                 {pkg.price}
               </p>
-
               <button
                 onClick={() => handleBuyTime(pkg)}
-                className="mt-auto w-full py-3 rounded-xl border border-surface-600 text-gray-300 font-medium hover:border-primary-500 hover:text-white transition-colors"
+                className="mt-auto self-start inline-flex items-baseline gap-3 bg-ink text-cream px-6 py-3 font-mono text-[12px] uppercase tracking-[0.18em] hover:bg-cinnabar transition-colors"
               >
                 {t('common.buy')}
+                <span>→</span>
               </button>
             </div>
           ))}
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <p className="text-gray-400 mb-4">{t('pricing.needHelp')}</p>
+        <div className="mt-24 border-t border-ink pt-10 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-4">
+          <p className="text-ink-soft">{t('pricing.needHelp')}</p>
           <Link
             to="/"
-            className="text-primary-400 hover:text-primary-300 font-medium transition-colors"
+            className="font-mono text-[13px] uppercase tracking-[0.18em] text-ink border-b border-ink pb-1 hover:text-cinnabar hover:border-cinnabar transition-colors self-start"
           >
-            {t('pricing.contactUs')}
+            {t('pricing.contactUs')} →
           </Link>
         </div>
       </div>

@@ -30,44 +30,53 @@ export function ProfileTab({ email, initialDisplayName }: ProfileTabProps) {
   };
 
   return (
-    <div className="glass rounded-2xl p-6 space-y-6">
-      <div className="flex items-center gap-4">
-        <div className="w-20 h-20 rounded-full bg-surface-700 flex items-center justify-center">
-          <UserIcon className="w-10 h-10 text-gray-500" />
+    <div className="border-t border-ink pt-6 space-y-8">
+      <div>
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+          Identity · 名乗
+        </span>
+        <h2 className="font-display text-3xl md:text-4xl text-ink mt-2">
+          {t('settings.profile')}
+        </h2>
+      </div>
+
+      <div className="flex items-center gap-5 border-t border-ink/15 pt-6">
+        <div className="w-16 h-16 border border-ink/30 bg-paper-deep flex items-center justify-center">
+          <UserIcon className="w-8 h-8 text-ink-mute" />
         </div>
         <div>
-          <p className="text-white font-medium">
+          <p className="text-[14px] text-ink">
             {t('settings.avatarPlaceholder')}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-mute mt-1">
             {t('settings.avatarHint')}
           </p>
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+      <div className="border-t border-ink/15 pt-5">
+        <label className="block font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute mb-3">
           {t('settings.displayName')}
         </label>
         <input
           type="text"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl bg-surface-800 border border-surface-700 text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 transition-colors"
+          className="w-full bg-transparent border-b border-ink/30 px-0 py-2 text-ink focus:outline-none focus:border-cinnabar transition-colors text-[15px]"
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+      <div className="border-t border-ink/15 pt-5">
+        <label className="block font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute mb-3">
           {t('settings.email')}
         </label>
         <input
           type="email"
           value={email}
           readOnly
-          className="w-full px-4 py-3 rounded-xl bg-surface-850 border border-surface-700 text-gray-400 cursor-not-allowed"
+          className="w-full bg-transparent border-b border-ink/15 px-0 py-2 text-ink-mute cursor-not-allowed text-[15px]"
         />
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-mute mt-2">
           {t('settings.emailReadonly')}
         </p>
       </div>
@@ -75,7 +84,7 @@ export function ProfileTab({ email, initialDisplayName }: ProfileTabProps) {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="px-6 py-3 rounded-xl gradient-bg text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+        className="px-6 py-3 bg-ink text-cream font-mono text-[12px] uppercase tracking-[0.22em] hover:bg-cinnabar transition-colors disabled:opacity-40"
       >
         {saved ? t('settings.saved') : saving ? t('common.loading') : t('settings.save')}
       </button>

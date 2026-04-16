@@ -24,7 +24,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-surface-950">
+      <div className="min-h-screen flex items-center justify-center bg-cream">
         <LoadingSpinner />
       </div>
     );
@@ -52,7 +52,7 @@ export default function App() {
     <ErrorBoundary>
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-surface-950">
+        <div className="min-h-screen flex items-center justify-center bg-cream">
           <LoadingSpinner />
         </div>
       }

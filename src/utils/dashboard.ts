@@ -63,18 +63,12 @@ export function countProjectStats(projects: MappedProject[]): { inProgress: numb
 
 export function getProgressBarColor(status: ProjectStatus): string {
   switch (status) {
-    case 'analyzing':
-    case 'uploading':
-      return 'bg-yellow-400';
-    case 'dubbing':
-    case 'lip-syncing':
-      return 'bg-blue-400';
-    case 'completed':
-      return 'bg-green-400';
     case 'failed':
-      return 'bg-red-400';
+      return 'bg-cinnabar';
+    case 'completed':
+      return 'bg-ink';
     default:
-      return 'bg-primary-400';
+      return 'bg-ink';
   }
 }
 

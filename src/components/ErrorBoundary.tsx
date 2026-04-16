@@ -25,12 +25,15 @@ export default class ErrorBoundary extends Component<Props, State> {
 
     const t = i18n.t.bind(i18n);
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-surface-950 text-white gap-4 px-4 text-center">
-        <h1 className="text-2xl font-bold">{t('errorBoundary.title')}</h1>
-        <p className="text-surface-400 max-w-md">{t('errorBoundary.description')}</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-cream text-ink gap-5 px-4 text-center">
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-cinnabar">
+          Error · 故障
+        </span>
+        <h1 className="font-display text-4xl md:text-5xl">{t('errorBoundary.title')}</h1>
+        <p className="text-ink-soft max-w-md">{t('errorBoundary.description')}</p>
         <button
           onClick={this.handleReload}
-          className="mt-2 px-6 py-2 bg-primary-600 hover:bg-primary-500 rounded-lg transition-colors"
+          className="mt-2 px-6 py-3 bg-ink text-cream font-mono text-[12px] uppercase tracking-[0.22em] hover:bg-cinnabar transition-colors"
         >
           {t('errorBoundary.reload')}
         </button>

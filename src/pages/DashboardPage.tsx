@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { listMyProjects, toggleFavorite, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
 import { formatCreditTime, getErrorMessage } from '../utils/format';
-import { PlusIcon, AlertCircleIcon, CheckCircleIcon, SearchIcon, WalletIcon, RefreshIcon, EmptyProjectsIcon, LoadingSpinner } from '../components/icons';
+import { PlusIcon, AlertCircleIcon, SearchIcon, EmptyProjectsIcon, LoadingSpinner } from '../components/icons';
 import { ProjectCard } from '../components/ProjectCard';
 import { DashboardToolbar } from '../components/DashboardToolbar';
 
@@ -24,40 +24,25 @@ const DASHBOARD_TABS: { key: FilterTab; i18nKey: string }[] = [
   { key: 'completed', i18nKey: 'dashboard.completed' },
 ];
 
-function StatePanel({ padding = 'p-16', children }: { padding?: string; children: React.ReactNode }) {
+function StatePanel({ children }: { children: React.ReactNode }) {
   return (
-    <div className={`glass rounded-2xl ${padding} flex flex-col items-center justify-center text-center`}>
+    <div className="border border-ink/15 px-6 py-20 flex flex-col items-center justify-center text-center bg-cream">
       {children}
     </div>
   );
 }
 
-function StatCard({ icon, iconBg, label, value }: {
-  icon: React.ReactNode;
-  iconBg: string;
-  label: React.ReactNode;
-  value: React.ReactNode;
-}) {
+function StatCell({ label, value, sub }: { label: React.ReactNode; value: React.ReactNode; sub?: React.ReactNode }) {
   return (
-    <div className="glass rounded-xl p-5 flex items-center gap-4">
-      <div className={`flex-shrink-0 w-11 h-11 rounded-lg ${iconBg} flex items-center justify-center`}>
-        {icon}
-      </div>
-      <div>
-        <p className="text-sm text-gray-400">{label}</p>
-        <p className="text-2xl font-bold text-white">{value}</p>
-      </div>
+    <div className="border-r border-b border-ink/15 px-6 py-7 last:border-r-0 md:last:border-r-0">
+      <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute mb-3">
+        {label}
+      </p>
+      <p className="font-display text-4xl text-ink leading-none">{value}</p>
+      {sub && <p className="mt-2 font-mono text-[11px] tracking-widest text-ink-mute">{sub}</p>}
     </div>
   );
 }
-
-const GRADIENT_PLACEHOLDERS = [
-  'from-orange-600/30 to-amber-600/30',
-  'from-rose-600/30 to-orange-600/30',
-  'from-cyan-600/30 to-teal-600/30',
-  'from-amber-600/30 to-rose-600/30',
-  'from-slate-600/30 to-cyan-600/30',
-];
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -138,161 +123,168 @@ export default function DashboardPage() {
   const tabs = DASHBOARD_TABS.map(({ key, i18nKey }) => ({ key, label: t(i18nKey) }));
 
   return (
-    <main className="min-h-screen bg-surface-950 pt-20 pb-12">
+    <main className="min-h-screen bg-cream pt-20 md:pt-24 pb-16">
       {showOnboarding && (
         <OnboardingModal onClose={() => setShowOnboarding(false)} />
       )}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">
-              {t('dashboard.myProjects')}
-            </h1>
-            {user?.displayName && (
-              <p className="text-sm text-gray-400 mt-1">
-                {user.displayName}
-              </p>
-            )}
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        {/* Masthead */}
+        <header className="border-t border-ink pt-6 mb-10">
+          <div className="flex items-baseline justify-between mb-3">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+              Console — Dashboard · 卓
+            </span>
+            <span className="font-mono text-[11px] tracking-widest text-ink-mute hidden sm:inline">
+              {new Date().toISOString().split('T')[0]}
+            </span>
           </div>
-          <Link
-            to="/studio"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity"
-          >
-            <PlusIcon className="w-4 h-4" />
-            {t('dashboard.newProject')}
-          </Link>
-        </div>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div>
+              <h1 className="font-display text-5xl md:text-6xl text-ink leading-[1.02] tracking-tight">
+                {t('dashboard.myProjects')}
+              </h1>
+              {user?.displayName && (
+                <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-ink-soft mt-3">
+                  {user.displayName}
+                </p>
+              )}
+            </div>
+            <Link
+              to="/studio"
+              className="inline-flex items-baseline gap-3 bg-ink text-cream px-6 py-3 font-mono text-[12px] uppercase tracking-[0.18em] hover:bg-cinnabar transition-colors self-start md:self-auto"
+            >
+              <PlusIcon className="w-3.5 h-3.5" />
+              {t('dashboard.newProject')}
+            </Link>
+          </div>
+        </header>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-          <StatCard
-            icon={<WalletIcon className="w-5 h-5 text-primary-400" />}
-            iconBg="bg-primary-500/15"
+        <div className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-ink/15 mb-12">
+          <StatCell
             label={t('dashboard.creditsRemaining')}
-            value={loading ? '...' : user ? formatCreditTime(user.creditSeconds, t) : '--'}
+            value={loading ? '—' : user ? formatCreditTime(user.creditSeconds, t) : '—'}
+            sub="credit · time"
           />
-          <StatCard
-            icon={<RefreshIcon className="w-5 h-5 text-accent-400" />}
-            iconBg="bg-accent-500/15"
+          <StatCell
             label={t('dashboard.inProgress')}
-            value={loading ? '...' : inProgressCount}
+            value={loading ? '—' : inProgressCount}
+            sub="project(s)"
           />
-          <StatCard
-            icon={<CheckCircleIcon className="w-5 h-5 text-green-400" />}
-            iconBg="bg-green-500/15"
+          <StatCell
             label={t('dashboard.completed')}
-            value={loading ? '...' : completedCount}
+            value={loading ? '—' : completedCount}
+            sub="project(s)"
           />
         </div>
 
         {/* Usage Chart */}
-        <div className="glass rounded-xl p-5 mb-10">
-          <h2 className="text-base font-semibold text-white mb-4">
-            {t('dashboard.usageChart')}
-          </h2>
-          <Suspense fallback={<div className="h-[200px] flex items-center justify-center"><LoadingSpinner className="w-6 h-6 border-primary-400" /></div>}>
+        <div className="border-t border-ink pt-6 mb-12">
+          <div className="flex items-baseline justify-between mb-5">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+              {t('dashboard.usageChart')}
+            </h2>
+            <span className="font-mono text-[11px] tracking-widest text-ink-mute">
+              · last {CREDIT_HISTORY_DAYS}d
+            </span>
+          </div>
+          <Suspense fallback={<div className="h-[200px] flex items-center justify-center"><LoadingSpinner className="w-6 h-6 border-ink" /></div>}>
             <UsageChart data={usageData} />
           </Suspense>
         </div>
 
-        {/* Recent Projects Header + Search + Tabs */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <h2 className="text-lg font-semibold text-white">
-            {t('dashboard.recentProjects')}
-          </h2>
+        {/* Recent Projects Header + Toolbar */}
+        <div className="border-t border-ink pt-6 mb-8">
+          <div className="flex items-baseline justify-between mb-5">
+            <h2 className="font-display text-2xl md:text-3xl text-ink">
+              {t('dashboard.recentProjects')}
+            </h2>
+          </div>
           <DashboardToolbar
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              languageFilter={languageFilter}
-              onLanguageFilterChange={setLanguageFilter}
-              availableLanguages={availableLanguages}
-              sortOrder={sortOrder}
-              onSortToggle={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              tabs={tabs}
-            />
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            languageFilter={languageFilter}
+            onLanguageFilterChange={setLanguageFilter}
+            availableLanguages={availableLanguages}
+            sortOrder={sortOrder}
+            onSortToggle={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            tabs={tabs}
+          />
         </div>
 
         {/* Loading State */}
         {loading && (
           <StatePanel>
-            <LoadingSpinner className="w-10 h-10 border-primary-400 mb-4" />
-            <p className="text-gray-400 text-base">{t('common.loading')}</p>
+            <LoadingSpinner className="w-8 h-8 border-ink mb-4" />
+            <p className="font-mono text-[12px] uppercase tracking-[0.22em] text-ink-mute">
+              {t('common.loading')}
+            </p>
           </StatePanel>
         )}
 
         {/* Error State */}
         {!loading && error && (
           <StatePanel>
-            <div className="w-12 h-12 mb-4 rounded-full bg-red-500/15 flex items-center justify-center">
-              <AlertCircleIcon className="w-6 h-6 text-red-400" />
-            </div>
-            <p className="text-red-400 text-base mb-2">{t('common.error')}</p>
-            <p className="text-gray-500 text-sm max-w-md mb-4">{error}</p>
+            <AlertCircleIcon className="w-7 h-7 text-cinnabar mb-4" />
+            <p className="font-display text-2xl text-ink mb-2">{t('common.error')}</p>
+            <p className="text-ink-soft text-sm max-w-md mb-6">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="px-5 py-2 rounded-lg bg-surface-800 text-white text-sm font-medium hover:bg-surface-700 transition-colors"
+              className="px-5 py-2.5 border border-ink text-ink font-mono text-[12px] uppercase tracking-[0.18em] hover:bg-ink hover:text-cream transition-colors"
             >
               {t('common.retry')}
             </button>
           </StatePanel>
         )}
 
-        {/* Projects Grid / Empty State */}
+        {/* Empty State */}
         {!loading && !error && filteredProjects.length === 0 && projects.length === 0 && (
-          <StatePanel padding="p-12 sm:p-16">
-            <div className="w-32 h-32 mb-8 relative">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-500/20 to-accent-500/20 blur-xl" />
-              <div className="relative w-full h-full rounded-2xl bg-surface-800/80 flex items-center justify-center">
-                <EmptyProjectsIcon className="w-16 h-16" />
-              </div>
-            </div>
-            <h3 className="text-xl font-bold gradient-text mb-2">
+          <StatePanel>
+            <EmptyProjectsIcon className="w-14 h-14 text-ink-mute mb-6" />
+            <h3 className="font-display text-3xl text-ink mb-3">
               {t('dashboard.noProjectsTitle')}
             </h3>
-            <p className="text-gray-400 text-sm max-w-sm mb-8">
+            <p className="text-ink-soft text-sm max-w-sm mb-8">
               {t('dashboard.noProjectsDesc')}
             </p>
             <Link
               to="/studio"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary-500/20"
+              className="inline-flex items-baseline gap-3 bg-ink text-cream px-6 py-3 font-mono text-[12px] uppercase tracking-[0.18em] hover:bg-cinnabar transition-colors"
             >
-              <PlusIcon className="w-4 h-4" />
+              <PlusIcon className="w-3.5 h-3.5" />
               {t('dashboard.newProject')}
             </Link>
           </StatePanel>
         )}
 
-        {/* Filter/Search — no results */}
+        {/* Filter no-results */}
         {!loading && !error && filteredProjects.length === 0 && projects.length > 0 && (
-          <StatePanel padding="p-12">
-            <div className="w-20 h-20 mb-6 rounded-2xl bg-surface-800/80 flex items-center justify-center">
-              <SearchIcon className="w-10 h-10 text-gray-500" />
-            </div>
-            <p className="text-gray-300 text-base font-medium mb-1">
+          <StatePanel>
+            <SearchIcon className="w-8 h-8 text-ink-mute mb-5" />
+            <p className="font-display text-xl text-ink mb-2">
               {t('dashboard.noFilterResults')}
             </p>
-            <p className="text-gray-500 text-sm max-w-sm mb-6">
+            <p className="text-ink-soft text-sm max-w-sm mb-6">
               {t('dashboard.noFilterResultsDesc')}
             </p>
             <button
               onClick={() => { setSearchQuery(''); setLanguageFilter(''); setActiveTab('all'); }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-surface-800 text-white text-sm font-medium hover:bg-surface-700 transition-colors"
+              className="px-5 py-2.5 border border-ink text-ink font-mono text-[12px] uppercase tracking-[0.18em] hover:bg-ink hover:text-cream transition-colors"
             >
               {t('dashboard.clearFilters')}
             </button>
           </StatePanel>
         )}
 
+        {/* Project Grid */}
         {!loading && !error && filteredProjects.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {filteredProjects.map((project, idx) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProjects.map((project) => (
               <ProjectCard
                 key={project.id}
                 project={project}
-                gradient={GRADIENT_PLACEHOLDERS[idx % GRADIENT_PLACEHOLDERS.length]}
                 onToggleFavorite={handleToggleFavorite}
               />
             ))}

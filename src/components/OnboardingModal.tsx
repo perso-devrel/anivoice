@@ -6,21 +6,21 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { XIcon, UploadIcon, CheckCircleIcon, ArrowRightIcon, TranslateIcon } from './icons';
 
 const PRIMARY_BUTTON_CLASS =
-  'inline-flex items-center gap-2 px-6 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity';
+  'inline-flex items-center gap-2 px-6 py-3 bg-ink text-cream font-mono text-[12px] uppercase tracking-[0.18em] hover:bg-cinnabar transition-colors';
 
 const STEPS = [
   {
-    icon: <UploadIcon className="w-10 h-10 text-primary-400" />,
+    icon: <UploadIcon className="w-7 h-7 text-ink" />,
     titleKey: 'onboarding.step1Title',
     descKey: 'onboarding.step1Desc',
   },
   {
-    icon: <TranslateIcon className="w-10 h-10 text-accent-400" />,
+    icon: <TranslateIcon className="w-7 h-7 text-ink" />,
     titleKey: 'onboarding.step2Title',
     descKey: 'onboarding.step2Desc',
   },
   {
-    icon: <CheckCircleIcon className="w-10 h-10 text-green-400" />,
+    icon: <CheckCircleIcon className="w-7 h-7 text-ink" />,
     titleKey: 'onboarding.step3Title',
     descKey: 'onboarding.step3Desc',
   },
@@ -60,45 +60,54 @@ export default function OnboardingModal({ onClose }: Props) {
   const current = STEPS[step];
 
   return (
-    <div ref={trapRef} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4" role="dialog" aria-modal="true" aria-label={t('onboarding.welcome')}>
-      <div className="w-full max-w-md glass rounded-2xl p-8 relative animate-in fade-in">
+    <div
+      ref={trapRef}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 px-5"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t('onboarding.welcome')}
+    >
+      <div className="w-full max-w-lg bg-cream border border-ink p-10 relative">
         <button
           onClick={handleSkip}
           aria-label={t('common.close')}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-300 transition-colors"
+          className="absolute top-4 right-4 text-ink-mute hover:text-ink transition-colors"
         >
           <XIcon />
         </button>
 
-        {step === 0 && (
-          <h2 className="text-xl font-bold text-white mb-6 text-center">
+        <div className="flex items-baseline justify-between mb-2">
+          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
             {t('onboarding.welcome')}
-          </h2>
-        )}
-
-        <div className="flex flex-col items-center text-center space-y-4">
-          <div className="w-20 h-20 rounded-2xl bg-surface-800 flex items-center justify-center">
-            {current.icon}
-          </div>
-          <div className="flex items-center gap-2 text-sm text-gray-400">
-            <span className="font-semibold text-primary-400">{step + 1}</span>
-            <span>/</span>
-            <span>{STEPS.length}</span>
-          </div>
-          <h3 className="text-lg font-semibold text-white">
-            {t(current.titleKey)}
-          </h3>
-          <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
-            {t(current.descKey)}
-          </p>
+          </span>
+          <span className="font-mono text-[11px] tracking-widest text-ink-mute">
+            {String(step + 1).padStart(2, '0')} / {String(STEPS.length).padStart(2, '0')}
+          </span>
         </div>
 
-        <div className="flex items-center gap-2 justify-center mt-6 mb-6">
+        <div className="border-t border-ink pt-8 mb-8">
+          <div className="flex items-start gap-5">
+            <div className="w-14 h-14 border border-ink flex items-center justify-center shrink-0">
+              {current.icon}
+            </div>
+            <div>
+              <h3 className="font-display text-3xl text-ink leading-tight mb-3">
+                {t(current.titleKey)}
+              </h3>
+              <p className="text-ink-soft leading-relaxed">
+                {t(current.descKey)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Progress dots as hairlines */}
+        <div className="flex items-center gap-2 mb-8">
           {STEPS.map((_, i) => (
             <div
               key={i}
-              className={`h-1.5 rounded-full transition-all ${
-                i === step ? 'w-6 bg-primary-500' : 'w-1.5 bg-surface-700'
+              className={`h-px transition-all ${
+                i === step ? 'w-10 bg-cinnabar' : 'w-4 bg-ink/30'
               }`}
             />
           ))}
@@ -107,7 +116,7 @@ export default function OnboardingModal({ onClose }: Props) {
         <div className="flex items-center justify-between">
           <button
             onClick={handleSkip}
-            className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+            className="font-mono text-[12px] uppercase tracking-[0.18em] text-ink-soft hover:text-ink transition-colors"
           >
             {t('onboarding.skip')}
           </button>
@@ -121,10 +130,7 @@ export default function OnboardingModal({ onClose }: Props) {
               <ArrowRightIcon />
             </Link>
           ) : (
-            <button
-              onClick={handleNext}
-              className={PRIMARY_BUTTON_CLASS}
-            >
+            <button onClick={handleNext} className={PRIMARY_BUTTON_CLASS}>
               {t('onboarding.next')}
               <ArrowRightIcon />
             </button>

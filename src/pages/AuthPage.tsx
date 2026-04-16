@@ -12,9 +12,9 @@ import type { User } from '../types';
 type Mode = 'login' | 'signup';
 
 const AUTH_INPUT_CLASS =
-  'w-full rounded-lg bg-surface-900 border border-surface-700 px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-primary-500 transition-colors';
+  'w-full bg-transparent border-b border-ink/30 px-0 py-2 text-[15px] text-ink placeholder-ink-mute outline-none focus:border-cinnabar transition-colors';
 
-const AUTH_LABEL_CLASS = 'block text-sm text-gray-300 mb-1.5';
+const AUTH_LABEL_CLASS = 'block font-mono text-[11px] uppercase tracking-[0.18em] text-ink-mute mb-2';
 
 export default function AuthPage() {
   const { t } = useTranslation();
@@ -85,44 +85,30 @@ export default function AuthPage() {
   const isLogin = mode === 'login';
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-surface-950 px-4">
-      <div className="w-full max-w-md glass rounded-2xl p-8">
-        {/* Logo */}
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-lg gradient-bg flex items-center justify-center text-white font-bold text-xl">
-            A
-          </div>
-          <span className="gradient-text text-2xl font-bold">AniVoice</span>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex mb-6 border-b border-surface-700">
-          <button
-            type="button"
-            onClick={() => switchMode('login')}
-            className={`flex-1 pb-3 text-sm font-medium transition-colors ${
-              isLogin
-                ? 'text-primary-400 border-b-2 border-primary-400'
-                : 'text-gray-400 hover:text-gray-300'
-            }`}
-          >
-            {t('common.login')}
-          </button>
-          <button
-            type="button"
-            onClick={() => switchMode('signup')}
-            className={`flex-1 pb-3 text-sm font-medium transition-colors ${
-              !isLogin
-                ? 'text-primary-400 border-b-2 border-primary-400'
-                : 'text-gray-400 hover:text-gray-300'
-            }`}
-          >
-            {t('common.signup')}
-          </button>
+    <main className="min-h-screen flex items-center justify-center bg-cream px-5 py-24">
+      <div className="w-full max-w-md">
+        {/* Logo / Section label */}
+        <div className="mb-10">
+          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+            {isLogin ? 'Sign In · 入場' : 'Sign Up · 登録'}
+          </span>
+          <h1 className="font-display text-5xl text-ink leading-none tracking-tight mt-3">
+            {isLogin ? t('common.login') : t('common.signup')}
+          </h1>
+          <p className="mt-3 text-ink-soft">
+            {isLogin ? t('auth.noAccount') : t('auth.hasAccount')}{' '}
+            <button
+              type="button"
+              onClick={() => switchMode(isLogin ? 'signup' : 'login')}
+              className="text-cinnabar border-b border-cinnabar pb-0.5 hover:opacity-70 transition-opacity"
+            >
+              {isLogin ? t('common.signup') : t('common.login')}
+            </button>
+          </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-7 border-t border-ink pt-8">
           {!isLogin && (
             <div>
               <label className={AUTH_LABEL_CLASS}>{t('auth.name')}</label>
@@ -165,18 +151,21 @@ export default function AuthPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full gradient-bg rounded-lg py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full bg-ink text-cream py-3.5 font-mono text-[12px] uppercase tracking-[0.22em] hover:bg-cinnabar transition-colors disabled:opacity-50 flex items-center justify-center gap-3"
           >
             {loading && <SpinnerIcon className="h-4 w-4" />}
             {isLogin ? t('common.login') : t('common.signup')}
+            <span className="opacity-60">→</span>
           </button>
         </form>
 
         {/* Divider */}
-        <div className="flex items-center gap-3 my-6">
-          <div className="flex-1 h-px bg-surface-700" />
-          <span className="text-xs text-gray-500">{t('auth.or')}</span>
-          <div className="flex-1 h-px bg-surface-700" />
+        <div className="flex items-center gap-4 my-8">
+          <div className="flex-1 h-px bg-ink/15" />
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-mute">
+            {t('auth.or')}
+          </span>
+          <div className="flex-1 h-px bg-ink/15" />
         </div>
 
         {/* Google */}
@@ -184,23 +173,11 @@ export default function AuthPage() {
           type="button"
           onClick={handleGoogle}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-3 rounded-lg bg-white py-2.5 text-sm font-medium text-gray-700 transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="w-full flex items-center justify-center gap-3 border border-ink py-3.5 text-[13px] text-ink hover:bg-ink hover:text-cream transition-colors disabled:opacity-50"
         >
           <GoogleIcon />
           {t('auth.googleContinue')}
         </button>
-
-        {/* Toggle link */}
-        <p className="mt-6 text-center text-sm text-gray-400">
-          {isLogin ? t('auth.noAccount') : t('auth.hasAccount')}{' '}
-          <button
-            type="button"
-            onClick={() => switchMode(isLogin ? 'signup' : 'login')}
-            className="text-primary-400 hover:text-primary-300 font-medium"
-          >
-            {isLogin ? t('common.signup') : t('common.login')}
-          </button>
-        </p>
       </div>
     </main>
   );

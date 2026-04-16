@@ -1,25 +1,24 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-const FOOTER_LINK_CLASS = 'block text-sm text-gray-500 hover:text-gray-300';
-const FOOTER_HEADING_CLASS = 'text-sm font-semibold text-gray-300 mb-3';
-const FOOTER_SECTION_CLASS = 'space-y-2';
+const FOOTER_LINK_CLASS = 'block text-sm text-ink-soft hover:text-cinnabar transition-colors';
+const FOOTER_HEADING_CLASS = 'text-[11px] font-mono uppercase tracking-[0.18em] text-ink-mute mb-4';
+const FOOTER_SECTION_CLASS = 'space-y-2.5';
 
 export default function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="border-t border-surface-800 bg-surface-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center text-white font-bold text-sm">
-                A
-              </div>
-              <span className="text-lg font-bold gradient-text">AniVoice</span>
+    <footer className="border-t border-ink bg-cream">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 pb-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-14">
+          <div className="col-span-2 md:col-span-1">
+            <div className="flex items-baseline gap-2 mb-5">
+              <span className="font-display italic text-2xl text-ink leading-none">Ani</span>
+              <span className="font-display text-2xl text-ink leading-none">Voice</span>
+              <span className="font-jp text-xs text-ink-mute ml-1">声</span>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-ink-soft leading-relaxed max-w-xs">
               {t('common.tagline')}
             </p>
           </div>
@@ -51,11 +50,11 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-surface-800 text-center">
-          <p className="text-xs text-gray-600">
+        <div className="mt-14 pt-6 border-t border-ink/15 flex flex-col sm:flex-row sm:justify-between gap-2">
+          <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-ink-mute">
             {t('landing.copyright')}
           </p>
-          <p className="text-xs text-gray-700 mt-2">
+          <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-ink-mute">
             {t('footer.allRights')}
           </p>
         </div>

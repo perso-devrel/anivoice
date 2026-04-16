@@ -273,7 +273,7 @@ export function UserIcon({ className = 'w-10 h-10' }: IconProps) {
   );
 }
 
-export function LoadingSpinner({ className = 'w-8 h-8 border-primary-500' }: IconProps) {
+export function LoadingSpinner({ className = 'w-8 h-8 border-ink' }: IconProps) {
   return (
     <div className={`${className} border-2 border-t-transparent rounded-full animate-spin`} />
   );

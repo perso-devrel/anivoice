@@ -19,10 +19,15 @@ export function UploadStep({ onFileChange }: UploadStepProps) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="text-center mb-2">
-        <h2 className="text-2xl font-bold gradient-text mb-2">{t('studio.uploadTitle')}</h2>
-        <p className="text-surface-200/60 text-sm">{t('studio.uploadDesc')}</p>
+    <div className="max-w-3xl mx-auto">
+      <div className="mb-8 border-t border-ink pt-6">
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute">
+          File · Source · 素材
+        </span>
+        <h2 className="font-display text-3xl md:text-4xl text-ink mt-2">
+          {t('studio.uploadTitle')}
+        </h2>
+        <p className="text-ink-soft mt-2">{t('studio.uploadDesc')}</p>
       </div>
 
       <div
@@ -30,15 +35,18 @@ export function UploadStep({ onFileChange }: UploadStepProps) {
         onDragLeave={() => setIsDragOver(false)}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`glass rounded-2xl border-2 border-dashed cursor-pointer transition-all flex flex-col items-center justify-center py-16 gap-4 ${
+        className={`border border-dashed cursor-pointer transition-colors flex flex-col items-center justify-center py-20 gap-5 ${
           isDragOver
-            ? 'border-primary-400 bg-primary-500/10'
-            : 'border-surface-700 hover:border-primary-500/50'
+            ? 'border-cinnabar bg-paper'
+            : 'border-ink/40 hover:border-ink hover:bg-paper/50'
         }`}
       >
-        <FileIcon className="w-12 h-12 text-surface-200/40" />
-        <p className="text-surface-200/70 text-center">{t('studio.dragDrop')}</p>
-        <button type="button" className="gradient-bg px-5 py-2 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity">
+        <FileIcon className="w-10 h-10 text-ink-mute" />
+        <p className="text-ink-soft text-center">{t('studio.dragDrop')}</p>
+        <button
+          type="button"
+          className="bg-ink text-cream px-6 py-2.5 font-mono text-[12px] uppercase tracking-[0.18em] hover:bg-cinnabar transition-colors"
+        >
           {t('studio.orBrowse')}
         </button>
         <input
@@ -53,7 +61,9 @@ export function UploadStep({ onFileChange }: UploadStepProps) {
         />
       </div>
 
-      <p className="text-center text-xs text-surface-200/40">{t('studio.supportedFormats')}</p>
+      <p className="text-center font-mono text-[11px] uppercase tracking-[0.22em] text-ink-mute mt-5">
+        {t('studio.supportedFormats')}
+      </p>
     </div>
   );
 }
