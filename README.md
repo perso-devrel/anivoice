@@ -12,7 +12,7 @@ Path: ./PROMPT.md
 
 # AniVoice
 
-[English](./README.en.md) | [日本語](./README.ja.md) | [中文](./README.zh.md)
+[English](./docs/i18n/README.en.md) | [日本語](./docs/i18n/README.ja.md) | [中文](./docs/i18n/README.zh.md)
 
 **일본 애니메이션을 원하는 언어로 더빙하세요.** 캐릭터 음성을 보존한 채 8개 이상 언어로 AI 더빙하는 오픈소스 웹 서비스입니다.
 
