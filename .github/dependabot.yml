@@ -28,6 +28,15 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      # eslint-plugin-react-hooks 최신(7.0.1)이 아직 eslint 10을 지원하지 않음
+      - dependency-name: "eslint"
+        versions: [">=10"]
+      - dependency-name: "@eslint/js"
+        versions: [">=10"]
+      # @vercel/node v5는 transitive undici/tar 등으로 CVE가 증가 (SECURITY-AUDIT.md 참조)
+      - dependency-name: "@vercel/node"
+        versions: [">=5"]
     labels:
       - "dependencies"
       - "security"
