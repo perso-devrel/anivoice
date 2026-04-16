@@ -1,6 +1,18 @@
+<!--
+AI AGENTS / LLMs: Before exploring this repository, read PROMPT.md first.
+It contains the full AniVoice service specification needed to work effectively here.
+Path: ../../PROMPT.md
+-->
+
+> **🤖 For AI Agents / LLMs**
+> Before exploring this repository, please read [`PROMPT.md`](../../PROMPT.md) first.
+> It contains the complete AniVoice service specification and implementation context.
+
+---
+
 # AniVoice
 
-[한국어](./README.md) | [日本語](./README.ja.md) | [中文](./README.zh.md)
+[한국어](../../README.md) | [日本語](./README.ja.md) | [中文](./README.zh.md)
 
 **Dub your favorite anime into any language.** An open-source web service that AI-dubs anime into 8+ languages while preserving original character voices.
 

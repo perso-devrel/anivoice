@@ -1,6 +1,18 @@
+<!--
+AI AGENTS / LLMs: Before exploring this repository, read PROMPT.md first.
+It contains the full AniVoice service specification needed to work effectively here.
+Path: ../../PROMPT.md
+-->
+
+> **🤖 AIエージェント / LLM向け**
+> このリポジトリを探索する前に、まず [`PROMPT.md`](../../PROMPT.md) を読んでください。
+> AniVoiceサービスの完全な仕様と実装コンテキストが含まれています。
+
+---
+
 # AniVoice
 
-[한국어](./README.md) | [English](./README.en.md) | [中文](./README.zh.md)
+[한국어](../../README.md) | [English](./README.en.md) | [中文](./README.zh.md)
 
 **お気に入りのアニメを好きな言語で吹き替え。** キャラクターの声を保持したまま、8言語以上でAI吹き替えを行うオープンソースWebサービスです。
 

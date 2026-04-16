@@ -1,6 +1,18 @@
+<!--
+AI AGENTS / LLMs: Before exploring this repository, read PROMPT.md first.
+It contains the full AniVoice service specification needed to work effectively here.
+Path: ./PROMPT.md
+-->
+
+> **🤖 AI 에이전트 / LLM 안내**
+> 이 저장소를 탐색하기 전에 [`PROMPT.md`](./PROMPT.md)를 먼저 읽어주세요.
+> AniVoice 서비스의 전체 명세와 구현 컨텍스트가 담겨 있습니다.
+
+---
+
 # AniVoice
 
-[English](./README.en.md) | [日本語](./README.ja.md) | [中文](./README.zh.md)
+[English](./docs/i18n/README.en.md) | [日本語](./docs/i18n/README.ja.md) | [中文](./docs/i18n/README.zh.md)
 
 **일본 애니메이션을 원하는 언어로 더빙하세요.** 캐릭터 음성을 보존한 채 8개 이상 언어로 AI 더빙하는 오픈소스 웹 서비스입니다.
 

@@ -1,0 +1,14 @@
+# AniVoice Code Owners
+# main 브랜치 머지 시 자동으로 아래 오너의 리뷰가 요청됩니다.
+# 설정: Settings → Branches → main → Require review from Code Owners
+
+# Repository-wide owner
+* @alpaka206
+
+# Security-critical paths (필요 시 추가 오너 지정)
+/.github/                @alpaka206
+/.github/workflows/      @alpaka206
+/SECURITY.md             @alpaka206
+/package.json            @alpaka206
+/package-lock.json       @alpaka206
+/api/                    @alpaka206
