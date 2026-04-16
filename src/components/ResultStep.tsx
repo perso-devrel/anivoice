@@ -6,14 +6,29 @@ import { PlayIcon, DownloadIcon, AlertCircleIcon, LoadingSpinner } from './icons
 import { SentenceEditList } from './SentenceEditList';
 import { PublishSection } from './PublishSection';
 
-const STAGE_ORDER = ['uploading', 'dubbing', 're-dubbing', 'lip-syncing', 'done'] as const;
+type ProcessStage = 'uploading' | 'dubbing' | 're-dubbing' | 'lip-syncing' | 'done';
 
-const PROGRESS_STAGE_I18N = [
-  { key: 'uploading', i18nKey: 'studio.progressAnalyzing' },
-  { key: 'dubbing', i18nKey: 'studio.progressDubbing' },
-  { key: 're-dubbing', i18nKey: 'studio.progressReDubbing' },
-  { key: 'lip-syncing', i18nKey: 'studio.progressLipSync' },
-] as const;
+const FLOW_STAGES: Record<string, { key: string; i18nKey: string }[]> = {
+  initial: [
+    { key: 'uploading', i18nKey: 'studio.progressAnalyzing' },
+    { key: 'dubbing', i18nKey: 'studio.progressDubbing' },
+    { key: 'done', i18nKey: 'studio.progressComplete' },
+  ],
+  editing: [
+    { key: 're-dubbing', i18nKey: 'studio.progressEditing' },
+    { key: 'done', i18nKey: 'studio.progressComplete' },
+  ],
+  lipsync: [
+    { key: 'lip-syncing', i18nKey: 'studio.progressLipSync' },
+    { key: 'done', i18nKey: 'studio.progressComplete' },
+  ],
+};
+
+function getFlowType(stage: ProcessStage): string {
+  if (stage === 're-dubbing') return 'editing';
+  if (stage === 'lip-syncing') return 'lipsync';
+  return 'initial';
+}
 
 const RESULT_CENTER_CLASS = 'max-w-lg mx-auto text-center py-12';
 const RESULT_MUTED_TEXT = 'text-sm text-surface-200/60';
@@ -39,7 +54,7 @@ function isDownloadAvailable(type: string, links: PersoDownloadLinks | null): bo
 interface ResultStepProps {
   loadingProject: boolean;
   isProcessing: boolean;
-  processStage: 'uploading' | 'dubbing' | 're-dubbing' | 'lip-syncing' | 'done';
+  processStage: ProcessStage;
   progress: number;
   remainingMinutes: number | null;
   error: string | null;
@@ -112,8 +127,9 @@ export function ResultStep({
     );
   }
 
-  const progressLabels = PROGRESS_STAGE_I18N.map(({ key, i18nKey }) => ({ key, label: t(i18nKey) }));
-  const currentStageIdx = STAGE_ORDER.indexOf(processStage);
+  const flowType = getFlowType(processStage);
+  const flowStages = FLOW_STAGES[flowType];
+  const currentStageIdx = flowStages.findIndex(({ key }) => key === processStage);
 
   if (isProcessing) {
     return (
@@ -137,12 +153,12 @@ export function ResultStep({
         </p>
 
         <div className="flex justify-between text-xs text-surface-200/50">
-          {progressLabels.map(({ key, label }, i) => (
+          {flowStages.map(({ key, i18nKey }, i) => (
             <span key={key} className={`transition-colors ${i <= currentStageIdx ? 'text-primary-400 font-medium' : ''}`}>
               {i <= currentStageIdx && (
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary-400 mr-1.5 align-middle animate-pulse" />
               )}
-              {label}
+              {t(i18nKey)}
             </span>
           ))}
         </div>
