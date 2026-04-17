@@ -8,17 +8,20 @@ export default function NotFoundPage() {
   usePageTitle('pageTitle.notFound');
 
   return (
-    <main className="min-h-[60vh] flex flex-col items-center justify-center px-4 text-center">
-      <p className="text-7xl font-bold text-primary-500 mb-4">404</p>
-      <h1 className="text-2xl font-bold text-white mb-2">
+    <main className="min-h-[60vh] flex flex-col items-center justify-center px-4 text-center scanlines">
+      <div className="relative">
+        <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-jp text-[200px] text-bone/[0.03] select-none pointer-events-none" aria-hidden="true">迷子</span>
+        <p className="font-display font-black text-lucy text-outline-bone chromatic-hover relative" style={{ fontSize: 'clamp(80px, 14vw, 200px)' }}>404</p>
+      </div>
+      <h1 className="text-2xl font-display font-bold text-bone mb-2">
         {t('notFound.title')}
       </h1>
-      <p className="text-gray-400 mb-8 max-w-md">
+      <p className="text-bone/60 mb-8 max-w-md">
         {t('notFound.description')}
       </p>
       <Link
         to="/"
-        className="inline-flex items-center gap-2 px-6 py-3 rounded-lg gradient-bg text-white font-semibold hover:opacity-90 transition-opacity"
+        className="inline-flex items-center gap-2 px-6 py-3 bg-lucy text-void font-display font-bold uppercase tracking-widest text-sm border-2 border-lucy hover:bg-void hover:text-lucy transition-colors offset-lucy-sm hover:shadow-none flicker-on-hover"
       >
         <ArrowLeftIcon />
         {t('notFound.goHome')}

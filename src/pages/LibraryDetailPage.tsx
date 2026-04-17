@@ -8,10 +8,10 @@ import { formatCreditTimeMs } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
 import { DownloadIcon, LinkIcon, ChevronLeftIcon, LoadingSpinner } from '../components/icons';
 
-const PAGE_SHELL_CLASS = 'min-h-screen bg-surface-950 pt-24 pb-16';
+const PAGE_SHELL_CLASS = 'min-h-screen bg-void pt-24 pb-16';
 
 const SECONDARY_BUTTON_CLASS =
-  'inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-700 text-white text-sm font-medium hover:bg-surface-600 transition-colors';
+  'inline-flex items-center gap-2 px-4 py-2 bg-ink border-2 border-bone/30 text-bone text-sm font-medium hover:border-bone hover:text-bone transition-colors';
 
 export default function LibraryDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -58,11 +58,11 @@ export default function LibraryDetailPage() {
     return (
       <main className={PAGE_SHELL_CLASS}>
         <div className="max-w-3xl mx-auto px-4 text-center">
-          <h1 className="text-2xl font-bold text-white mb-2">{t('library.notFound')}</h1>
-          <p className="text-gray-400 mb-6">{t('library.notFoundDesc')}</p>
+          <h1 className="text-2xl font-bold text-bone font-display mb-2">{t('library.notFound')}</h1>
+          <p className="text-bone/60 mb-6">{t('library.notFoundDesc')}</p>
           <Link
             to="/library"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl gradient-bg text-white font-medium text-sm hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-lucy text-void border-2 border-lucy hover:bg-void hover:text-lucy font-medium text-sm transition-colors"
           >
             {t('library.backToLibrary')}
           </Link>
@@ -76,19 +76,19 @@ export default function LibraryDetailPage() {
   const subtitleSrc = resolvePersoFileUrl(item.subtitleUrl);
 
   return (
-    <main className="min-h-screen bg-surface-950 pt-24 pb-16">
+    <main className="min-h-screen bg-void pt-24 pb-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Back link */}
         <Link
           to="/library"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 font-mono uppercase tracking-widest text-xs text-bone/60 hover:text-bone transition-colors mb-6"
         >
           <ChevronLeftIcon />
           {t('library.backToLibrary')}
         </Link>
 
         {/* Video player */}
-        <div className="glass rounded-2xl overflow-hidden mb-6">
+        <div className="bg-ink border-2 border-bone/30 overflow-hidden mb-6 corner-marks">
           {videoSrc ? (
             <video
               src={videoSrc}
@@ -97,28 +97,29 @@ export default function LibraryDetailPage() {
               poster={resolvePersoFileUrl(item.thumbnailUrl)}
             />
           ) : (
-            <div className="w-full aspect-video bg-surface-800 flex items-center justify-center">
-              <span className="text-gray-500 text-lg">{t('common.noData')}</span>
+            <div className="w-full aspect-video bg-ink flex items-center justify-center">
+              <span className="text-bone/50 text-lg">{t('common.noData')}</span>
             </div>
           )}
         </div>
 
         {/* Info section */}
-        <div className="glass rounded-2xl p-6 space-y-4">
+        <div className="relative bg-ink border-2 border-bone/30 p-6 space-y-4 corner-marks">
+          <span className="absolute -top-3 left-4 font-mono text-[10px] uppercase tracking-[0.3em] text-lucy bg-void px-2" aria-hidden="true">INFO</span>
           {/* Title + meta */}
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white mb-1">{item.title}</h1>
-            <p className="text-gray-400 text-sm">
+            <h1 className="text-xl sm:text-2xl font-bold text-bone font-display mb-1">{item.title}</h1>
+            <p className="text-bone/60 text-sm font-mono">
               {t('library.by')} {item.authorName}
             </p>
           </div>
 
           {/* Language + duration badges */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-surface-800 text-xs text-gray-300 uppercase">
+            <span className="px-3 py-1 bg-ink border-2 border-bone/30 text-xs text-bone/80 uppercase font-mono">
               {item.sourceLanguage} → {item.targetLanguage}
             </span>
-            <span className="px-3 py-1 rounded-full bg-surface-800 text-xs text-gray-300">
+            <span className="px-3 py-1 bg-ink border-2 border-bone/30 text-xs text-bone/80 font-mono">
               {formatCreditTimeMs(item.durationMs, t)}
             </span>
           </div>
@@ -129,7 +130,7 @@ export default function LibraryDetailPage() {
               {item.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-2 py-0.5 rounded bg-accent-500/15 text-accent-400 text-xs font-medium"
+                  className="px-2 py-0.5 bg-lucy/15 text-lucy text-xs font-medium"
                 >
                   {tag}
                 </span>
@@ -144,7 +145,7 @@ export default function LibraryDetailPage() {
                 href={videoSrc}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl gradient-bg text-white text-sm font-medium hover:opacity-90 transition-opacity"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-lucy text-void border-2 border-lucy hover:bg-void hover:text-lucy text-sm font-medium transition-colors offset-lucy-sm"
               >
                 <DownloadIcon className="w-4 h-4" />
                 {t('library.downloadVideo')}

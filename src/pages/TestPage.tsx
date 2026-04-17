@@ -6,7 +6,7 @@ import { useClipboard } from '../hooks/useClipboard';
 import { getErrorMessage } from '../utils/format';
 
 const BASE = (import.meta.env.VITE_PERSO_PROXY_PATH || '/api/perso').replace(/\/+$/, '');
-const INTEGRATION_INPUT_CLASS = 'w-24 bg-surface-900 border border-surface-700 rounded px-2 py-1 text-white text-xs';
+const INTEGRATION_INPUT_CLASS = 'w-24 bg-ink border-2 border-bone/30 px-2 py-1 text-bone text-xs font-mono';
 
 // ── Types ──
 
@@ -36,7 +36,7 @@ function statusDot(s: TestStatus) {
   if (s === 'pass') return 'bg-green-500';
   if (s === 'fail') return 'bg-red-500';
   if (s === 'running') return 'bg-yellow-500 animate-pulse';
-  return 'bg-gray-600';
+  return 'bg-bone/30';
 }
 
 function statusLabel(s: TestStatus) {
@@ -68,7 +68,7 @@ function CopyButton({ text }: { text: string }) {
   const { copied, copy } = useClipboard(1500);
   return (
     <button
-      className="text-[10px] text-gray-500 hover:text-white px-2 py-0.5 rounded bg-surface-800 border border-surface-700"
+      className="text-[10px] bg-ink border border-bone/30 text-bone/50 hover:text-bone px-2 py-0.5 font-mono"
       onClick={() => copy(text)}
     >
       {copied ? 'Copied!' : 'Copy'}
@@ -88,7 +88,7 @@ function ResultBlock({ result, docExpected, issues }: {
     <div className="mt-3 space-y-2">
       {/* Status summary */}
       <div className="flex items-center gap-2">
-        <button className="text-xs text-gray-400 hover:text-white" onClick={() => setOpen(!open)}>
+        <button className="text-xs text-bone/60 hover:text-bone" onClick={() => setOpen(!open)}>
           {open ? '▼' : '▶'} {result.success ? '✅ Pass' : '❌ Fail'} ({result.duration}ms)
         </button>
         <CopyButton text={json} />
@@ -98,8 +98,8 @@ function ResultBlock({ result, docExpected, issues }: {
         <div className="space-y-2">
           {/* Actual response */}
           <div>
-            <p className="text-[10px] font-semibold text-primary-400 mb-1">📦 Actual Response</p>
-            <pre className="bg-surface-900 rounded-lg p-3 text-xs overflow-auto max-h-48 text-gray-300 whitespace-pre-wrap break-all border border-surface-700">
+            <p className="text-[10px] font-semibold text-lucy mb-1">📦 Actual Response</p>
+            <pre className="bg-ink p-3 text-xs overflow-auto max-h-48 text-bone/80 whitespace-pre-wrap break-all border border-bone/30">
               {json}
             </pre>
           </div>
@@ -107,8 +107,8 @@ function ResultBlock({ result, docExpected, issues }: {
           {/* Doc expected */}
           {docExpected && (
             <div>
-              <p className="text-[10px] font-semibold text-accent-400 mb-1">📄 Doc Expected</p>
-              <pre className="bg-accent-900/20 rounded-lg p-3 text-xs overflow-auto max-h-36 text-accent-300 border border-accent-500/20 leading-relaxed">
+              <p className="text-[10px] font-semibold text-rebecca mb-1">📄 Doc Expected</p>
+              <pre className="bg-rebecca/10 p-3 text-xs overflow-auto max-h-36 text-rebecca border border-rebecca/30 leading-relaxed">
                 {formatDocExpected(docExpected)}
               </pre>
             </div>
@@ -116,7 +116,7 @@ function ResultBlock({ result, docExpected, issues }: {
 
           {/* Issues */}
           {issues && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+            <div className="bg-red-500/10 border border-red-500/20 p-3">
               <p className="text-[10px] font-semibold text-red-400 mb-1">⚠️ Known Issues</p>
               <p className="text-xs text-red-300">{issues}</p>
             </div>
@@ -139,22 +139,22 @@ function TestRow({ label, description, endpoint, status, result, onRun, docExpec
   children?: React.ReactNode;
 }) {
   return (
-    <div className="border-b border-surface-700/50 py-4 last:border-b-0">
+    <div className="border-b border-bone/30 py-4 last:border-b-0">
       <div className="flex items-start gap-3">
         <span className={`w-2.5 h-2.5 rounded-full shrink-0 mt-1 ${statusDot(status)}`} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-medium text-white">{label}</span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-surface-800 text-gray-500 font-mono">{statusLabel(status)}</span>
+            <span className="text-sm font-medium text-bone">{label}</span>
+            <span className="text-[10px] px-1.5 py-0.5 bg-ink border border-bone/30 text-bone/50 font-mono">{statusLabel(status)}</span>
           </div>
-          <p className="text-xs text-gray-500 mt-0.5">{description}</p>
-          <code className="text-[10px] text-primary-400/70 font-mono">{endpoint}</code>
+          <p className="text-xs text-bone/50 mt-0.5">{description}</p>
+          <code className="text-[10px] text-lucy/70 font-mono">{endpoint}</code>
         </div>
         {children}
         <button
           onClick={onRun}
           disabled={status === 'running'}
-          className="px-3 py-1.5 text-xs rounded-lg gradient-bg hover:opacity-90 disabled:opacity-50 text-white font-medium shrink-0"
+          className="px-3 py-1.5 text-xs bg-lucy text-void hover:opacity-90 disabled:opacity-50 font-medium shrink-0"
         >
           Run
         </button>
@@ -172,14 +172,14 @@ function Section({ title, description, num, children }: {
 }) {
   const [open, setOpen] = useState(true);
   return (
-    <div className="glass rounded-2xl p-5 mb-4">
+    <div className="bg-ink border-2 border-bone/30 p-5 mb-4">
       <button className="flex items-center gap-3 w-full text-left" onClick={() => setOpen(!open)}>
-        <span className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center text-white text-sm font-bold shrink-0">{num}</span>
+        <span className="w-8 h-8 bg-lucy text-void flex items-center justify-center text-sm font-bold shrink-0">{num}</span>
         <div className="flex-1">
-          <h2 className="text-lg font-semibold text-white">{title}</h2>
-          <p className="text-xs text-gray-500">{description}</p>
+          <h2 className="text-lg font-semibold text-bone">{title}</h2>
+          <p className="text-xs text-bone/50">{description}</p>
         </div>
-        <span className="text-gray-500 text-sm">{open ? '▼' : '▶'}</span>
+        <span className="text-bone/50 text-sm">{open ? '▼' : '▶'}</span>
       </button>
       {open && <div className="mt-4 ml-11">{children}</div>}
     </div>
@@ -247,15 +247,15 @@ export default function TestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-950 text-white">
+    <div className="min-h-screen bg-void text-bone">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-2">
           <div>
-            <h1 className="text-2xl font-bold gradient-text">Perso API Test Tool</h1>
-            <p className="text-sm text-gray-400 mt-1">Test all endpoints against the live API and compare with documentation</p>
+            <h1 className="text-2xl text-lucy font-display font-bold">Perso API Test Tool</h1>
+            <p className="text-sm text-bone/60 mt-1">Test all endpoints against the live API and compare with documentation</p>
           </div>
-          <button onClick={runAll} className="px-5 py-2.5 rounded-xl gradient-bg font-medium text-sm">
+          <button onClick={runAll} className="px-5 py-2.5 bg-lucy text-void font-medium text-sm">
             Run all
           </button>
         </div>
@@ -268,16 +268,16 @@ export default function TestPage() {
         </div>
 
         {/* Integration state */}
-        <div className="glass rounded-xl p-4 mb-4">
-          <p className="text-xs text-gray-400 mb-2">🔗 Integration state (previous test results feed into the next test)</p>
+        <div className="bg-ink border-2 border-bone/30 p-4 mb-4">
+          <p className="text-xs text-bone/60 mb-2">🔗 Integration state (previous test results feed into the next test)</p>
           <div className="flex flex-wrap gap-3 text-sm">
             {[
               { label: 'spaceSeq', value: spaceSeq, onChange: setSpaceSeq },
               { label: 'mediaSeq', value: mediaSeq, onChange: setMediaSeq },
               { label: 'projectSeq', value: projectSeq, onChange: setProjectSeq },
             ].map(({ label, value, onChange }) => (
-              <label key={label} className="flex items-center gap-2 text-gray-400">
-                <span className="text-[10px] bg-surface-800 px-1.5 py-0.5 rounded">{label}</span>
+              <label key={label} className="flex items-center gap-2 text-bone/60">
+                <span className="text-[10px] bg-ink border border-bone/30 px-1.5 py-0.5">{label}</span>
                 <input type="number" value={value ?? ''} onChange={e => onChange(e.target.value ? Number(e.target.value) : null)}
                   className={INTEGRATION_INPUT_CLASS} />
               </label>
@@ -376,7 +376,7 @@ export default function TestPage() {
                 setMediaSeq(r.seq);
                 return r;
               }); } }} />
-            {selectedFile && <span className="text-xs text-gray-500 shrink-0">{selectedFile.name}</span>}
+            {selectedFile && <span className="text-xs text-bone/50 shrink-0">{selectedFile.name}</span>}
           </TestRow>
 
           <TestRow
@@ -466,8 +466,8 @@ export default function TestPage() {
             }}
           >
             {progressLog.length > 0 && (
-              <div className="mt-2 bg-surface-900 rounded-lg p-2 max-h-24 overflow-auto w-full">
-                {progressLog.map((l, i) => <div key={i} className="text-[10px] text-gray-400 font-mono">{l}</div>)}
+              <div className="mt-2 bg-ink p-2 max-h-24 overflow-auto w-full">
+                {progressLog.map((l, i) => <div key={i} className="text-[10px] text-bone/60 font-mono">{l}</div>)}
               </div>
             )}
           </TestRow>
@@ -541,7 +541,7 @@ export default function TestPage() {
             }}
           >
             <input value={sentenceText} onChange={e => setSentenceText(e.target.value)}
-              className="w-40 bg-surface-900 border border-surface-700 rounded px-2 py-1 text-xs text-white shrink-0"
+              className="w-40 bg-ink border-2 border-bone/30 px-2 py-1 text-xs text-bone shrink-0"
               placeholder="Edited translation text" />
           </TestRow>
 
@@ -645,9 +645,9 @@ export default function TestPage() {
           ))}
 
           {videoUrl && (
-            <div className="mt-3 p-3 bg-surface-900 rounded-lg">
-              <p className="text-xs text-primary-400 mb-2">🎬 Dubbed Video Playback</p>
-              <video src={videoUrl} controls className="w-full max-w-lg rounded-lg bg-black" />
+            <div className="mt-3 p-3 bg-ink">
+              <p className="text-xs text-lucy mb-2">🎬 Dubbed Video Playback</p>
+              <video src={videoUrl} controls className="w-full max-w-lg bg-black" />
             </div>
           )}
         </Section>
@@ -897,10 +897,10 @@ export default function TestPage() {
           />
         </Section>
 
-        <div className="text-center text-xs text-gray-600 py-8">
+        <div className="text-center text-xs text-bone/30 py-8">
           AniVoice Perso API Test Tool — {allKeys.length} tests registered
           <br />
-          <span className="text-gray-700">This page is for testing only. To remove, delete TestPage.tsx and the /test route in App.tsx.</span>
+          <span className="text-bone/30">This page is for testing only. To remove, delete TestPage.tsx and the /test route in App.tsx.</span>
         </div>
       </div>
     </div>

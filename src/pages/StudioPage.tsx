@@ -56,14 +56,12 @@ export default function StudioPage() {
   const [targetLanguages, setTargetLanguages] = useState<string[]>([]);
   const [withLipSync, setWithLipSync] = useState(false);
 
-  // Processing
   const [isProcessing, setIsProcessing] = useState(false);
   const [processStage, setProcessStage] = useState<'uploading' | 'dubbing' | 're-dubbing' | 'lip-syncing' | 'done'>('uploading');
   const [progress, setProgress] = useState(0);
   const [remainingMinutes, setRemainingMinutes] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Result
   const [projectSeq, setProjectSeq] = useState<number | null>(null);
   const [spaceSeq, setSpaceSeq] = useState<number | null>(null);
   const [downloadLinks, setDownloadLinks] = useState<PersoDownloadLinks | null>(null);
@@ -72,20 +70,16 @@ export default function StudioPage() {
   const [savingSentence, setSavingSentence] = useState<number | null>(null);
   const [loadingProject, setLoadingProject] = useState(false);
 
-  // DB project tracking
   const [dbProjectId, setDbProjectId] = useState<number | null>(null);
 
-  // Publish
   const [tags, setTags] = useState<Tag[]>([]);
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
   const { copied: linkCopied, copy: copyToClipboard } = useClipboard();
 
-  // Store uploaded file info for use after polling
   const uploadedFileRef = useRef<{ seq: number; durationMs: number } | null>(null);
 
-  // Fetch tags on mount
   useEffect(() => { getTags().then(setTags).catch(() => {}); }, []);
 
   const projectParam = searchParams.get('project');
@@ -105,13 +99,11 @@ export default function StudioPage() {
 
     async function loadExistingProject() {
       try {
-        // Check progress
         const prog = await getProgress(pSeq, sSeq);
         const reason = (prog.progressReason || '').toUpperCase();
         const isComplete = reason === 'COMPLETED' || prog.progress >= 100;
 
         if (!isComplete && !prog.hasFailed) {
-          // Still processing — poll
           setIsProcessing(true);
           setProcessStage('dubbing');
           setProgress(prog.progress);
@@ -130,13 +122,11 @@ export default function StudioPage() {
           return;
         }
 
-        // Load script
         try {
           const script = await getScript(pSeq, sSeq);
           setSentences(script.sentences);
         } catch { /* script not ready */ }
 
-        // Load downloads
         try {
           const links = await getDownloadLinks(pSeq, sSeq);
           setDownloadLinks(links);
@@ -156,14 +146,11 @@ export default function StudioPage() {
     loadExistingProject();
   }, [projectParam, spaceParam, t]);
 
-  /* ── step indicator ── */
   const stepLabels: Record<Step, string> = {
     upload: t('common.upload'),
     settings: t('studio.selectLanguage'),
     result: t('studio.resultTitle'),
   };
-
-  /* ── handlers ── */
 
   function handleFileChange(file: File) {
     setSelectedFile(file);
@@ -184,7 +171,6 @@ export default function StudioPage() {
         throw new Error(t('studio.selectTargetLanguage'));
       }
 
-      // 1. Get user's space
       setProgress(PROGRESS_GET_SPACE);
       const spaces = await listSpaces();
       if (spaces.length === 0) {
@@ -193,7 +179,6 @@ export default function StudioPage() {
       const space = spaces[0];
       setSpaceSeq(space.spaceSeq);
 
-      // 2. Upload file
       setProgress(PROGRESS_UPLOAD_START);
       let uploadedFile;
       if (selectedFile) {
@@ -204,7 +189,6 @@ export default function StudioPage() {
       setProgress(PROGRESS_UPLOAD_DONE);
       uploadedFileRef.current = uploadedFile;
 
-      // 2.5. Credit guard — check balance before proceeding
       const requiredSeconds = computeDeductSeconds(uploadedFile.durationMs, targetLanguages.length);
       const currentCredits = useAuthStore.getState().user?.creditSeconds ?? 0;
       if (currentCredits < requiredSeconds) {
@@ -216,11 +200,9 @@ export default function StudioPage() {
         return;
       }
 
-      // 3. Ensure the queue exists before the first translation request
       setProgress(PROGRESS_QUEUE_ENSURED);
       await ensureSpaceQueue(space.spaceSeq);
 
-      // 4. Request translation (dubbing)
       setProcessStage('dubbing');
       setProgress(PROGRESS_TRANSLATION_REQUESTED);
       const projectIds = await requestTranslation(space.spaceSeq, {
@@ -239,7 +221,6 @@ export default function StudioPage() {
       }
       setProjectSeq(primaryProjectSeq);
 
-      // Create project record in DB
       const dbProject = await createProject({
         title: selectedFile?.name || t('studio.untitled'),
         originalFileName: selectedFile?.name,
@@ -251,11 +232,9 @@ export default function StudioPage() {
       });
       setDbProjectId(dbProject.id);
 
-      // Deduct credits upfront
       const deductResult = await deductCredits(dbProject.id, uploadedFile.durationMs, targetLanguages.length);
       useAuthStore.getState().setCreditSeconds(deductResult.remainingSeconds);
 
-      // 5. Poll progress (every 5 seconds)
       await pollProgress(primaryProjectSeq, space.spaceSeq, (p: PersoProgress) => {
         setProgress(computeDubbingProgress(p.progress));
         if (p.expectedRemainingTimeMinutes > 0) {
@@ -265,26 +244,19 @@ export default function StudioPage() {
 
       setProgress(PROGRESS_POLL_COMPLETE);
 
-      // 6. Fetch script for editing
       setProcessStage('done');
       setProgress(PROGRESS_SCRIPT_FETCHED);
       try {
         const script = await getScript(primaryProjectSeq, space.spaceSeq);
         setSentences(script.sentences);
-      } catch {
-        // Script may not be ready yet — ok to continue
-      }
+      } catch { }
 
-      // 7. Fetch download links
       let links: PersoDownloadLinks | null = null;
       try {
         links = await getDownloadLinks(primaryProjectSeq, space.spaceSeq);
         setDownloadLinks(links);
-      } catch {
-        // Downloads may not be available yet
-      }
+      } catch { }
 
-      // 8. Update DB project with completed status
       if (dbProject.id && links) {
         await updateProject(dbProject.id, {
           status: 'completed',
@@ -311,7 +283,6 @@ export default function StudioPage() {
     setSavingSentence(sentenceSeq);
     try {
       const newText = editingValues[sentenceSeq];
-      // Update translation text on server
       await translateSentence(projectSeq, sentenceSeq, newText);
 
       setSentences((prev) =>
@@ -325,7 +296,6 @@ export default function StudioPage() {
         return next;
       });
 
-      // Re-process translations and refresh download links
       if (spaceSeq) {
         setProcessStage('re-dubbing');
         setIsProcessing(true);
@@ -379,11 +349,9 @@ export default function StudioPage() {
       if (!lipSyncProjectSeq) {
         throw new Error(t('studio.noLipSyncProjectId'));
       }
-      // Poll lip sync project progress
       await pollProgress(lipSyncProjectSeq, spaceSeq, (p) => {
         setProgress(PROGRESS_LIP_SYNC_BASE + p.progress * PROGRESS_LIP_SYNC_SCALE);
       });
-      // Refresh download links
       const links = await getDownloadLinks(projectSeq, spaceSeq);
       setDownloadLinks(links);
       setIsProcessing(false);
@@ -458,11 +426,15 @@ export default function StudioPage() {
     setIsPublished(false);
   }
 
-  /* ── render ── */
-
   return (
-    <main className="min-h-screen bg-surface-950 text-white">
-      <div className="max-w-4xl mx-auto px-4 py-10 sm:py-16">
+    <main className="min-h-screen bg-void text-bone">
+      <div className="w-full bg-ink border-b-2 border-bone/10 px-6 md:px-12 py-2 flex items-center justify-between">
+        <span className="font-mono text-[11px] uppercase tracking-widest text-bone/40">
+          {selectedFile ? selectedFile.name : t('studio.uploadTitle')}
+        </span>
+        <span className="font-mono text-[11px] tracking-wider text-wire">00:00:00:00</span>
+      </div>
+      <div className="max-w-6xl mx-auto px-6 md:px-12 py-6 sm:py-8">
         <StepIndicator currentStep={step} labels={stepLabels} />
         {step === 'upload' && <UploadStep onFileChange={handleFileChange} />}
         {step === 'settings' && (
@@ -516,4 +488,3 @@ export default function StudioPage() {
     </main>
   );
 }
-

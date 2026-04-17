@@ -45,8 +45,9 @@ const CREDIT_PACKS = [
   { seconds: TIME_PACK_100_MIN_SECONDS, labelKey: 'pricing.timePack100', price: TIME_PACK_100_MIN_PRICE },
 ];
 
-const LANDING_SECTION_CLASS = "px-4 py-20 md:py-28 mx-auto";
-const SECTION_HEADING_CLASS = "text-3xl md:text-4xl font-bold text-center gradient-text";
+const STEP_SFX = ['ドン', 'バン', 'ズキュン'];
+const STEP_ACCENTS = ['text-lucy', 'text-wire', 'text-david'];
+const FEATURE_SFX = ['声', '語', '口', '書'];
 
 const SAMPLE_VIDEO_ORIGINAL = '/sample_original_ja.mp4';
 const SAMPLE_VIDEO_DUBBED = '/sample_dubbed_en.mp4';
@@ -83,7 +84,7 @@ function VideoPreviewBox({
 
   return (
     <div
-      className="relative rounded-xl overflow-hidden bg-surface-900 aspect-video group cursor-pointer"
+      className="relative overflow-hidden bg-ink aspect-video group cursor-pointer border-2 border-bone"
       onClick={handleToggle}
     >
       <video
@@ -95,16 +96,16 @@ function VideoPreviewBox({
         onEnded={() => setPlaying(false)}
       />
       {!playing && (
-        <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity">
-          <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-            <PlayIcon className="w-7 h-7 text-white ml-0.5" />
+        <div className="absolute inset-0 bg-void/50 flex items-center justify-center transition-opacity">
+          <div className="w-20 h-20 bg-bone flex items-center justify-center border-2 border-bone group-hover:bg-lucy group-hover:border-lucy transition-colors">
+            <PlayIcon className="w-8 h-8 text-void ml-0.5" />
           </div>
         </div>
       )}
-      <span className={`absolute top-3 left-3 ${badgeClass} text-xs text-white px-3 py-1 rounded-full font-medium`}>
+      <span className={`absolute top-0 left-0 ${badgeClass} font-display font-bold text-xs uppercase tracking-widest px-4 py-2 border-b-2 border-r-2 border-bone`}>
         {badgeLabel}
       </span>
-      <span className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-xs text-gray-300 px-3 py-1 rounded-full">
+      <span className="absolute bottom-0 right-0 bg-void font-mono text-[10px] uppercase tracking-widest text-bone/70 px-3 py-2 border-t-2 border-l-2 border-bone">
         {langLabel}
       </span>
     </div>
@@ -121,12 +122,12 @@ function FeatureCard({
   desc: string;
 }) {
   return (
-    <div className="glass rounded-2xl p-6 hover:scale-[1.03] transition-transform duration-300 group">
-      <div className="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-4 text-white group-hover:shadow-lg group-hover:shadow-primary-500/25 transition-shadow">
+    <div className="relative bg-ink border-2 border-bone p-6 group transition-transform duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:offset-lucy-sm">
+      <div className="w-12 h-12 bg-bone text-void flex items-center justify-center mb-6 border-2 border-bone group-hover:bg-david group-hover:border-david transition-colors">
         {icon}
       </div>
-      <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
-      <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+      <h3 className="font-display text-lg font-bold text-bone mb-2 leading-tight">{title}</h3>
+      <p className="text-bone/60 text-sm leading-relaxed">{desc}</p>
     </div>
   );
 }
@@ -144,18 +145,34 @@ function StepCard({
   icon: React.ReactNode;
   isLast: boolean;
 }) {
+  const sfx = STEP_SFX[num - 1] ?? '';
+  const accent = STEP_ACCENTS[num - 1] ?? 'text-lucy';
+
   return (
-    <div className="flex flex-col items-center text-center relative">
-      {/* Connecting line (hidden on last item and on mobile) */}
-      {!isLast && (
-        <div className="hidden md:block absolute top-7 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-px bg-gradient-to-r from-primary-500 to-accent-500 opacity-30" />
-      )}
-      <div className="w-14 h-14 rounded-full gradient-bg flex items-center justify-center text-white font-bold text-lg mb-4 relative z-10 shadow-lg shadow-primary-500/20">
-        {num}
+    <div className="relative bg-ink border-2 border-bone p-8 flex flex-col min-h-[320px] overflow-hidden">
+      {/* huge sound-effect typography */}
+      <span
+        aria-hidden
+        className={`absolute -top-6 -right-4 font-jp font-black text-[7rem] leading-none ${accent} opacity-90 select-none pointer-events-none`}
+        style={{ transform: 'rotate(-6deg)' }}
+      >
+        {sfx}
+      </span>
+      <div className="relative z-10 font-mono text-xs uppercase tracking-widest text-bone/50">
+        STEP / {String(num).padStart(2, '0')}
       </div>
-      <div className="text-primary-400 mb-3">{icon}</div>
-      <h3 className="text-white font-semibold text-lg mb-2">{title}</h3>
-      <p className="text-gray-400 text-sm max-w-xs leading-relaxed">{desc}</p>
+      <div className="relative z-10 mt-8 text-bone">{icon}</div>
+      <h3 className="relative z-10 mt-4 font-display font-bold text-2xl text-bone leading-tight">
+        {title}
+      </h3>
+      <p className="relative z-10 mt-3 text-bone/60 text-sm leading-relaxed max-w-xs">
+        {desc}
+      </p>
+      {!isLast && (
+        <div aria-hidden className="hidden md:block absolute top-1/2 -right-6 w-12 h-0.5 bg-bone z-20">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[10px] border-l-bone" />
+        </div>
+      )}
     </div>
   );
 }
@@ -168,17 +185,24 @@ function CreditPackCard({
   price: number;
 }) {
   return (
-    <div className="glass rounded-2xl p-6 flex flex-col items-center text-center hover:scale-[1.03] transition-transform duration-300">
-      <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
-        <ClockIcon className="w-6 h-6 text-primary-400" />
+    <div className="relative bg-ink border-2 border-bone p-8 flex flex-col text-left transition-transform duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:offset-david-sm">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 bg-bone text-void flex items-center justify-center">
+          <ClockIcon className="w-5 h-5" />
+        </div>
+        <span className="font-mono text-xs uppercase tracking-widest text-bone/50">PACK</span>
       </div>
-      <p className="text-2xl font-bold text-white mb-1">{label}</p>
-      <p className="text-3xl font-bold gradient-text mb-6">${price}</p>
+      <p className="font-display font-black text-3xl text-bone leading-none mb-2">{label}</p>
+      <div className="flex items-baseline gap-1 mb-8">
+        <span className="font-mono text-xs text-bone/60">USD</span>
+        <span className="font-display font-black text-5xl text-david leading-none">${price}</span>
+      </div>
       <Link
         to="/pricing"
-        className="mt-auto w-full text-center py-3 rounded-xl border border-surface-600 text-gray-300 font-medium hover:border-primary-500 hover:text-white transition-colors"
+        className="mt-auto inline-flex items-center justify-between border-2 border-bone text-bone font-display font-bold uppercase tracking-widest text-xs px-4 py-3 hover:bg-bone hover:text-void transition-colors"
       >
-        {label}
+        <span>{label}</span>
+        <span>→</span>
       </Link>
     </div>
   );
@@ -188,22 +212,29 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-surface-700/50">
+    <div className="border-t-2 border-bone last:border-b-2">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between py-5 text-left group"
+        className="w-full flex items-center justify-between py-6 px-4 md:px-6 text-left group hover:bg-ink transition-colors"
+        aria-expanded={open}
       >
-        <span className="text-white font-medium pr-4 group-hover:text-primary-400 transition-colors">
-          {question}
+        <span className="flex items-start gap-4 pr-4">
+          <span className="font-mono text-xs uppercase tracking-widest text-lucy mt-1.5">Q.</span>
+          <span className="font-display font-bold text-base md:text-lg text-bone leading-snug">
+            {question}
+          </span>
         </span>
-        <ChevronDownIcon className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+        <ChevronDownIcon className={`w-5 h-5 text-bone shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
       <div
         className={`overflow-hidden transition-all duration-300 ${
-          open ? 'max-h-40 pb-5' : 'max-h-0'
+          open ? 'max-h-60' : 'max-h-0'
         }`}
       >
-        <p className="text-gray-400 text-sm leading-relaxed">{answer}</p>
+        <div className="flex items-start gap-4 pl-4 md:pl-6 pr-10 pb-6 bg-ink">
+          <span className="font-mono text-xs uppercase tracking-widest text-david mt-0.5">A.</span>
+          <p className="text-bone/70 text-sm md:text-base leading-relaxed">{answer}</p>
+        </div>
       </div>
     </div>
   );
@@ -217,166 +248,398 @@ export default function LandingPage() {
   const { t } = useTranslation();
   usePageTitle('pageTitle.landing');
 
+  const heroLines = t('landing.heroTitle').split('\n');
+  const heroLine1 = heroLines[0] ?? '';
+  const heroLine2 = heroLines[1] ?? '';
+
   return (
-    <main className="min-h-screen bg-gray-950 text-gray-100 overflow-x-hidden">
-      {/* Decorative gradient orbs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-primary-600/8 blur-[120px]" />
-        <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] rounded-full bg-accent-600/6 blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full bg-primary-500/5 blur-[100px]" />
-      </div>
+    <main className="min-h-screen bg-void text-bone overflow-x-hidden font-body selection:bg-lucy selection:text-void">
+      {/* ============================================================ */}
+      {/*  HERO                                                        */}
+      {/* ============================================================ */}
+      <section className="relative overflow-hidden scanlines film-grain border-b-2 border-bone">
+        {/* Giant background katakana graffiti */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none select-none">
+          <span
+            className="absolute -left-4 top-[8%] font-jp font-black leading-none text-outline-bone opacity-[0.12]"
+            style={{ fontSize: 'clamp(120px, 28vw, 420px)' }}
+          >
+            ボイス
+          </span>
+          <span
+            className="absolute right-[-2vw] bottom-[-4vw] font-jp font-black leading-none text-lucy opacity-[0.10]"
+            style={{ fontSize: 'clamp(180px, 40vw, 640px)' }}
+          >
+            声
+          </span>
+          <span
+            className="absolute right-[6%] top-[18%] font-jp font-bold text-wire opacity-25 text-sm md:text-base tracking-[0.3em]"
+          >
+            ANI / VOICE / DUBBING
+          </span>
+        </div>
 
-      <div className="relative z-10">
-        {/* ============================================================ */}
-        {/*  HERO                                                        */}
-        {/* ============================================================ */}
-        <section className="px-4 pt-24 pb-20 md:pt-36 md:pb-32 max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold leading-tight mb-6 whitespace-pre-line gradient-text">
-              {t('landing.heroTitle')}
-            </h1>
-            <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-              {t('landing.heroSubtitle')}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/studio"
-                className="gradient-bg text-white font-semibold py-3.5 px-8 rounded-xl text-base hover:opacity-90 transition-opacity shadow-lg shadow-primary-500/25"
-              >
-                {t('landing.ctaPrimary')}
-              </Link>
-              <Link
-                to="/signup"
-                className="border border-surface-700 text-gray-300 font-semibold py-3.5 px-8 rounded-xl text-base hover:border-primary-500/50 hover:text-white transition-all"
-              >
-                {t('landing.ctaSecondary')}
-              </Link>
+        {/* Top meta strip */}
+        <div className="relative z-10 px-6 md:px-12 pt-24 md:pt-28 flex items-center justify-between font-mono text-[10px] md:text-xs uppercase tracking-[0.3em] text-bone/60">
+          <span className="flex items-center gap-2">
+            <span className="block w-2 h-2 bg-lucy" />
+            EP.01 / ANIVOICE
+          </span>
+          <span className="hidden md:inline">DUBBING — WITHOUT LOSING THE VOICE</span>
+          <span>2026 ——</span>
+        </div>
+
+        {/* Main headline */}
+        <div className="relative z-10 px-6 md:px-12 pt-12 md:pt-16 pb-20 md:pb-28">
+          <h1
+            className="font-display font-black leading-[0.88] tracking-[-0.03em] chromatic-hover whitespace-pre-line"
+            style={{ fontSize: 'clamp(48px, 11vw, 180px)' }}
+          >
+            <span className="block text-bone">{heroLine1}</span>
+            <span className="block text-lucy">{heroLine2}</span>
+          </h1>
+
+          <p className="mt-8 md:mt-10 max-w-xl text-base md:text-lg text-bone/70 leading-relaxed">
+            {t('landing.heroSubtitle')}
+          </p>
+
+          {/* CTAs */}
+          <div className="mt-10 flex flex-col sm:flex-row gap-4">
+            <Link
+              to="/studio"
+              className="inline-flex items-center justify-center gap-3 bg-david text-void font-display font-bold uppercase tracking-widest text-sm px-8 py-4 border-2 border-david hover:bg-void hover:text-david transition-colors"
+            >
+              <span>{t('landing.ctaPrimary')}</span>
+              <span aria-hidden>→</span>
+            </Link>
+            <Link
+              to="/signup"
+              className="inline-flex items-center justify-center gap-3 border-2 border-bone text-bone font-display font-bold uppercase tracking-widest text-sm px-8 py-4 hover:bg-bone hover:text-void transition-colors"
+            >
+              <span>{t('landing.ctaSecondary')}</span>
+              <span aria-hidden>▸</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Bottom meta strip */}
+        <div className="relative z-10 px-6 md:px-12 pb-10 flex items-end justify-between gap-6 font-mono text-[10px] md:text-xs uppercase tracking-[0.3em]">
+          <div className="flex items-center gap-3 text-bone/60">
+            <span className="block w-px h-8 bg-bone/40" />
+            <span>01 / SCROLL DOWN</span>
+          </div>
+          <span className="text-lucy">BEFORE × AFTER ↓</span>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  BEFORE / AFTER                                              */}
+      {/* ============================================================ */}
+      <section className="relative bg-void border-b-2 border-bone">
+        <div className="px-6 md:px-12 py-10 flex items-end justify-between border-b-2 border-bone">
+          <div>
+            <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
+              02 / DEMO
             </div>
+            <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
+              BEFORE <span className="text-lucy">×</span> AFTER
+            </h2>
+          </div>
+          <span
+            aria-hidden
+            className="hidden md:inline font-jp font-black text-bone/20 leading-none"
+            style={{ fontSize: 'clamp(60px, 8vw, 140px)' }}
+          >
+            比較
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="relative border-b-2 md:border-b-0 md:border-r-2 border-bone p-6 md:p-10 bg-void">
+            <div className="mb-4 flex items-center justify-between">
+              <span className="font-display font-black text-2xl text-bone">BEFORE</span>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-bone/50">
+                {t('landing.videoOriginalLang')}
+              </span>
+            </div>
+            <VideoPreviewBox
+              badgeLabel={t('landing.videoOriginal')}
+              badgeClass="bg-bone text-void"
+              langLabel={t('landing.videoOriginalLang')}
+              src={SAMPLE_VIDEO_ORIGINAL}
+            />
+            <span
+              aria-hidden
+              className="absolute right-4 bottom-2 font-jp font-black text-bone/10 text-6xl leading-none select-none"
+            >
+              原音
+            </span>
           </div>
 
-          {/* Video comparison */}
-          <div className="max-w-4xl mx-auto">
-            <div className="glass rounded-2xl p-4 md:p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <VideoPreviewBox
-                  badgeLabel={t('landing.videoOriginal')}
-                  badgeClass="bg-black/60 backdrop-blur-sm"
-                  langLabel={t('landing.videoOriginalLang')}
-                  src={SAMPLE_VIDEO_ORIGINAL}
-                />
-                <VideoPreviewBox
-                  badgeLabel={t('landing.videoDubbed')}
-                  badgeClass="gradient-bg"
-                  langLabel={t('landing.videoDubbedLang')}
-                  src={SAMPLE_VIDEO_DUBBED}
-                />
+          <div className="relative p-6 md:p-10 bg-ink">
+            <div className="mb-4 flex items-center justify-between">
+              <span className="font-display font-black text-2xl text-david">AFTER</span>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-bone/50">
+                {t('landing.videoDubbedLang')}
+              </span>
+            </div>
+            <VideoPreviewBox
+              badgeLabel={t('landing.videoDubbed')}
+              badgeClass="bg-lucy text-void"
+              langLabel={t('landing.videoDubbedLang')}
+              src={SAMPLE_VIDEO_DUBBED}
+            />
+            <span
+              aria-hidden
+              className="absolute right-4 bottom-2 font-jp font-black text-lucy/20 text-6xl leading-none select-none"
+            >
+              吹替
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  FEATURES                                                    */}
+      {/* ============================================================ */}
+      <section className="relative bg-ink border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
+        <div className="flex items-end justify-between mb-12 md:mb-16">
+          <div>
+            <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
+              03 / FEATURES
+            </div>
+            <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
+              왜 <span className="text-david">AniVoice</span>인가
+            </h2>
+          </div>
+          <span
+            aria-hidden
+            className="hidden md:inline font-jp font-black text-david/20 leading-none"
+            style={{ fontSize: 'clamp(60px, 7vw, 130px)' }}
+          >
+            機能
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {FEATURE_KEYS.map((f, i) => (
+            <div key={f.titleKey} className="relative">
+              <div className="absolute -top-3 left-4 z-10 bg-void border-2 border-bone px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-bone">
+                {String(i + 1).padStart(2, '0')}
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ============================================================ */}
-        {/*  FEATURES                                                    */}
-        {/* ============================================================ */}
-        <section className={`${LANDING_SECTION_CLASS} max-w-6xl`}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {FEATURE_KEYS.map((f) => (
+              <span
+                aria-hidden
+                className="absolute -top-8 right-2 z-10 font-jp font-black text-bone/20 text-5xl leading-none select-none pointer-events-none"
+              >
+                {FEATURE_SFX[i]}
+              </span>
               <FeatureCard
-                key={f.titleKey}
                 icon={FEATURE_ICONS[f.iconId]}
                 title={t(f.titleKey)}
                 desc={t(f.descKey)}
               />
-            ))}
-          </div>
-        </section>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        {/* ============================================================ */}
-        {/*  HOW IT WORKS                                                */}
-        {/* ============================================================ */}
-        <section className={`${LANDING_SECTION_CLASS} max-w-5xl`}>
-          <h2 className={`${SECTION_HEADING_CLASS} mb-4`}>
-            {t('landing.howItWorks')}
+      {/* ============================================================ */}
+      {/*  HOW IT WORKS — manga panels                                 */}
+      {/* ============================================================ */}
+      <section className="relative bg-void border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
+        <div className="flex items-end justify-between mb-12 md:mb-16">
+          <div>
+            <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
+              04 / HOW IT WORKS
+            </div>
+            <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
+              {t('landing.howItWorks')}
+            </h2>
+            <p className="mt-4 max-w-xl text-bone/60 text-sm md:text-base leading-relaxed">
+              {t('landing.heroSubtitle')}
+            </p>
+          </div>
+          <span
+            aria-hidden
+            className="hidden md:inline font-jp font-black text-lucy/20 leading-none"
+            style={{ fontSize: 'clamp(60px, 7vw, 130px)' }}
+          >
+            手順
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
+          {STEP_KEYS.map((s, i) => (
+            <StepCard
+              key={s.titleKey}
+              num={i + 1}
+              title={t(s.titleKey)}
+              desc={t(s.descKey)}
+              icon={STEP_ICONS[s.iconId]}
+              isLast={i === STEP_KEYS.length - 1}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  SUPPORTED LANGUAGES                                         */}
+      {/* ============================================================ */}
+      <section className="relative bg-ink border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
+        <div className="flex items-end justify-between mb-12 md:mb-16">
+          <div>
+            <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
+              05 / LANGUAGES
+            </div>
+            <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
+              {t('landing.supportedLangs')}
+            </h2>
+          </div>
+          <span
+            aria-hidden
+            className="hidden md:inline font-jp font-black text-wire/30 leading-none"
+            style={{ fontSize: 'clamp(60px, 7vw, 130px)' }}
+          >
+            言語
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-0 border-2 border-bone">
+          {SUPPORTED_LANGUAGES.map((lang, i) => (
+            <div
+              key={lang.key}
+              className={`relative group bg-void px-6 py-8 flex flex-col items-start gap-3 hover:bg-lucy hover:text-void transition-colors ${
+                i < SUPPORTED_LANGUAGES.length - 1 ? 'border-r-2 border-b-2 border-bone' : 'border-b-2 border-bone'
+              }`}
+            >
+              <span className="font-mono text-[10px] uppercase tracking-widest text-bone/40 group-hover:text-void/70">
+                {String(i + 1).padStart(2, '0')} / {lang.key.toUpperCase()}
+              </span>
+              <span className="text-4xl leading-none">{lang.flag}</span>
+              <span className="font-display font-bold text-sm text-bone group-hover:text-void">
+                {t(`languages.${lang.key}`)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  PRICING                                                     */}
+      {/* ============================================================ */}
+      <section className="relative bg-void border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
+        <div className="flex items-end justify-between mb-12 md:mb-16">
+          <div>
+            <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
+              06 / PRICING
+            </div>
+            <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
+              {t('pricing.title')}
+            </h2>
+            <p className="mt-4 max-w-xl text-bone/60 text-sm md:text-base leading-relaxed">
+              {t('pricing.creditOnlySubtitle', { price: CREDIT_PRICE_PER_MINUTE_USD })}
+            </p>
+          </div>
+          <span
+            aria-hidden
+            className="hidden md:inline font-jp font-black text-david/20 leading-none"
+            style={{ fontSize: 'clamp(60px, 7vw, 130px)' }}
+          >
+            料金
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {CREDIT_PACKS.map((pack) => (
+            <CreditPackCard
+              key={pack.seconds}
+              label={t(pack.labelKey)}
+              price={pack.price}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  FAQ                                                         */}
+      {/* ============================================================ */}
+      <section className="relative bg-void border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
+        <div className="flex items-end justify-between mb-12 md:mb-16">
+          <div>
+            <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
+              07 / FAQ
+            </div>
+            <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
+              {t('landing.faq')}
+            </h2>
+          </div>
+          <span
+            aria-hidden
+            className="hidden md:inline font-jp font-black text-lucy/20 leading-none"
+            style={{ fontSize: 'clamp(60px, 7vw, 130px)' }}
+          >
+            質問
+          </span>
+        </div>
+
+        <div className="max-w-4xl">
+          {FAQ_KEYS.map((item, i) => (
+            <FAQItem key={i} question={t(item.qKey)} answer={t(item.aKey)} />
+          ))}
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  CTA — full-bleed lucy block                                 */}
+      {/* ============================================================ */}
+      <section className="relative bg-lucy text-void overflow-hidden border-b-2 border-bone">
+        <span
+          aria-hidden
+          className="absolute right-[-4vw] top-[-8vw] font-jp font-black text-void/15 leading-none select-none pointer-events-none"
+          style={{ fontSize: 'clamp(240px, 36vw, 560px)' }}
+        >
+          吹替
+        </span>
+
+        <div className="relative z-10 px-6 md:px-12 py-24 md:py-32">
+          <div className="font-mono text-xs uppercase tracking-[0.3em] text-void/70 mb-6">
+            08 / START NOW
+          </div>
+          <h2
+            className="font-display font-black leading-[0.9] tracking-[-0.03em] max-w-4xl"
+            style={{ fontSize: 'clamp(44px, 9vw, 140px)' }}
+          >
+            목소리를 <br />
+            <span className="text-void">입히다.</span>
           </h2>
-          <p className="text-gray-400 text-center mb-16 max-w-lg mx-auto">
-            {t('landing.heroSubtitle')}
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
-            {STEP_KEYS.map((s, i) => (
-              <StepCard
-                key={s.titleKey}
-                num={i + 1}
-                title={t(s.titleKey)}
-                desc={t(s.descKey)}
-                icon={STEP_ICONS[s.iconId]}
-                isLast={i === STEP_KEYS.length - 1}
-              />
-            ))}
+          <div className="mt-12 flex flex-col sm:flex-row gap-4">
+            <Link
+              to="/studio"
+              className="inline-flex items-center justify-center gap-3 bg-void text-bone font-display font-bold uppercase tracking-widest text-sm px-10 py-5 border-2 border-void hover:bg-bone hover:text-void transition-colors"
+            >
+              <span>{t('landing.ctaPrimary')}</span>
+              <span aria-hidden>→</span>
+            </Link>
+            <Link
+              to="/pricing"
+              className="inline-flex items-center justify-center gap-3 border-2 border-void text-void font-display font-bold uppercase tracking-widest text-sm px-10 py-5 hover:bg-void hover:text-bone transition-colors"
+            >
+              <span>{t('common.pricing')}</span>
+              <span aria-hidden>▸</span>
+            </Link>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ============================================================ */}
-        {/*  SUPPORTED LANGUAGES                                         */}
-        {/* ============================================================ */}
-        <section className={`${LANDING_SECTION_CLASS} max-w-5xl`}>
-          <h2 className={`${SECTION_HEADING_CLASS} mb-14`}>
-            {t('landing.supportedLangs')}
-          </h2>
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-            {SUPPORTED_LANGUAGES.map((lang) => (
-              <div
-                key={lang.key}
-                className="glass rounded-2xl px-6 py-5 flex flex-col items-center gap-3 min-w-[100px] hover:scale-105 transition-transform duration-200"
-              >
-                <span className="text-4xl">{lang.flag}</span>
-                <span className="text-sm font-medium text-gray-300">
-                  {t(`languages.${lang.key}`)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ============================================================ */}
-        {/*  PRICING                                                     */}
-        {/* ============================================================ */}
-        <section className={`${LANDING_SECTION_CLASS} max-w-4xl`}>
-          <h2 className={`${SECTION_HEADING_CLASS} mb-4`}>
-            {t('pricing.title')}
-          </h2>
-          <p className="text-gray-400 text-center mb-14 max-w-lg mx-auto">
-            {t('pricing.creditOnlySubtitle', { price: CREDIT_PRICE_PER_MINUTE_USD })}
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {CREDIT_PACKS.map((pack) => (
-              <CreditPackCard
-                key={pack.seconds}
-                label={t(pack.labelKey)}
-                price={pack.price}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* ============================================================ */}
-        {/*  FAQ                                                         */}
-        {/* ============================================================ */}
-        <section className={`${LANDING_SECTION_CLASS} max-w-3xl`}>
-          <h2 className={`${SECTION_HEADING_CLASS} mb-14`}>
-            {t('landing.faq')}
-          </h2>
-          <div className="glass rounded-2xl p-6 md:p-8">
-            {FAQ_KEYS.map((item, i) => (
-              <FAQItem key={i} question={t(item.qKey)} answer={t(item.aKey)} />
-            ))}
-          </div>
-        </section>
-
-        {/* Footer note */}
-        <footer className="px-4 py-10 text-center">
-          <p className="text-gray-500 text-sm">{t('landing.copyright')}</p>
-        </footer>
-      </div>
+      {/* Footer note */}
+      <footer className="bg-void px-6 md:px-12 py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/50">
+          {t('landing.copyright')}
+        </p>
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-bone/40">
+          ANIVOICE / 2026 / TRIGGER-EDITION
+        </span>
+      </footer>
     </main>
   );
 }

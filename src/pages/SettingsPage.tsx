@@ -33,7 +33,7 @@ function getTxTypeKey(type: string): string {
   return 'settings.txTypeUnknown';
 }
 
-const TABLE_HEADER_CLASS = 'text-left text-sm font-medium text-gray-400 pb-3';
+const TABLE_HEADER_CLASS = 'text-left font-mono text-xs uppercase tracking-widest text-bone/50 pb-3';
 
 const LANGUAGE_OPTIONS: { code: 'ko' | 'en' | 'ja' | 'zh'; emoji: string; label: string; subtitleKey: string }[] = [
   { code: 'ko', emoji: '🇰🇷', label: '한국어', subtitleKey: 'settings.langKoreanSub' },
@@ -69,24 +69,28 @@ export default function SettingsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-surface-950 pt-24 pb-16 px-4">
+    <main className="min-h-screen bg-void pt-24 pb-16 px-4">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
-        <h1 className="text-3xl font-bold gradient-text mb-2">
-          {t('settings.title')}
-        </h1>
-        <p className="text-gray-400 mb-8">{t('settings.subtitle')}</p>
+        <div className="relative mb-10">
+          <span className="absolute -top-6 -left-2 font-jp text-[100px] leading-none text-bone/[0.03] select-none pointer-events-none" aria-hidden="true">個人</span>
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-bone/40 mb-1">RUNNER PROFILE</p>
+          <h1 className="text-4xl sm:text-5xl font-display font-black text-david relative">
+            {user?.displayName || 'UNKNOWN'}
+          </h1>
+          <p className="font-mono text-xs text-bone/30 mt-2">{user?.email}</p>
+        </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-8 p-1 bg-surface-900 rounded-xl overflow-x-auto">
+        <div className="flex mb-8 border-b border-bone/20 overflow-x-auto">
           {SETTINGS_TABS.map((tab) => (
             <button
               key={tab.key}
               onClick={() => handleTabChange(tab.key)}
-              className={`flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+              className={`flex-1 px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest transition-all whitespace-nowrap ${
                 activeTab === tab.key
-                  ? 'gradient-bg text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white hover:bg-surface-800'
+                  ? 'border-b-2 border-lucy bg-transparent text-lucy'
+                  : 'text-bone/40 hover:text-bone border-b-2 border-transparent'
               }`}
             >
               {t(tab.i18nKey)}
@@ -111,27 +115,28 @@ export default function SettingsPage() {
 
         {/* Billing Tab */}
         {activeTab === 'billing' && (
-          <div className="glass rounded-2xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">
+          <div className="relative bg-ink border-2 border-bone/30 p-6 corner-marks">
+            <span className="absolute -top-3 left-4 font-mono text-[10px] uppercase tracking-[0.3em] text-lucy bg-void px-2" aria-hidden="true">BILLING</span>
+            <h2 className="text-xl font-display font-semibold text-bone mb-6">
               {t('settings.paymentHistory')}
             </h2>
 
             {txLoading ? (
-              <p className="text-gray-400 text-sm py-8 text-center">{t('settings.loadingTransactions')}</p>
+              <p className="text-bone/60 text-sm py-8 text-center">{t('settings.loadingTransactions')}</p>
             ) : transactions.length === 0 ? (
-              <p className="text-gray-400 text-sm py-8 text-center">{t('settings.noTransactions')}</p>
+              <p className="text-bone/60 text-sm py-8 text-center">{t('settings.noTransactions')}</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-surface-700">
-                      <th className={`${TABLE_HEADER_CLASS} pr-4`}>
+                    <tr className="border-b border-bone/30">
+                      <th className={`${TABLE_HEADER_CLASS} pr-4 border-r border-bone/10`}>
                         {t('settings.date')}
                       </th>
-                      <th className={`${TABLE_HEADER_CLASS} pr-4`}>
+                      <th className={`${TABLE_HEADER_CLASS} pr-4 border-r border-bone/10`}>
                         {t('settings.description')}
                       </th>
-                      <th className={`${TABLE_HEADER_CLASS} pr-4`}>
+                      <th className={`${TABLE_HEADER_CLASS} pr-4 border-r border-bone/10`}>
                         {t('settings.amount')}
                       </th>
                       <th className={TABLE_HEADER_CLASS}>
@@ -143,19 +148,20 @@ export default function SettingsPage() {
                     {transactions.map((tx) => (
                       <tr
                         key={tx.id}
-                        className="border-b border-surface-800 last:border-0"
+                        className="group relative border-b border-bone/20 last:border-0 hover:bg-void/30 transition-colors"
                       >
-                        <td className="py-4 pr-4 text-sm text-gray-300">
+                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-lucy opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <td className="py-4 pr-4 text-sm text-bone/80 border-r border-bone/10">
                           {tx.createdAt.slice(0, 10)}
                         </td>
-                        <td className="py-4 pr-4 text-sm text-white">
+                        <td className="py-4 pr-4 text-sm text-bone border-r border-bone/10">
                           {t(getTxTypeKey(tx.type))}
                         </td>
-                        <td className={`py-4 pr-4 text-sm font-medium ${tx.amountSeconds > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        <td className={`py-4 pr-4 text-sm font-medium border-r border-bone/10 ${tx.amountSeconds > 0 ? 'text-green-400' : 'text-red-400'}`}>
                           {formatTxAmount(tx.amountSeconds)}
                         </td>
                         <td className="py-4">
-                          <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400">
+                          <span className="font-mono text-[10px] uppercase px-2 py-0.5 bg-green-500/20 text-green-400">
                             {t('settings.paid')}
                           </span>
                         </td>
@@ -170,11 +176,12 @@ export default function SettingsPage() {
 
         {/* Language Tab */}
         {activeTab === 'language' && (
-          <div className="glass rounded-2xl p-6 space-y-4">
-            <h2 className="text-xl font-semibold text-white mb-2">
+          <div className="relative bg-ink border-2 border-bone/30 p-6 space-y-4 corner-marks">
+            <span className="absolute -top-3 left-4 font-mono text-[10px] uppercase tracking-[0.3em] text-lucy bg-void px-2" aria-hidden="true">LANG</span>
+            <h2 className="text-xl font-display font-semibold text-bone mb-2">
               {t('settings.selectLanguage')}
             </h2>
-            <p className="text-sm text-gray-400 mb-6">
+            <p className="text-sm font-mono text-bone/60 mb-6">
               {t('settings.languageHint')}
             </p>
 
@@ -183,36 +190,40 @@ export default function SettingsPage() {
                 <button
                   key={opt.code}
                   onClick={() => handleLanguageChange(opt.code)}
-                  className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all ${
+                  className={`w-full flex items-center gap-4 p-4 border-2 transition-all ${
                     language === opt.code
-                      ? 'border-primary-500 bg-primary-500/10'
-                      : 'border-surface-700 bg-surface-900 hover:border-surface-600'
+                      ? 'border-lucy bg-lucy/10 corner-marks offset-lucy-sm'
+                      : 'border-bone/20 bg-ink hover:border-bone/30'
                   }`}
                 >
                   <span className="text-2xl">{opt.emoji}</span>
                   <div className="text-left">
-                    <p className="text-white font-medium">{opt.label}</p>
-                    <p className="text-sm text-gray-400">{t(opt.subtitleKey)}</p>
+                    <p className="text-bone font-medium">{opt.label}</p>
+                    <p className="text-sm text-bone/60">{t(opt.subtitleKey)}</p>
                   </div>
                   {language === opt.code && (
-                    <CheckmarkIcon className="w-5 h-5 text-primary-400 ml-auto" />
+                    <CheckmarkIcon className="w-5 h-5 text-lucy ml-auto" />
                   )}
                 </button>
               ))}
             </div>
           </div>
         )}
-        {/* Logout */}
-        <div className="mt-8 pt-8 border-t border-surface-800">
-          <button
-            onClick={async () => {
-              await signOut();
-              navigate('/');
-            }}
-            className="px-6 py-3 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors text-sm font-medium"
-          >
-            {t('common.logout')}
-          </button>
+        {/* Logout — DANGER ZONE */}
+        <div className="mt-10 pt-8 border-t-2 border-rebecca/30">
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-rebecca/60 mb-4">DANGER ZONE</p>
+          <div className="bg-rebecca/5 border-2 border-rebecca/30 p-6">
+            <p className="text-sm text-bone/60 mb-4">{t('settings.logoutDescription', t('common.logout'))}</p>
+            <button
+              onClick={async () => {
+                await signOut();
+                navigate('/');
+              }}
+              className="px-6 py-3 border-2 border-rebecca text-rebecca font-mono text-sm uppercase tracking-widest hover:bg-rebecca hover:text-void transition-colors flicker-on-hover"
+            >
+              {t('common.logout')}
+            </button>
+          </div>
         </div>
       </div>
     </main>
