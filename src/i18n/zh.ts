@@ -160,6 +160,7 @@ export default {
     linkCopied: '已复制！',
     autoDetect: '自动检测（Auto）',
     publishTitle: '发布',
+    unpublishTitle: '取消发布',
     publishedTitle: '✅ 已发布',
     noWorkspaceError: '找不到工作区，请先在 Perso.ai 创建空间。',
     noFileError: '未选择文件',

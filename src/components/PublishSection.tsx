@@ -11,6 +11,7 @@ interface PublishSectionProps {
   dbProjectId: number | null;
   linkCopied: boolean;
   onPublish: () => void;
+  onUnpublish: () => void;
   onCopyShareLink: () => void;
 }
 
@@ -23,6 +24,7 @@ export function PublishSection({
   dbProjectId,
   linkCopied,
   onPublish,
+  onUnpublish,
   onCopyShareLink,
 }: PublishSectionProps) {
   const { t } = useTranslation();
@@ -43,6 +45,14 @@ export function PublishSection({
           >
             <LinkIcon />
             {linkCopied ? t('studio.linkCopied') : t('studio.copyShareLink')}
+          </button>
+          <button
+            type="button"
+            onClick={onUnpublish}
+            disabled={!dbProjectId || isPublishing}
+            className="w-full border-2 border-rebecca/40 text-rebecca font-mono uppercase py-2 text-[11px] hover:bg-rebecca/10 transition-colors disabled:opacity-40"
+          >
+            {isPublishing ? <SpinnerIcon className="w-4 h-4 mx-auto" /> : t('studio.unpublishTitle')}
           </button>
         </div>
       ) : (

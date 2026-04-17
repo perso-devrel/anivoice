@@ -160,6 +160,7 @@ export default {
     linkCopied: '복사됨!',
     autoDetect: '자동 감지 (Auto)',
     publishTitle: '공개하기',
+    unpublishTitle: '비공개로 전환',
     publishedTitle: '✅ 공개됨',
     noWorkspaceError: '워크스페이스를 찾을 수 없습니다. Perso.ai에서 스페이스를 먼저 생성해 주세요.',
     noFileError: '파일이 선택되지 않았습니다',

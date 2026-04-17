@@ -92,6 +92,13 @@ export async function listMyProjects(limit = 20, offset = 0): Promise<{ projects
   return data;
 }
 
+export async function getProjectByPersoSeq(persoProjectSeq: number, persoSpaceSeq: number): Promise<DbProject | null> {
+  const { data } = await api.get('/projects', {
+    params: { persoProjectSeq, persoSpaceSeq, limit: 1 },
+  });
+  return data.projects?.[0] ?? null;
+}
+
 export async function createProject(params: {
   title: string;
   originalFileName?: string;
