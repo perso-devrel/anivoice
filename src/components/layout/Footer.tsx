@@ -1,29 +1,31 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-const FOOTER_LINK_CLASS = 'block text-sm text-gray-500 hover:text-gray-300';
-const FOOTER_HEADING_CLASS = 'text-sm font-semibold text-gray-300 mb-3';
-const FOOTER_SECTION_CLASS = 'space-y-2';
+const FOOTER_LINK_CLASS = 'block font-mono text-xs uppercase tracking-[0.1em] text-bone/50 hover:text-bone transition-colors';
+const FOOTER_HEADING_CLASS = 'font-mono text-[10px] uppercase tracking-[0.3em] text-bone/80 mb-4';
+const FOOTER_SECTION_CLASS = 'space-y-3';
 
 export default function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="border-t border-surface-800 bg-surface-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="border-t-2 border-bone bg-ink">
+      <div className="px-6 md:px-12 py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+          {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center text-white font-bold text-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 bg-lucy text-void flex items-center justify-center font-display font-black text-sm">
                 A
               </div>
-              <span className="text-lg font-bold gradient-text">AniVoice</span>
+              <span className="font-display font-bold text-lg text-bone">AniVoice</span>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-bone/50 leading-relaxed max-w-xs">
               {t('common.tagline')}
             </p>
           </div>
 
+          {/* Product */}
           <div>
             <h4 className={FOOTER_HEADING_CLASS}>{t('footer.product')}</h4>
             <div className={FOOTER_SECTION_CLASS}>
@@ -33,6 +35,7 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* Support */}
           <div>
             <h4 className={FOOTER_HEADING_CLASS}>{t('footer.support')}</h4>
             <div className={FOOTER_SECTION_CLASS}>
@@ -41,6 +44,7 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* Legal */}
           <div>
             <h4 className={FOOTER_HEADING_CLASS}>{t('footer.legal')}</h4>
             <div className={FOOTER_SECTION_CLASS}>
@@ -51,11 +55,12 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-surface-800 text-center">
-          <p className="text-xs text-gray-600">
+        {/* Bottom strip */}
+        <div className="mt-12 pt-8 border-t-2 border-bone/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/40">
             {t('landing.copyright')}
           </p>
-          <p className="text-xs text-gray-700 mt-2">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/30">
             {t('footer.allRights')}
           </p>
         </div>
