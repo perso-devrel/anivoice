@@ -4,10 +4,10 @@ import type { CreditHistoryDay } from '../services/anivoiceApi';
 import { formatChartDay } from '../utils/format';
 
 const CHART_MARGIN = { top: 4, right: 8, bottom: 0, left: 0 };
-const AXIS_TICK_STYLE = { fill: '#6b7280', fontSize: 11 };
-const TOOLTIP_CONTENT_STYLE = { background: '#1e1e2e', border: '1px solid #333', borderRadius: 8, fontSize: 12 };
-const TOOLTIP_LABEL_STYLE = { color: '#9ca3af' };
-const TOOLTIP_ITEM_STYLE = { color: '#fb923c' };
+const AXIS_TICK_STYLE = { fill: '#F5F0E680', fontSize: 11 };
+const TOOLTIP_CONTENT_STYLE = { background: '#1A1A1A', border: '2px solid #F5F0E6', borderRadius: 0, fontSize: 12 };
+const TOOLTIP_LABEL_STYLE = { color: '#F5F0E6' };
+const TOOLTIP_ITEM_STYLE = { color: '#FF4FA3' };
 
 function formatTooltipLabel(label: unknown): string {
   return String(label);
@@ -18,7 +18,7 @@ export default function UsageChart({ data }: { data: CreditHistoryDay[] }) {
 
   if (data.length === 0) {
     return (
-      <p className="text-sm text-gray-500 text-center py-8">
+      <p className="text-sm text-bone/50 text-center py-8">
         {t('dashboard.noUsageData')}
       </p>
     );
@@ -27,7 +27,7 @@ export default function UsageChart({ data }: { data: CreditHistoryDay[] }) {
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data} margin={CHART_MARGIN}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3a" vertical={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke="#F5F0E630" vertical={false} />
         <XAxis
           dataKey="day"
           tickFormatter={formatChartDay}
@@ -48,7 +48,7 @@ export default function UsageChart({ data }: { data: CreditHistoryDay[] }) {
           formatter={(value) => [`${value}s`, t('dashboard.usageSeconds')]}
           labelFormatter={formatTooltipLabel}
         />
-        <Bar dataKey="usedSeconds" fill="#f97316" radius={[4, 4, 0, 0]} maxBarSize={32} />
+        <Bar dataKey="usedSeconds" fill="#FF4FA3" radius={[4, 4, 0, 0]} maxBarSize={32} />
       </BarChart>
     </ResponsiveContainer>
   );

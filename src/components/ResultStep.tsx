@@ -31,7 +31,7 @@ function getFlowType(stage: ProcessStage): string {
 }
 
 const RESULT_CENTER_CLASS = 'max-w-lg mx-auto text-center py-12';
-const RESULT_MUTED_TEXT = 'text-sm text-surface-200/60';
+const RESULT_MUTED_TEXT = 'text-sm text-bone/60';
 
 const DOWNLOAD_BUTTONS = [
   { i18nKey: 'studio.downloadVideo', type: 'video' },
@@ -121,7 +121,7 @@ export function ResultStep({
   if (loadingProject) {
     return (
       <div className={`${RESULT_CENTER_CLASS} space-y-4`}>
-        <LoadingSpinner className="w-10 h-10 mx-auto border-primary-400" />
+        <LoadingSpinner className="w-10 h-10 mx-auto border-lucy" />
         <p className={RESULT_MUTED_TEXT}>{t('studio.loadingProject')}</p>
       </div>
     );
@@ -134,29 +134,34 @@ export function ResultStep({
   if (isProcessing) {
     return (
       <div className={`${RESULT_CENTER_CLASS} space-y-8`}>
-        <h2 className="text-2xl font-bold gradient-text">{t('studio.processing')}</h2>
+        <h2 className="text-2xl text-bone font-display font-bold">{t('studio.processing')}</h2>
 
-        <div className="w-full bg-surface-800 rounded-full h-2 overflow-hidden">
-          <div
-            className="h-full gradient-bg rounded-full transition-all duration-700 ease-out"
-            style={{ width: `${Math.min(progress, 100)}%` }}
-          />
+        <div className="space-y-2">
+          <span className="font-mono uppercase tracking-widest text-bone/40 text-sm">PROCESSING...</span>
+          <div className="flex items-center gap-4">
+            <div className="flex-1 w-full bg-bone/10 h-2 overflow-hidden">
+              <div
+                className="h-full bg-lucy transition-all duration-700 ease-out"
+                style={{ width: `${Math.min(progress, 100)}%` }}
+              />
+            </div>
+            <span className="font-mono text-lg text-bone">{Math.round(progress)}%</span>
+          </div>
         </div>
 
         <p className={RESULT_MUTED_TEXT}>
-          {Math.round(progress)}%
           {remainingMinutes !== null && remainingMinutes > 0 && (
-            <span className="ml-2 text-surface-200/40">
+            <span className="text-bone/40">
               {t('studio.remainingTime', { minutes: remainingMinutes })}
             </span>
           )}
         </p>
 
-        <div className="flex justify-between text-xs text-surface-200/50">
+        <div className="flex justify-between text-bone/50">
           {flowStages.map(({ key, i18nKey }, i) => (
-            <span key={key} className={`transition-colors ${i <= currentStageIdx ? 'text-primary-400 font-medium' : ''}`}>
+            <span key={key} className={`font-mono uppercase text-[10px] tracking-wider transition-colors ${i <= currentStageIdx ? 'text-lucy font-medium' : ''}`}>
               {i <= currentStageIdx && (
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary-400 mr-1.5 align-middle animate-pulse" />
+                <span className="inline-block w-1.5 h-1.5 bg-lucy mr-1.5 align-middle animate-pulse" />
               )}
               {t(i18nKey)}
             </span>
@@ -169,23 +174,23 @@ export function ResultStep({
   if (error) {
     return (
       <div className={`${RESULT_CENTER_CLASS} space-y-4`}>
-        <div className="w-16 h-16 mx-auto rounded-full bg-red-500/10 flex items-center justify-center">
-          <AlertCircleIcon className="w-8 h-8 text-red-400" />
+        <div className="w-16 h-16 mx-auto bg-rebecca/10 flex items-center justify-center">
+          <AlertCircleIcon className="w-8 h-8 text-rebecca" />
         </div>
-        <h2 className="text-xl font-bold text-red-400">{t('common.error')}</h2>
+        <h2 className="font-mono uppercase tracking-wider text-xl font-bold text-rebecca">ERROR</h2>
         <p className={`${RESULT_MUTED_TEXT} break-words`}>{error}</p>
         <div className="flex gap-3 justify-center">
           <button
             type="button"
             onClick={onGoBack}
-            className="px-4 py-2 rounded-lg border border-surface-700 text-sm text-surface-200/80 hover:text-white transition-colors"
+            className="px-4 py-2 border-2 border-bone/30 text-sm text-bone/80 hover:text-bone transition-colors"
           >
             {t('common.cancel')}
           </button>
           <button
             type="button"
             onClick={onRetry}
-            className="gradient-bg px-4 py-2 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity"
+            className="bg-lucy text-void px-4 py-2 font-mono uppercase text-sm font-medium hover:opacity-90 transition-opacity"
           >
             {t('common.retry')}
           </button>
@@ -196,20 +201,30 @@ export function ResultStep({
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <h2 className="text-2xl font-bold gradient-text text-center mb-2">{t('studio.resultTitle')}</h2>
+      <h2 className="text-2xl text-bone font-display font-bold text-center mb-2">{t('studio.resultTitle')}</h2>
 
-      <div className="glass rounded-2xl overflow-hidden">
+      <div className="relative bg-ink border-2 border-bone/30 overflow-hidden">
+        {/* Corner crop markers */}
+        <span className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-bone/30 pointer-events-none z-10" />
+        <span className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-bone/30 pointer-events-none z-10" />
+        <span className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-bone/30 pointer-events-none z-10" />
+        <span className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-bone/30 pointer-events-none z-10" />
+
         {downloadLinks?.videoFile?.videoDownloadLink ? (
-          <video
-            src={resolvePersoFileUrl(downloadLinks.videoFile.videoDownloadLink)}
-            controls
-            className="w-full aspect-video bg-black"
-          />
+          <div className="relative">
+            <video
+              src={resolvePersoFileUrl(downloadLinks.videoFile.videoDownloadLink)}
+              controls
+              className="w-full aspect-video bg-black"
+            />
+            <div className="absolute inset-0 scanlines pointer-events-none" />
+          </div>
         ) : (
           <div className="relative bg-black aspect-video flex items-center justify-center">
-            <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm">
-              <PlayIcon className="w-8 h-8 text-white ml-1" />
+            <div className="w-16 h-16 bg-bone/10 flex items-center justify-center">
+              <PlayIcon className="w-8 h-8 text-bone ml-1" />
             </div>
+            <div className="absolute inset-0 scanlines pointer-events-none" />
           </div>
         )}
       </div>
@@ -221,7 +236,7 @@ export function ResultStep({
             type="button"
             onClick={() => onDownload(type)}
             disabled={!isDownloadAvailable(type, downloadLinks)}
-            className="glass rounded-xl px-4 py-3 flex items-center justify-center gap-2 text-sm text-surface-200/80 hover:text-white hover:border-primary-500/40 transition-colors disabled:opacity-30"
+            className="bg-ink border-2 border-bone/30 px-4 py-3 flex items-center justify-center gap-2 font-mono uppercase text-[11px] tracking-wider text-bone/80 hover:text-bone hover:border-bone transition-colors disabled:opacity-30"
           >
             <DownloadIcon className="w-4 h-4" />
             {t(i18nKey)}
@@ -233,7 +248,7 @@ export function ResultStep({
         <button
           type="button"
           onClick={onRequestLipSync}
-          className="w-full glass rounded-xl px-4 py-3 text-sm text-accent-400 hover:text-white hover:border-accent-500/40 transition-colors"
+          className="w-full bg-ink border-2 border-bone/30 px-4 py-3 font-mono uppercase text-sm text-wire hover:text-bone transition-colors"
         >
           {t('studio.progressLipSync')}
         </button>
@@ -264,7 +279,7 @@ export function ResultStep({
           type="button"
           onClick={onApplyEdits}
           disabled={isProcessing}
-          className="w-full gradient-bg py-3 rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full bg-david text-void font-mono font-bold uppercase tracking-widest border-2 border-david py-3 text-base hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {t('studio.applyEdits')}
         </button>
@@ -274,7 +289,7 @@ export function ResultStep({
         <button
           type="button"
           onClick={onReset}
-          className="text-sm text-primary-400 hover:text-primary-300 transition-colors"
+          className="font-mono uppercase text-[11px] text-lucy hover:text-david transition-colors"
         >
           + {t('dashboard.newProject')}
         </button>

@@ -28,8 +28,9 @@ export function PublishSection({
   const { t } = useTranslation();
 
   return (
-    <div className="glass rounded-2xl p-5 space-y-4">
-      <h3 className="text-base font-semibold text-surface-200/90">
+    <div className="relative bg-ink border-2 border-bone/30 p-5 space-y-4">
+      <span className="absolute -top-3 left-4 font-mono text-[10px] uppercase tracking-[0.3em] text-bone/30 bg-ink px-2">PUBLISH</span>
+      <h3 className="font-mono uppercase tracking-widest text-sm text-bone/90">
         {isPublished ? t('studio.publishedTitle') : t('studio.publishTitle')}
       </h3>
       {isPublished ? (
@@ -38,7 +39,7 @@ export function PublishSection({
           <button
             type="button"
             onClick={onCopyShareLink}
-            className="w-full glass rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 text-sm text-surface-200/80 hover:text-white hover:border-primary-500/40 transition-colors"
+            className="w-full bg-ink border-2 border-bone/30 px-4 py-2.5 flex items-center justify-center gap-2 font-mono uppercase text-[11px] text-bone/80 hover:text-bone transition-colors"
           >
             <LinkIcon />
             {linkCopied ? t('studio.linkCopied') : t('studio.copyShareLink')}
@@ -55,10 +56,10 @@ export function PublishSection({
                     key={tag.id}
                     type="button"
                     onClick={() => onTagToggle(tag.id)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                    className={`px-3 py-1.5 font-mono text-[10px] uppercase font-medium border transition-all ${
                       isSelected
-                        ? 'border-primary-500 bg-primary-500/15 text-primary-400'
-                        : 'border-surface-700 bg-surface-900/50 text-surface-200/60 hover:border-surface-200/30'
+                        ? 'border-lucy bg-lucy/15 text-lucy'
+                        : 'border-bone/30 bg-void text-bone/60 hover:border-bone/50'
                     }`}
                   >
                     {tag.displayNameKo}
@@ -71,7 +72,7 @@ export function PublishSection({
             type="button"
             onClick={onPublish}
             disabled={!dbProjectId || isPublishing}
-            className="w-full gradient-bg py-2.5 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-40"
+            className="w-full bg-david text-void font-mono font-bold uppercase py-2.5 text-sm hover:opacity-90 transition-opacity disabled:opacity-40"
           >
             {isPublishing ? <SpinnerIcon className="w-4 h-4 mx-auto" /> : t('studio.publishTitle')}
           </button>

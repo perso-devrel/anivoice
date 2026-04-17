@@ -6,11 +6,11 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { XIcon, UploadIcon, CheckCircleIcon, ArrowRightIcon, TranslateIcon } from './icons';
 
 const PRIMARY_BUTTON_CLASS =
-  'inline-flex items-center gap-2 px-6 py-2.5 rounded-lg gradient-bg text-white text-sm font-semibold hover:opacity-90 transition-opacity';
+  'inline-flex items-center gap-2 px-6 py-2.5 bg-lucy text-void font-display font-bold text-sm border-2 border-lucy hover:bg-void hover:text-lucy transition-colors';
 
 const STEPS = [
   {
-    icon: <UploadIcon className="w-10 h-10 text-primary-400" />,
+    icon: <UploadIcon className="w-10 h-10 text-lucy" />,
     titleKey: 'onboarding.step1Title',
     descKey: 'onboarding.step1Desc',
   },
@@ -61,34 +61,34 @@ export default function OnboardingModal({ onClose }: Props) {
 
   return (
     <div ref={trapRef} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4" role="dialog" aria-modal="true" aria-label={t('onboarding.welcome')}>
-      <div className="w-full max-w-md glass rounded-2xl p-8 relative animate-in fade-in">
+      <div className="w-full max-w-md bg-ink border-2 border-bone p-8 relative animate-in fade-in">
         <button
           onClick={handleSkip}
           aria-label={t('common.close')}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-300 transition-colors"
+          className="absolute top-4 right-4 text-bone/50 hover:text-bone/80 transition-colors"
         >
           <XIcon />
         </button>
 
         {step === 0 && (
-          <h2 className="text-xl font-bold text-white mb-6 text-center">
+          <h2 className="text-xl font-bold text-bone mb-6 text-center">
             {t('onboarding.welcome')}
           </h2>
         )}
 
         <div className="flex flex-col items-center text-center space-y-4">
-          <div className="w-20 h-20 rounded-2xl bg-surface-800 flex items-center justify-center">
+          <div className="w-20 h-20 bg-void border-2 border-bone/30 flex items-center justify-center">
             {current.icon}
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-400">
-            <span className="font-semibold text-primary-400">{step + 1}</span>
+          <div className="flex items-center gap-2 text-sm text-bone/60">
+            <span className="font-semibold text-lucy">{step + 1}</span>
             <span>/</span>
             <span>{STEPS.length}</span>
           </div>
-          <h3 className="text-lg font-semibold text-white">
+          <h3 className="text-lg font-semibold text-bone">
             {t(current.titleKey)}
           </h3>
-          <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
+          <p className="text-sm text-bone/60 leading-relaxed max-w-xs">
             {t(current.descKey)}
           </p>
         </div>
@@ -98,7 +98,7 @@ export default function OnboardingModal({ onClose }: Props) {
             <div
               key={i}
               className={`h-1.5 rounded-full transition-all ${
-                i === step ? 'w-6 bg-primary-500' : 'w-1.5 bg-surface-700'
+                i === step ? 'w-6 bg-lucy' : 'w-1.5 bg-bone/30'
               }`}
             />
           ))}
@@ -107,7 +107,7 @@ export default function OnboardingModal({ onClose }: Props) {
         <div className="flex items-center justify-between">
           <button
             onClick={handleSkip}
-            className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+            className="text-sm text-bone/50 hover:text-bone/80 transition-colors"
           >
             {t('onboarding.skip')}
           </button>

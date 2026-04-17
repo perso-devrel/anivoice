@@ -21,39 +21,42 @@ export function UploadStep({ onFileChange }: UploadStepProps) {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="text-center mb-2">
-        <h2 className="text-2xl font-bold gradient-text mb-2">{t('studio.uploadTitle')}</h2>
-        <p className="text-surface-200/60 text-sm">{t('studio.uploadDesc')}</p>
+        <h2 className="text-2xl text-bone font-mono uppercase tracking-widest font-bold mb-2">{t('studio.uploadTitle')}</h2>
+        <p className="font-mono text-bone/40 text-sm">{t('studio.uploadDesc')}</p>
       </div>
 
-      <div
-        onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
-        onDragLeave={() => setIsDragOver(false)}
-        onDrop={handleDrop}
-        onClick={() => fileInputRef.current?.click()}
-        className={`glass rounded-2xl border-2 border-dashed cursor-pointer transition-all flex flex-col items-center justify-center py-16 gap-4 ${
-          isDragOver
-            ? 'border-primary-400 bg-primary-500/10'
-            : 'border-surface-700 hover:border-primary-500/50'
-        }`}
-      >
-        <FileIcon className="w-12 h-12 text-surface-200/40" />
-        <p className="text-surface-200/70 text-center">{t('studio.dragDrop')}</p>
-        <button type="button" className="gradient-bg px-5 py-2 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity">
-          {t('studio.orBrowse')}
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="video/*"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) onFileChange(file);
-          }}
-        />
+      <div className="relative">
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-bone/30 block mb-2">FILE INPUT</span>
+        <div
+          onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+          onDragLeave={() => setIsDragOver(false)}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+          className={`bg-void border-2 border-dashed cursor-pointer transition-all flex flex-col items-center justify-center py-16 gap-4 ${
+            isDragOver
+              ? 'border-lucy bg-lucy/10'
+              : 'border-bone/20 hover:border-lucy'
+          }`}
+        >
+          <FileIcon className="w-16 h-16 text-bone/20" />
+          <p className="text-bone/70 text-center">{t('studio.dragDrop')}</p>
+          <button type="button" className="bg-lucy text-void border-2 border-lucy px-5 py-2 font-mono uppercase text-sm font-medium hover:opacity-90 transition-opacity">
+            {t('studio.orBrowse')}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="video/*"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) onFileChange(file);
+            }}
+          />
+        </div>
       </div>
 
-      <p className="text-center text-xs text-surface-200/40">{t('studio.supportedFormats')}</p>
+      <p className="text-center font-mono text-[10px] tracking-wider text-bone/40">{t('studio.supportedFormats')}</p>
     </div>
   );
 }

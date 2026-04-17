@@ -13,7 +13,7 @@ const iconByType: Record<ToastType, ReactNode> = {
 const bgByType: Record<ToastType, string> = {
   success: 'bg-green-500/90',
   error: 'bg-red-500/90',
-  info: 'bg-primary-500/90',
+  info: 'bg-lucy/90',
 };
 
 export default function ToastContainer() {
@@ -27,7 +27,7 @@ export default function ToastContainer() {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`pointer-events-auto flex items-center gap-2 px-5 py-3 rounded-xl text-white font-medium shadow-lg backdrop-blur-sm animate-[fadeSlideIn_0.3s_ease-out] ${bgByType[toast.type]}`}
+          className={`pointer-events-auto flex items-center gap-2 px-5 py-3 rounded-xl text-bone font-medium backdrop-blur-sm animate-[fadeSlideIn_0.3s_ease-out] ${bgByType[toast.type]}`}
         >
           {iconByType[toast.type]}
           <span className="text-sm">{toast.message}</span>

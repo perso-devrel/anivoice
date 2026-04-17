@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { SearchIcon, SortIcon } from './icons';
 import type { FilterTab, SortOrder } from '../utils/dashboard';
 
-const TOOLBAR_CONTROL_CLASS = 'py-1.5 rounded-lg bg-surface-800 text-sm border border-surface-700 transition-colors';
+const TOOLBAR_CONTROL_CLASS = 'py-1.5 bg-ink text-sm border-2 border-bone/30 transition-colors';
 
 interface DashboardToolbarProps {
   searchQuery: string;
@@ -34,14 +34,14 @@ export function DashboardToolbar({
   return (
     <div className="flex flex-wrap items-center gap-3">
       <div className="relative">
-        <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+        <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-bone/50 pointer-events-none" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={t('common.search')}
           aria-label={t('common.search')}
-          className={`w-44 pl-8 pr-3 ${TOOLBAR_CONTROL_CLASS} text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none`}
+          className={`w-44 pl-8 pr-3 ${TOOLBAR_CONTROL_CLASS} text-bone placeholder-bone/40 focus:border-lucy focus:outline-none`}
         />
       </div>
       {availableLanguages.length > 0 && (
@@ -49,7 +49,7 @@ export function DashboardToolbar({
           value={languageFilter}
           onChange={(e) => onLanguageFilterChange(e.target.value)}
           aria-label={t('common.filterByLanguage')}
-          className={`px-3 ${TOOLBAR_CONTROL_CLASS} text-white focus:border-primary-500 focus:outline-none`}
+          className={`px-3 ${TOOLBAR_CONTROL_CLASS} text-bone focus:border-lucy focus:outline-none`}
         >
           <option value="">{t('dashboard.allLanguages')}</option>
           {availableLanguages.map((lang) => (
@@ -61,20 +61,20 @@ export function DashboardToolbar({
       )}
       <button
         onClick={onSortToggle}
-        className={`flex items-center gap-1.5 px-3 ${TOOLBAR_CONTROL_CLASS} text-gray-300 hover:text-white`}
+        className={`flex items-center gap-1.5 px-3 ${TOOLBAR_CONTROL_CLASS} text-bone/80 hover:text-bone`}
       >
         <SortIcon className="w-3.5 h-3.5" />
         {t(sortOrder === 'newest' ? 'dashboard.sortNewest' : 'dashboard.sortOldest')}
       </button>
-      <div className="flex gap-1 p-1 rounded-lg bg-surface-800">
+      <div className="flex gap-1 p-1 bg-ink border-2 border-bone/30">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => onTabChange(tab.key)}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+            className={`px-4 py-1.5 text-sm font-medium transition-colors ${
               activeTab === tab.key
-                ? 'bg-surface-700 text-white'
-                : 'text-gray-400 hover:text-gray-200'
+                ? 'bg-bone/10 text-bone'
+                : 'text-bone/50 hover:text-bone'
             }`}
           >
             {tab.label}
