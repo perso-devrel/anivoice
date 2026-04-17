@@ -32,6 +32,7 @@ AI 더빙 엔진: Perso.ai API
 i18n: i18next (한국어, 영어, 일본어, 중국어)
 HTTP 클라이언트: Axios
 차트: Recharts
+아이콘: @phosphor-icons/react (Phosphor Icons)
 ```
 
 ---
@@ -75,7 +76,7 @@ anivoice/
 │   │   ├── CheckoutModal.tsx     # 결제 모달 (카드 입력)
 │   │   ├── DashboardToolbar.tsx  # 검색, 필터, 정렬
 │   │   ├── ErrorBoundary.tsx     # React 에러 바운더리
-│   │   ├── icons.tsx             # 공유 아이콘 (LoadingSpinner 등)
+│   │   ├── icons.tsx             # @phosphor-icons/react 래퍼 (아이콘 컴포넌트)
 │   │   ├── LibraryCard.tsx       # 라이브러리 아이템 카드
 │   │   ├── OnboardingModal.tsx   # 첫 사용자 가이드
 │   │   ├── ProfileTab.tsx        # 프로필 편집 탭
@@ -554,12 +555,13 @@ interface ToastState {
 
 ### 10.1 LandingPage
 
-- 히어로 섹션: 타이틀, 부제, CTA 버튼 → `/studio`
-- 기능 카드 4개: 음성 보존, 다국어, 립싱크, 편집
-- 작동 방식 3단계: 업로드 → 더빙 → 다운로드
-- FAQ 아코디언
-- 샘플 영상 미리보기 (원본 vs 더빙)
-- 가격 개요
+- 히어로 섹션: `bg-void`, 스캔라인+필름그레인 효과, 대형 `font-display` 타이틀 + `chromatic-hover`, CTA 버튼(`bg-lucy`) → `/studio`
+- 샘플 영상: 원본(일본어) vs 더빙(영어) 나란히, `border-2 border-bone` 비디오 박스 + 재생/일시정지
+- 기능 카드 4개: `bg-ink border-2 border-bone`, 아이콘 박스(`bg-bone`→호버`bg-david`), 일본 효과음 장식(声/語/口/書)
+- 작동 방식 3단계: `bg-ink` 카드에 거대한 효과음(ドン/バン/ズキュン), 스텝 번호(`font-mono`), 화살표 연결
+- FAQ 아코디언: `bg-ink border-2 border-bone`, 열기/닫기 `ChevronDownIcon` 회전
+- 가격 카드: `font-display font-black` 가격, `text-david` 강조, 오프셋 그림자
+- 하단 CTA: `bg-david text-void` 버튼
 
 ### 10.2 StudioPage (핵심 — 4단계 워크플로우)
 
@@ -807,16 +809,111 @@ VITE_ANIVOICE_API_URL=https://your-app.vercel.app
 
 ---
 
-## 16. 디자인 가이드라인
+## 16. 디자인 가이드라인 — EDGERUNNERS 테마
 
-- **다크 테마** 기본 (bg-surface-950 배경)
+### 16.1 디자인 컨셉
+
+사이버펑크: 에지러너스에서 영감을 받은 "네오-브루탈리즘 + 일본 만화 타이포그래피" 디자인. 둥근 모서리 없이, 날카로운 직선 보더와 오프셋 그림자, 스캔라인·필름 그레인 등 아날로그 효과를 사용합니다.
+
+### 16.2 컬러 팔레트 (EDGERUNNERS palette)
+
+```css
+--color-void: #0A0A0A;       /* 기본 배경 — 순수 블랙에 가까움 */
+--color-ink: #1A1A1A;         /* 카드/컨테이너 배경 */
+--color-bone: #F5F0E6;        /* 텍스트/보더 — 따뜻한 오프화이트 */
+--color-lucy: #FF4FA3;        /* 주 강조 — 핫핑크 (CTA, 활성 상태, 링크) */
+--color-david: #FCEE0A;       /* 보조 강조 — 일렉트릭 옐로 (가격, 중요 수치) */
+--color-rebecca: #FF2E63;     /* 경고/위험 */
+--color-wire: #00F0FF;        /* 정보/사이버 — 시안 */
+--color-edge: #FF6B00;        /* 오렌지 포인트 */
+```
+
+레거시 토큰 (`primary-*`, `accent-*`, `surface-*`)도 유지되지만, 새로운 UI는 EDGERUNNERS 팔레트를 사용합니다.
+
+### 16.3 타이포그래피
+
+```css
+--font-display: 'Space Grotesk', 'Pretendard Variable', system-ui, sans-serif;  /* 제목, 로고, CTA */
+--font-body: 'Pretendard Variable', 'Space Grotesk', system-ui, sans-serif;     /* 본문 */
+--font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;  /* 라벨, 네비 */
+--font-jp: 'Noto Sans JP', 'Pretendard Variable', sans-serif;                   /* 일본어 효과음 */
+```
+
+웹폰트 CDN:
+- Pretendard Variable: `cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9`
+- Space Grotesk, JetBrains Mono, Noto Sans JP: Google Fonts
+
+### 16.4 UI 스타일 규칙
+
+- **배경**: `bg-void` (페이지), `bg-ink` (카드/컨테이너)
+- **보더**: `border-2 border-bone` — 항상 2px, 둥근 모서리(rounded) 사용 금지
+- **텍스트 색상**: `text-bone` (기본), `text-bone/60` (보조), `text-bone/30` (비활성)
+- **강조**: `text-lucy` (활성 링크/선택), `text-david` (가격/수치), `text-wire` (정보)
+- **버튼 스타일**: 배경 채움 + 보더, 호버 시 반전 (예: `bg-david text-void` → 호버 `bg-void text-david`)
+- **오프셋 그림자**: `.offset-lucy`, `.offset-david-sm` 등 — 그라데이션 없는 단색 블록 그림자
+- **네비게이션 링크**: `font-mono text-xs uppercase tracking-[0.15em]`
+- **라벨/뱃지**: `font-mono text-[10px] uppercase tracking-widest`
+- **카드 호버**: `hover:-translate-x-1 hover:-translate-y-1` + 오프셋 그림자 조합
+
+### 16.5 특수 효과 유틸리티
+
+| 클래스 | 효과 | 사용처 |
+|--------|------|--------|
+| `.scanlines` | 반투명 수평 스캔라인 오버레이 | 히어로 섹션 배경 |
+| `.film-grain` | SVG 노이즈 텍스처 | 히어로 섹션 배경 |
+| `.chromatic-hover` | 호버 시 색수차 텍스트 쉐도우 (wire + rebecca) | 제목 텍스트 |
+| `.text-outline-bone` | 외곽선만 있는 텍스트 (-webkit-text-stroke) | 장식용 카타카나 |
+| `.corner-marks` | 코너 브라켓 장식 | 섹션 프레임 |
+| `.flicker-on-hover` | 호버 시 한 번 깜빡임 | 인터랙티브 요소 |
+| `.sfx-pop` | 스케일+회전 팝 애니메이션 | 효과음 텍스트 |
+| `.slash-divider` / `.slash-divider-r` | 대각선 클리핑 | 히어로 패널 구분 |
+| `.offset-{color}` / `.offset-{color}-sm` | 10px/5px 블록 그림자 | 카드 호버 |
+
+### 16.6 일본어 효과음 타이포그래피
+
+랜딩페이지에서 만화 스타일 효과음을 사용합니다:
+- 스텝 카드: `ドン` (쿵), `バン` (빵), `ズキュン` (쿵쿵) — `font-jp font-black text-[7rem]`, 각각 `text-lucy`, `text-wire`, `text-david`
+- 피처 카드: `声` (목소리), `語` (언어), `口` (입), `書` (쓰기) — `font-jp text-[5rem]`
+- 회전/오프셋 배치: `rotate(-6deg)`, 오른쪽 상단 절대 위치, `opacity-90`
+
+### 16.7 아이콘 시스템
+
+`@phosphor-icons/react` 라이브러리를 사용합니다. `src/components/icons.tsx`에서 래퍼 컴포넌트로 내보냅니다:
+
+```typescript
+// Phosphor 아이콘을 import하고 className prop으로 래핑
+import { Play as PhPlay } from '@phosphor-icons/react';
+
+export function PlayIcon({ className = 'w-10 h-10' }: IconProps) {
+  return <PhPlay className={className} weight="fill" />;
+}
+```
+
+주요 아이콘 목록: FileIcon, PlayIcon, DownloadIcon, CheckIcon, SpinnerIcon(커스텀), SearchIcon, ChevronDownIcon, ClockIcon, XIcon, PlusIcon, AlertCircleIcon, UploadIcon, CheckCircleIcon, ArrowRightIcon, InfoIcon, MenuIcon, StarIcon, LinkIcon, ChevronLeftIcon, ArrowLeftIcon, WalletIcon, RefreshIcon, VoiceIcon, GlobeIcon, LipSyncIcon, EditIcon, SettingsIcon, TranslateIcon, SortIcon, VideoPlayIcon, UserIcon, LoadingSpinner(커스텀), EmptyProjectsIcon(커스텀 SVG), GoogleIcon(커스텀 SVG)
+
+SpinnerIcon은 Phosphor 대신 CSS `border` + `animate-spin` + `steps(8)`으로 디지털 느낌을 구현합니다.
+
+### 16.8 컴포넌트 패턴
+
+**Navbar**: 고정 상단, `bg-void/95 backdrop-blur-sm border-b-2 border-bone`. 로고는 `bg-lucy text-void` 사각형 + `font-display`. 모바일 메뉴는 전체 너비 드롭다운.
+
+**카드**: `bg-ink border-2 border-bone p-6/p-8`. 호버 시 `-translate-x-1 -translate-y-1` + offset shadow. 내부 아이콘 박스는 `bg-bone text-void` → 호버 시 `bg-david`/`bg-lucy`.
+
+**모달**: `bg-ink border-2 border-bone` + 배경 오버레이 `bg-void/80`.
+
+**입력 필드**: `bg-void border-2 border-bone/40 text-bone font-mono` → 포커스 시 `border-lucy`.
+
+**텍스트 선택**: `::selection { background: lucy; color: void; }`
+
+### 16.9 기타 원칙
+
 - **모바일 퍼스트** 반응형 레이아웃
 - **실제 서비스 수준** 말투와 UX (데모 느낌 제거)
 - Tailwind CSS 유틸리티 클래스 사용
 - 무한 로딩, 빈 상태, 에러 상태 모두 UI로 표현
 - 토스트 알림으로 사용자 피드백
-- 그라데이션 플레이스홀더 (썸네일 없을 때)
 - `@` alias로 import 경로 단순화
+- `prefers-reduced-motion` 미디어 쿼리로 애니메이션 비활성화 지원
 
 ---
 

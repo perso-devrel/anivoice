@@ -11,11 +11,7 @@ const BASE = (import.meta.env.VITE_PERSO_PROXY_PATH || '/api/perso').replace(/\/
 const PERSO_FILE_BASE_URL = 'https://perso.ai';
 
 const UPLOAD_RETRY_BASE_DELAY_MS = 2000;
-const DEFAULT_POLL_INTERVAL_MS = 5000;
-const LONG_ETA_POLL_INTERVAL_MS = 10000;
-const MEDIUM_ETA_POLL_INTERVAL_MS = 7000;
-const LONG_ETA_THRESHOLD_MINUTES = 3;
-const MEDIUM_ETA_THRESHOLD_MINUTES = 1;
+const POLL_INTERVAL_MS = 5000;
 const MAX_CONSECUTIVE_POLL_ERRORS = 30;
 const COMPLETION_PROGRESS = 100;
 const ERROR_SNIPPET_LENGTH = 500;
@@ -350,11 +346,7 @@ export async function pollProgress(
   projectSeq: number,
   spaceSeq: number,
   onProgress: (p: PersoProgress) => void,
-  intervalMs = DEFAULT_POLL_INTERVAL_MS
 ): Promise<PersoProgress> {
-  // Tolerate transient network errors up to MAX_CONSECUTIVE_ERRORS before aborting.
-  // Observed: 25 consecutive fetch failures over 5 min during dubbing, followed by
-  // full recovery and successful completion.
   const MAX_CONSECUTIVE_ERRORS = MAX_CONSECUTIVE_POLL_ERRORS;
 
   return new Promise((resolve, reject) => {
@@ -381,17 +373,14 @@ export async function pollProgress(
           return;
         }
 
-        // Adapt interval: poll less often when ETA is long
-        const eta = progress.expectedRemainingTimeMinutes ?? 0;
-        const nextInterval = eta > LONG_ETA_THRESHOLD_MINUTES ? LONG_ETA_POLL_INTERVAL_MS : eta > MEDIUM_ETA_THRESHOLD_MINUTES ? MEDIUM_ETA_POLL_INTERVAL_MS : intervalMs;
-        setTimeout(poll, nextInterval);
+        setTimeout(poll, POLL_INTERVAL_MS);
       } catch (error) {
         consecutiveErrors += 1;
         if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) {
           reject(error);
           return;
         }
-        setTimeout(poll, intervalMs);
+        setTimeout(poll, POLL_INTERVAL_MS);
       }
     };
 

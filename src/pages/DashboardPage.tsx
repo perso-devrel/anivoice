@@ -24,7 +24,7 @@ const DASHBOARD_TABS: { key: FilterTab; i18nKey: string }[] = [
   { key: 'completed', i18nKey: 'dashboard.completed' },
 ];
 
-const MISSION_STATUS: Record<string, { labelKey: string; badgeClass: string }> = {
+const PROJECT_STATUS: Record<string, { labelKey: string; badgeClass: string }> = {
   analyzing: { labelKey: 'dashboard.statusAnalyzing', badgeClass: 'text-david bg-david/10' },
   uploading: { labelKey: 'dashboard.statusUploading', badgeClass: 'text-david bg-david/10' },
   dubbing: { labelKey: 'dashboard.statusDubbing', badgeClass: 'text-lucy bg-lucy/10' },
@@ -33,7 +33,7 @@ const MISSION_STATUS: Record<string, { labelKey: string; badgeClass: string }> =
   failed: { labelKey: 'dashboard.statusFailed', badgeClass: 'text-rebecca bg-rebecca/10' },
 };
 
-function getMissionBarColor(status: ProjectStatus): string {
+function getProjectBarColor(status: ProjectStatus): string {
   if (status === 'completed') return 'bg-wire';
   if (status === 'failed') return 'bg-rebecca';
   return 'bg-lucy';
@@ -151,7 +151,7 @@ export default function DashboardPage() {
               >
                 作業
               </span>
-              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-bone/40 mb-1">RUNNER</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-bone/40 mb-1">OWNER</p>
               <p className="text-2xl font-display font-black text-david truncate relative">
                 {user?.displayName || 'UNKNOWN'}
               </p>
@@ -182,13 +182,13 @@ export default function DashboardPage() {
               />
             </div>
 
-            {/* New Mission */}
+            {/* New Video */}
             <Link
               to="/studio"
               className="flex items-center justify-center gap-2 w-full px-5 py-3 bg-david text-void font-mono text-sm uppercase tracking-widest border-2 border-david hover:bg-void hover:text-david transition-colors"
             >
               <PlusIcon className="w-4 h-4" />
-              NEW MISSION
+              NEW VIDEO
             </Link>
 
             {/* Usage Chart — desktop sidebar */}
@@ -213,7 +213,7 @@ export default function DashboardPage() {
             {/* Toolbar */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <h2 className="font-mono text-sm uppercase tracking-widest text-bone/60 border-l-4 border-lucy pl-3">
-                ACTIVE MISSIONS
+                ACTIVE PROJECTS
               </h2>
               <DashboardToolbar
                 searchQuery={searchQuery}
@@ -261,7 +261,7 @@ export default function DashboardPage() {
               <div className="scanlines relative bg-ink border-2 border-bone/30 py-20 text-center">
                 <p className="font-mono text-3xl text-bone/20 tracking-[0.2em] mb-3">NO SIGNAL</p>
                 <p className="font-mono text-sm text-bone/30">
-                  &gt; START YOUR FIRST MISSION
+                  &gt; START YOUR FIRST PROJECT
                   <span className="inline-block w-2 h-4 bg-bone/40 ml-1 animate-pulse align-middle" />
                 </p>
                 <Link
@@ -269,7 +269,7 @@ export default function DashboardPage() {
                   className="inline-flex items-center gap-2 mt-8 px-6 py-3 bg-david text-void font-mono text-sm uppercase tracking-widest border-2 border-david hover:bg-void hover:text-david transition-colors"
                 >
                   <PlusIcon className="w-4 h-4" />
-                  NEW MISSION
+                  NEW VIDEO
                 </Link>
               </div>
             )}
@@ -294,10 +294,10 @@ export default function DashboardPage() {
               <div className="border-2 border-bone/30">
                 {/* Table header */}
                 <div className="hidden sm:grid sm:grid-cols-[1fr_6.5rem_7.5rem_5rem_1.5rem] gap-4 px-5 py-2.5 border-b border-bone/20 bg-ink">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/30">MISSION</span>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/30">STATUS</span>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/30">PROGRESS</span>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/30 text-right">DATE</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/30">PROJECT</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/30 text-center">STATUS</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/30 text-center">PROGRESS</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/30 text-center">DATE</span>
                   <span />
                 </div>
 
@@ -305,7 +305,7 @@ export default function DashboardPage() {
                 <div className="divide-y divide-bone/10">
                   {filteredProjects.map((project) => {
                     const status = project.mappedStatus;
-                    const cfg = MISSION_STATUS[status] ?? MISSION_STATUS.analyzing;
+                    const cfg = PROJECT_STATUS[status] ?? PROJECT_STATUS.analyzing;
                     return (
                       <Link
                         key={project.id}
@@ -329,7 +329,7 @@ export default function DashboardPage() {
                         </div>
 
                         {/* Status badge */}
-                        <span className={`self-start sm:self-auto inline-flex px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider justify-center ${cfg.badgeClass}`}>
+                        <span className={`self-start sm:self-auto sm:justify-self-center inline-flex px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider justify-center ${cfg.badgeClass}`}>
                           {t(cfg.labelKey)}
                         </span>
 
@@ -337,7 +337,7 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-2">
                           <div className="flex-1 h-1 bg-bone/10">
                             <div
-                              className={`h-full ${getMissionBarColor(status)} transition-all`}
+                              className={`h-full ${getProjectBarColor(status)} transition-all`}
                               style={{ width: `${project.progress}%` }}
                             />
                           </div>
@@ -347,7 +347,7 @@ export default function DashboardPage() {
                         </div>
 
                         {/* Date */}
-                        <span className="font-mono text-[10px] text-bone/30 text-right hidden sm:block">
+                        <span className="font-mono text-[10px] text-bone/30 text-center hidden sm:block">
                           {project.createdAt?.split('T')[0] || ''}
                         </span>
 
@@ -355,7 +355,7 @@ export default function DashboardPage() {
                         <button
                           onClick={(e) => handleToggleFavorite(e, project.id, project.isFavorite)}
                           aria-label={project.isFavorite ? t('dashboard.removeFavorite') : t('dashboard.addFavorite')}
-                          className="hidden sm:flex items-center justify-center p-0.5 text-bone/20 hover:text-yellow-400 transition-colors"
+                          className={`hidden sm:flex items-center justify-center p-0.5 transition-colors ${project.isFavorite ? 'text-david' : 'text-bone/20 hover:text-david/60'}`}
                         >
                           <StarIcon
                             className="w-3.5 h-3.5"

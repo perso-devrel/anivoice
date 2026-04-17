@@ -15,8 +15,12 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-lucy text-void flex items-center justify-center font-display font-black text-sm">
-                A
+              <div className="relative w-9 h-9 overflow-hidden">
+                <div className="absolute inset-0 bg-lucy" style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
+                <div className="absolute inset-0 bg-david" style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 100%)' }} />
+                <span className="absolute inset-0 flex items-center justify-center font-display font-black text-sm text-void">
+                  A
+                </span>
               </div>
               <span className="font-display font-bold text-lg text-bone">AniVoice</span>
             </div>

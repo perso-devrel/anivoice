@@ -194,7 +194,7 @@ export default function LibraryPage() {
           <div className="scanlines relative bg-ink border-2 border-bone/30 py-20 text-center">
             <p className="font-mono text-3xl text-bone/20 tracking-[0.2em] mb-3">NO DATA FOUND</p>
             <p className="font-mono text-sm text-bone/30">
-              &gt; START YOUR FIRST MISSION
+              &gt; START YOUR FIRST PROJECT
               <span className="inline-block w-2 h-4 bg-bone/40 ml-1 animate-pulse align-middle" />
             </p>
           </div>

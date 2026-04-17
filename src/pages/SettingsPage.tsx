@@ -74,7 +74,7 @@ export default function SettingsPage() {
         {/* Header */}
         <div className="relative mb-10">
           <span className="absolute -top-6 -left-2 font-jp text-[100px] leading-none text-bone/[0.03] select-none pointer-events-none" aria-hidden="true">個人</span>
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-bone/40 mb-1">RUNNER PROFILE</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-bone/40 mb-1">MY PROFILE</p>
           <h1 className="text-4xl sm:text-5xl font-display font-black text-david relative">
             {user?.displayName || 'UNKNOWN'}
           </h1>
