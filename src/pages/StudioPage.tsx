@@ -17,7 +17,7 @@ import {
   getDownloadLinks,
   resolvePersoFileUrl,
 } from '../services/persoApi';
-import { createProject, updateProject, deductCredits, getTags, publishProject } from '../services/anivoiceApi';
+import { createProject, updateProject, deductCredits, getTags, publishProject, getProjectByPersoSeq } from '../services/anivoiceApi';
 import { useAuthStore } from '../stores/authStore';
 import type { Tag } from '../services/anivoiceApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
@@ -131,6 +131,14 @@ export default function StudioPage() {
           const links = await getDownloadLinks(pSeq, sSeq);
           setDownloadLinks(links);
         } catch { /* downloads not ready */ }
+
+        try {
+          const dbProject = await getProjectByPersoSeq(pSeq, sSeq);
+          if (dbProject) {
+            setDbProjectId(dbProject.id);
+            setIsPublished(dbProject.isPublic);
+          }
+        } catch { /* db lookup optional */ }
 
         setProgress(100);
         setProcessStage('done');
@@ -386,6 +394,19 @@ export default function StudioPage() {
     }
   }
 
+  async function handleUnpublish() {
+    if (!dbProjectId) return;
+    setIsPublishing(true);
+    try {
+      await publishProject(dbProjectId, [], false);
+      setIsPublished(false);
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setIsPublishing(false);
+    }
+  }
+
   async function handleCopyShareLink() {
     const url = buildShareUrl(window.location.origin, dbProjectId);
     try {
@@ -477,6 +498,7 @@ export default function StudioPage() {
             onRequestLipSync={handleRequestLipSync}
             onTagToggle={(tagId) => setSelectedTags((prev) => toggleArrayItem(prev, tagId))}
             onPublish={handlePublish}
+            onUnpublish={handleUnpublish}
             onCopyShareLink={handleCopyShareLink}
             onEditChange={(seq, value) => setEditingValues((prev) => ({ ...prev, [seq]: value }))}
             onSaveSentence={handleSaveSentence}

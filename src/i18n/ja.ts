@@ -160,6 +160,7 @@ export default {
     linkCopied: 'コピーしました！',
     autoDetect: '自動検出（Auto）',
     publishTitle: '公開する',
+    unpublishTitle: '非公開にする',
     publishedTitle: '✅ 公開済み',
     noWorkspaceError: 'ワークスペースが見つかりません。Perso.aiでスペースを先に作成してください。',
     noFileError: 'ファイルが選択されていません',

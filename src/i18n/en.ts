@@ -160,6 +160,7 @@ export default {
     linkCopied: 'Copied!',
     autoDetect: 'Auto-detect',
     publishTitle: 'Publish',
+    unpublishTitle: 'Unpublish',
     publishedTitle: '✅ Published',
     noWorkspaceError: 'No workspace found. Please create a space in Perso.ai first.',
     noFileError: 'No file provided',

@@ -77,6 +77,7 @@ interface ResultStepProps {
   onRequestLipSync: () => void;
   onTagToggle: (tagId: number) => void;
   onPublish: () => void;
+  onUnpublish: () => void;
   onCopyShareLink: () => void;
   onEditChange: (seq: number, value: string) => void;
   onSaveSentence: (seq: number) => void;
@@ -110,6 +111,7 @@ export function ResultStep({
   onRequestLipSync,
   onTagToggle,
   onPublish,
+  onUnpublish,
   onCopyShareLink,
   onEditChange,
   onSaveSentence,
@@ -263,6 +265,7 @@ export function ResultStep({
         dbProjectId={dbProjectId}
         linkCopied={linkCopied}
         onPublish={onPublish}
+        onUnpublish={onUnpublish}
         onCopyShareLink={onCopyShareLink}
       />
 
