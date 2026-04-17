@@ -401,9 +401,7 @@ server: {
 ### 6.5 진행률 폴링
 
 ```
-- 기본 간격: 5초
-- ETA > 3분: 10초 간격
-- ETA > 1분: 7초 간격
+- 폴링 간격: 5초 고정 (API 명세 준수, POLL_INTERVAL_MS = 5000)
 - 네트워크 에러 허용: 최대 30회 연속 실패까지 재시도
 - 완료 조건: progressReason === 'COMPLETED' 또는 progress >= 100
 - 실패 조건: hasFailed === true 또는 progressReason === 'FAILED'
@@ -555,13 +553,15 @@ interface ToastState {
 
 ### 10.1 LandingPage
 
-- 히어로 섹션: `bg-void`, 스캔라인+필름그레인 효과, 대형 `font-display` 타이틀 + `chromatic-hover`, CTA 버튼(`bg-lucy`) → `/studio`
-- 샘플 영상: 원본(일본어) vs 더빙(영어) 나란히, `border-2 border-bone` 비디오 박스 + 재생/일시정지
-- 기능 카드 4개: `bg-ink border-2 border-bone`, 아이콘 박스(`bg-bone`→호버`bg-david`), 일본 효과음 장식(声/語/口/書)
-- 작동 방식 3단계: `bg-ink` 카드에 거대한 효과음(ドン/バン/ズキュン), 스텝 번호(`font-mono`), 화살표 연결
+- **스크롤 애니메이션**: 모든 섹션이 `RevealSection` 컴포넌트로 감싸져 IntersectionObserver 기반 fade-in + translate-y 애니메이션 적용 (threshold: 0.12, `prefers-reduced-motion` 존중)
+- 히어로 섹션: `bg-void`, 스캔라인+필름그레인 효과, 대형 `font-display` 타이틀(`leading-[1.05]`, `clamp(32px, 8vw, 180px)`) + `chromatic-hover`, CTA 버튼(`bg-lucy`) → `/studio`, 보조 CTA → `/library` (아카이브)
+- 샘플 영상(01 DEMO): 원본(일본어) vs 더빙(영어) 나란히, `border-2 border-bone` 비디오 박스 + 재생/일시정지
+- 기능 카드 4개(02 FEATURES): `bg-ink border-2 border-bone`, 아이콘 박스(`bg-bone`→호버`bg-david`), 일본 효과음 장식(声/語/口/書)
+- 작동 방식 3단계(03 HOW IT WORKS): `bg-ink` 카드에 거대한 효과음(ドン/バン/ズキュン), 스텝 번호(`font-mono`), 화살표 연결
+- 지원 언어(04 LANGUAGES), 가격(05 PRICING), FAQ(06 FAQ), 하단 CTA(07 START NOW)
 - FAQ 아코디언: `bg-ink border-2 border-bone`, 열기/닫기 `ChevronDownIcon` 회전
 - 가격 카드: `font-display font-black` 가격, `text-david` 강조, 오프셋 그림자
-- 하단 CTA: `bg-david text-void` 버튼
+- 하단 CTA: `bg-david text-void` 버튼, `leading-[1.1]`
 
 ### 10.2 StudioPage (핵심 — 4단계 워크플로우)
 
@@ -591,7 +591,8 @@ interface ToastState {
 - 문장별 인라인 편집 (`translateSentence()`) + 음성 재생성 (`generateSentenceAudio()`)
 - `getDownloadLinks()` → 다운로드 버튼 생성 (영상, 음성, 자막, ZIP)
 - 공유 링크 생성
-- 라이브러리 게시 (태그 선택)
+- 아카이브 공개/비공개 토글 (태그 선택, 언제든 전환 가능)
+- 기존 프로젝트 재진입 시 DB에서 `dbProjectId`, `isPublished` 자동 조회 (`getProjectByPersoSeq`)
 
 ### 10.3 DashboardPage
 
@@ -602,11 +603,14 @@ interface ToastState {
 - 사용량 차트 (최근 30일, Recharts)
 - 크레딧/통계 카드
 - 신규 사용자 온보딩 모달
-- 프로젝트 카드: 상태 표시, 즐겨찾기 토글
+- 프로젝트 테이블: STATUS/PROGRESS/DATE 중앙 정렬
+- 즐겨찾기 활성 시 `text-david` 색상, 비활성 시 `text-bone/20`
+- **실시간 폴링**: 진행 중 프로젝트(uploading/dubbing/lip-syncing/analyzing)만 5초 간격으로 `getProgress` API 호출, progress bar 실시간 업데이트. 완료/실패 시 자동 폴링 중단
+- 용어: OWNER, ACTIVE PROJECTS, NEW VIDEO, PROJECT (Mission/Runner 사용 안 함)
 
-### 10.4 LibraryPage
+### 10.4 LibraryPage (아카이브)
 
-- 공개 프로젝트 탐색
+- 공개 프로젝트 탐색 (아카이브)
 - 태그 필터링
 - 언어 필터링
 - 검색
@@ -633,9 +637,11 @@ interface ToastState {
 
 ### 10.7 SettingsPage
 
-- 프로필 탭: 이름, 이메일, 프로필 사진
+- 프로필 탭 (MY PROFILE): 이름, 이메일, 프로필 사진
 - 구독/크레딧 탭
-- 계정 관리
+- 결제 내역 탭
+- 언어 설정 탭
+- DANGER ZONE: 로그아웃
 
 ---
 
@@ -653,7 +659,7 @@ interface ToastState {
 | 메서드 | 경로 | 인증 | 설명 |
 |--------|------|------|------|
 | GET | `/api/user/me` | 필수 | 현재 사용자 조회/생성 |
-| GET | `/api/projects` | 필수 | 내 프로젝트 목록 |
+| GET | `/api/projects` | 필수 | 내 프로젝트 목록 (persoProjectSeq, persoSpaceSeq 쿼리로 특정 프로젝트 조회 가능) |
 | POST | `/api/projects` | 필수 | 프로젝트 생성 |
 | GET | `/api/projects/:id` | 필수 | 프로젝트 상세 |
 | PATCH | `/api/projects/:id` | 필수 | 프로젝트 업데이트 |
@@ -704,14 +710,25 @@ i18next.use(initReactI18next).init({
 {
   common: { appName, login, signup, logout, save, cancel, delete, loading, error, ... },
   auth: { email, password, loginTitle, signupTitle, googleLogin, ... },
-  landing: { heroTitle, heroSubtitle, features, howItWorks, faq, ... },
+  landing: { heroTitle, heroSubtitle, ctaPrimary('시작하기'), ctaSecondary('공개 영상 보기'), features, howItWorks, faq, ... },
   dashboard: { myProjects, favorites, inProgress, completed, search, ... },
-  library: { popular, latest, allTags, noResults, ... },
-  studio: { upload, settings, dubbing, result, selectLanguage, lipSync, ... },
+  library: { title('더빙 아카이브'), popular, latest, allTags, noResults, ... },
+  studio: { upload, settings, dubbing, result, selectLanguage, lipSync, publishTitle, unpublishTitle, ... },
   pricing: { title, perMinute, timePack10, timePack50, timePack100, ... },
   settings: { profile, subscription, account, ... },
   pageTitle: { dashboard, studio, library, pricing, settings, ... },
 }
+```
+
+### 용어 규칙
+
+| 사용 | 미사용 |
+|------|--------|
+| 아카이브 (Archive) | 라이브러리 (Library) |
+| 프로젝트 (Project) | 미션 (Mission) |
+| 오너 (Owner) | 러너 (Runner) |
+| 시작하기 (Get started) | 무료로 시작하기 |
+| 공개 영상 보기 (Browse archive) | 데모 영상 보기 |
 ```
 
 ### 언어 전환
@@ -895,7 +912,7 @@ SpinnerIcon은 Phosphor 대신 CSS `border` + `animate-spin` + `steps(8)`으로 
 
 ### 16.8 컴포넌트 패턴
 
-**Navbar**: 고정 상단, `bg-void/95 backdrop-blur-sm border-b-2 border-bone`. 로고는 `bg-lucy text-void` 사각형 + `font-display`. 모바일 메뉴는 전체 너비 드롭다운.
+**Navbar**: 고정 상단, `bg-void/95 backdrop-blur-sm border-b-2 border-bone`. 로고는 대각선 분할 lucy/david 디자인 (`clipPath: polygon`으로 삼각형 분할) + 중앙 "A" 글자 + `chromatic-hover`. Footer도 동일한 로고. 모바일 메뉴는 전체 너비 드롭다운.
 
 **카드**: `bg-ink border-2 border-bone p-6/p-8`. 호버 시 `-translate-x-1 -translate-y-1` + offset shadow. 내부 아이콘 박스는 `bg-bone text-void` → 호버 시 `bg-david`/`bg-lucy`.
 
