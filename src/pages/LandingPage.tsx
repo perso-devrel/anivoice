@@ -240,6 +240,34 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   );
 }
 
+const REVEAL_TRANSITION = 'opacity 600ms cubic-bezier(.2,.9,.3,1), transform 600ms cubic-bezier(.2,.9,.3,1)';
+
+function RevealSection({ children, className = '', style, ...rest }: React.HTMLAttributes<HTMLElement>) {
+  const [visible, setVisible] = useState(false);
+
+  const callbackRef = (el: HTMLElement | null) => {
+    if (!el) return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mq.matches) { setVisible(true); return; }
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { threshold: 0.12 },
+    );
+    observer.observe(el);
+  };
+
+  return (
+    <section
+      ref={callbackRef}
+      className={`${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${className}`}
+      style={{ transition: REVEAL_TRANSITION, ...style }}
+      {...rest}
+    >
+      {children}
+    </section>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /*  Landing Page                                                      */
 /* ------------------------------------------------------------------ */
@@ -292,14 +320,14 @@ export default function LandingPage() {
         {/* Main headline */}
         <div className="relative z-10 px-6 md:px-12 pt-12 md:pt-16 pb-20 md:pb-28">
           <h1
-            className="font-display font-black leading-[0.88] tracking-[-0.03em] chromatic-hover whitespace-pre-line"
-            style={{ fontSize: 'clamp(48px, 11vw, 180px)' }}
+            className="font-display font-black leading-[1.05] tracking-[-0.03em] chromatic-hover"
+            style={{ fontSize: 'clamp(32px, 8vw, 180px)' }}
           >
-            <span className="block text-bone">{heroLine1}</span>
-            <span className="block text-lucy">{heroLine2}</span>
+            <span className="block text-bone whitespace-nowrap">{heroLine1}</span>
+            <span className="block text-lucy whitespace-nowrap">{heroLine2}</span>
           </h1>
 
-          <p className="mt-8 md:mt-10 max-w-xl text-base md:text-lg text-bone/70 leading-relaxed">
+          <p className="mt-8 md:mt-10 text-base md:text-lg text-bone/70 leading-relaxed whitespace-nowrap">
             {t('landing.heroSubtitle')}
           </p>
 
@@ -313,7 +341,7 @@ export default function LandingPage() {
               <span aria-hidden>→</span>
             </Link>
             <Link
-              to="/signup"
+              to="/library"
               className="inline-flex items-center justify-center gap-3 border-2 border-bone text-bone font-display font-bold uppercase tracking-widest text-sm px-8 py-4 hover:bg-bone hover:text-void transition-colors"
             >
               <span>{t('landing.ctaSecondary')}</span>
@@ -322,24 +350,18 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Bottom meta strip */}
-        <div className="relative z-10 px-6 md:px-12 pb-10 flex items-end justify-between gap-6 font-mono text-[10px] md:text-xs uppercase tracking-[0.3em]">
-          <div className="flex items-center gap-3 text-bone/60">
-            <span className="block w-px h-8 bg-bone/40" />
-            <span>01 / SCROLL DOWN</span>
-          </div>
-          <span className="text-lucy">BEFORE × AFTER ↓</span>
-        </div>
+        {/* Bottom spacer */}
+        <div className="relative z-10 pb-10" />
       </section>
 
       {/* ============================================================ */}
       {/*  BEFORE / AFTER                                              */}
       {/* ============================================================ */}
-      <section className="relative bg-void border-b-2 border-bone">
+      <RevealSection className="relative bg-void border-b-2 border-bone">
         <div className="px-6 md:px-12 py-10 flex items-end justify-between border-b-2 border-bone">
           <div>
             <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
-              02 / DEMO
+              01 / DEMO
             </div>
             <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
               BEFORE <span className="text-lucy">×</span> AFTER
@@ -397,16 +419,16 @@ export default function LandingPage() {
             </span>
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ============================================================ */}
       {/*  FEATURES                                                    */}
       {/* ============================================================ */}
-      <section className="relative bg-ink border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
+      <RevealSection className="relative bg-ink border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
         <div className="flex items-end justify-between mb-12 md:mb-16">
           <div>
             <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
-              03 / FEATURES
+              02 / FEATURES
             </div>
             <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
               왜 <span className="text-david">AniVoice</span>인가
@@ -441,16 +463,16 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
-      </section>
+      </RevealSection>
 
       {/* ============================================================ */}
       {/*  HOW IT WORKS — manga panels                                 */}
       {/* ============================================================ */}
-      <section className="relative bg-void border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
+      <RevealSection className="relative bg-void border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
         <div className="flex items-end justify-between mb-12 md:mb-16">
           <div>
             <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
-              04 / HOW IT WORKS
+              03 / HOW IT WORKS
             </div>
             <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
               {t('landing.howItWorks')}
@@ -480,16 +502,16 @@ export default function LandingPage() {
             />
           ))}
         </div>
-      </section>
+      </RevealSection>
 
       {/* ============================================================ */}
       {/*  SUPPORTED LANGUAGES                                         */}
       {/* ============================================================ */}
-      <section className="relative bg-ink border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
+      <RevealSection className="relative bg-ink border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
         <div className="flex items-end justify-between mb-12 md:mb-16">
           <div>
             <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
-              05 / LANGUAGES
+              04 / LANGUAGES
             </div>
             <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
               {t('landing.supportedLangs')}
@@ -522,16 +544,16 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
-      </section>
+      </RevealSection>
 
       {/* ============================================================ */}
       {/*  PRICING                                                     */}
       {/* ============================================================ */}
-      <section className="relative bg-void border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
+      <RevealSection className="relative bg-void border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
         <div className="flex items-end justify-between mb-12 md:mb-16">
           <div>
             <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
-              06 / PRICING
+              05 / PRICING
             </div>
             <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
               {t('pricing.title')}
@@ -558,16 +580,16 @@ export default function LandingPage() {
             />
           ))}
         </div>
-      </section>
+      </RevealSection>
 
       {/* ============================================================ */}
       {/*  FAQ                                                         */}
       {/* ============================================================ */}
-      <section className="relative bg-void border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
+      <RevealSection className="relative bg-void border-b-2 border-bone px-6 md:px-12 py-20 md:py-28">
         <div className="flex items-end justify-between mb-12 md:mb-16">
           <div>
             <div className="font-mono text-xs uppercase tracking-[0.3em] text-bone/60 mb-2">
-              07 / FAQ
+              06 / FAQ
             </div>
             <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
               {t('landing.faq')}
@@ -587,12 +609,12 @@ export default function LandingPage() {
             <FAQItem key={i} question={t(item.qKey)} answer={t(item.aKey)} />
           ))}
         </div>
-      </section>
+      </RevealSection>
 
       {/* ============================================================ */}
       {/*  CTA — full-bleed lucy block                                 */}
       {/* ============================================================ */}
-      <section className="relative bg-lucy text-void overflow-hidden border-b-2 border-bone">
+      <RevealSection className="relative bg-lucy text-void overflow-hidden border-b-2 border-bone">
         <span
           aria-hidden
           className="absolute right-[-4vw] top-[-8vw] font-jp font-black text-void/15 leading-none select-none pointer-events-none"
@@ -603,10 +625,10 @@ export default function LandingPage() {
 
         <div className="relative z-10 px-6 md:px-12 py-24 md:py-32">
           <div className="font-mono text-xs uppercase tracking-[0.3em] text-void/70 mb-6">
-            08 / START NOW
+            07 / START NOW
           </div>
           <h2
-            className="font-display font-black leading-[0.9] tracking-[-0.03em] max-w-4xl"
+            className="font-display font-black leading-[1.1] tracking-[-0.03em] max-w-4xl"
             style={{ fontSize: 'clamp(44px, 9vw, 140px)' }}
           >
             목소리를 <br />
@@ -629,7 +651,7 @@ export default function LandingPage() {
             </Link>
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* Footer note */}
       <footer className="bg-void px-6 md:px-12 py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
