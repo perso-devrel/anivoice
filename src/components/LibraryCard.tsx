@@ -11,7 +11,7 @@ export function LibraryCard({ item, gradient }: { item: LibraryItem; gradient: s
 
   return (
     <Link
-      to={`/library/${item.id}`}
+      to={`/archive/${item.id}`}
       className="group relative bg-ink border-2 border-bone/30 overflow-hidden cursor-pointer transition-colors hover:border-lucy corner-marks"
     >
       {/* Hover left accent */}

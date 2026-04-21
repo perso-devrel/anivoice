@@ -34,7 +34,7 @@ export default function Footer() {
             <h4 className={FOOTER_HEADING_CLASS}>{t('footer.product')}</h4>
             <div className={FOOTER_SECTION_CLASS}>
               <Link to="/studio" className={FOOTER_LINK_CLASS}>{t('common.studio')}</Link>
-              <Link to="/library" className={FOOTER_LINK_CLASS}>{t('common.library')}</Link>
+              <Link to="/archive" className={FOOTER_LINK_CLASS}>{t('common.library')}</Link>
               <Link to="/pricing" className={FOOTER_LINK_CLASS}>{t('common.pricing')}</Link>
             </div>
           </div>

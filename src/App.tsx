@@ -62,8 +62,8 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<AuthPage />} />
         <Route path="/signup" element={<AuthPage />} />
-        <Route path="/library" element={<LibraryPage />} />
-        <Route path="/library/:id" element={<LibraryDetailPage />} />
+        <Route path="/archive" element={<LibraryPage />} />
+        <Route path="/archive/:id" element={<LibraryDetailPage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/test" element={<TestPage />} />
         <Route

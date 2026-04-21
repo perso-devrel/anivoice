@@ -82,11 +82,11 @@ describe('computeDubbingProgress', () => {
 
 describe('buildShareUrl', () => {
   it('builds project-specific URL when id is provided', () => {
-    expect(buildShareUrl('https://example.com', 42)).toBe('https://example.com/library/42');
+    expect(buildShareUrl('https://example.com', 42)).toBe('https://example.com/archive/42');
   });
 
   it('builds generic library URL when id is null', () => {
-    expect(buildShareUrl('https://example.com', null)).toBe('https://example.com/library');
+    expect(buildShareUrl('https://example.com', null)).toBe('https://example.com/archive');
   });
 });
 

@@ -341,7 +341,7 @@ export default function LandingPage() {
               <span aria-hidden>→</span>
             </Link>
             <Link
-              to="/library"
+              to="/archive"
               className="inline-flex items-center justify-center gap-3 border-2 border-bone text-bone font-display font-bold uppercase tracking-widest text-sm px-8 py-4 hover:bg-bone hover:text-void transition-colors"
             >
               <span>{t('landing.ctaSecondary')}</span>

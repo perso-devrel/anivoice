@@ -8,7 +8,7 @@ import { XIcon, MenuIcon, ChevronDownIcon } from '../icons';
 const NAV_LINK_KEYS = [
   { to: '/dashboard', labelKey: 'common.dashboard', authOnly: true },
   { to: '/studio', labelKey: 'common.studio', authOnly: true },
-  { to: '/library', labelKey: 'common.library', authOnly: false },
+  { to: '/archive', labelKey: 'common.library', authOnly: false },
   { to: '/pricing', labelKey: 'common.pricing', authOnly: false },
 ] as const;
 

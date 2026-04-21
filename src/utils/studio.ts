@@ -40,8 +40,8 @@ export function computeDubbingProgress(pollProgress: number): number {
 
 export function buildShareUrl(origin: string, dbProjectId: number | null): string {
   return dbProjectId
-    ? `${origin}/library/${dbProjectId}`
-    : `${origin}/library`;
+    ? `${origin}/archive/${dbProjectId}`
+    : `${origin}/archive`;
 }
 
 export function toggleArrayItem<T>(arr: T[], item: T): T[] {

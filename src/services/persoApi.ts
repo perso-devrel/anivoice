@@ -24,6 +24,19 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+api.interceptors.request.use(async (config) => {
+  try {
+    const { getAuth } = await import('firebase/auth');
+    const user = getAuth().currentUser;
+    if (user) {
+      config.headers.Authorization = `Bearer ${await user.getIdToken()}`;
+    }
+  } catch {
+    // Firebase not available
+  }
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
   (error) => Promise.reject(new Error(extractApiErrorMessage(error))),

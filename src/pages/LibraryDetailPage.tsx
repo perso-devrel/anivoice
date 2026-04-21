@@ -61,7 +61,7 @@ export default function LibraryDetailPage() {
           <h1 className="text-2xl font-bold text-bone font-display mb-2">{t('library.notFound')}</h1>
           <p className="text-bone/60 mb-6">{t('library.notFoundDesc')}</p>
           <Link
-            to="/library"
+            to="/archive"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-lucy text-void border-2 border-lucy hover:bg-void hover:text-lucy font-medium text-sm transition-colors"
           >
             {t('library.backToLibrary')}
@@ -80,7 +80,7 @@ export default function LibraryDetailPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Back link */}
         <Link
-          to="/library"
+          to="/archive"
           className="inline-flex items-center gap-1.5 font-mono uppercase tracking-widest text-xs text-bone/60 hover:text-bone transition-colors mb-6"
         >
           <ChevronLeftIcon />
