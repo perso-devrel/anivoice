@@ -10,10 +10,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await migrate();
     await ensureUser(token);
 
-    const { seconds, description } = req.body;
+    const { seconds, description, paymentIntentId } = req.body;
 
     if (!seconds || seconds <= 0) {
       return res.status(400).json({ error: 'seconds required' });
+    }
+
+    // TODO: Stripe webhook 기반 결제 검증으로 교체 필요
+    if (!paymentIntentId) {
+      return res.status(400).json({ error: 'paymentIntentId required — payment verification missing' });
     }
 
     await db.execute({

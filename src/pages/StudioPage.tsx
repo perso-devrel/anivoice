@@ -257,13 +257,13 @@ export default function StudioPage() {
       try {
         const script = await getScript(primaryProjectSeq, space.spaceSeq);
         setSentences(script.sentences);
-      } catch { }
+      } catch { /* script may not be ready yet */ }
 
       let links: PersoDownloadLinks | null = null;
       try {
         links = await getDownloadLinks(primaryProjectSeq, space.spaceSeq);
         setDownloadLinks(links);
-      } catch { }
+      } catch { /* download links may not be ready yet */ }
 
       if (dbProject.id && links) {
         await updateProject(dbProject.id, {

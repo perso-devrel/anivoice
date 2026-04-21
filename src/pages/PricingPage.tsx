@@ -71,6 +71,7 @@ export default function PricingPage() {
       const result = await purchaseCredits({
         seconds: modal.seconds,
         description: t('pricing.creditRecharge', { amount: modal.label }),
+        paymentIntentId: `mock_${Date.now()}`,
       });
       useAuthStore.getState().setCreditSeconds(result.creditSeconds);
 

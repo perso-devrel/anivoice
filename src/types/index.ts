@@ -12,23 +12,6 @@ export type SupportedLanguage = 'ja' | 'ko' | 'en' | 'es' | 'pt' | 'id' | 'ar' |
 
 export type ProjectStatus = 'uploading' | 'analyzing' | 'dubbing' | 'lip-syncing' | 'completed' | 'failed';
 
-export interface Project {
-  id: string;
-  userId: string;
-  title: string;
-  originalFileName: string;
-  originalLanguage: SupportedLanguage;
-  targetLanguages: SupportedLanguage[];
-  status: ProjectStatus;
-  progress: number;
-  duration: number;
-  thumbnailUrl?: string;
-  createdAt: string;
-  updatedAt: string;
-  spaceSeq?: number;
-  projectSeq?: number;
-}
-
 // Perso API types
 
 export interface PersoSpaceBanner {
@@ -51,23 +34,6 @@ export interface PersoUploadedFile {
   thumbnailFilePath: string;
   size: number;
   durationMs: number;
-}
-
-export interface PersoProject {
-  seq: number;
-  projectType: string;
-  title: string;
-  isEditable: boolean;
-  durationMs: number;
-  sourceLanguage: { code: string; name: string };
-  targetLanguage: { code: string; name: string };
-  progress: number;
-  progressReason: string;
-  hasFailed: boolean;
-  isLipSync: boolean;
-  thumbnailUrl?: string;
-  createDate: string;
-  updateDate: string;
 }
 
 export interface PersoProgress {

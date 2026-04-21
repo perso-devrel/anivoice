@@ -1,7 +1,16 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { buildTargetUrl, buildForwardHeaders, serializeBody, isHopByHopHeader } from './_lib/proxy.js';
+import { verifyFirebaseToken, sendAuthAwareError } from './_lib/auth.js';
+
+const ALLOWED_PATH_PREFIX = /^(spaces|files|projects|dubbing|editing|lip-sync|languages|quota)\b/;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  try {
+    await verifyFirebaseToken(req);
+  } catch (e) {
+    return sendAuthAwareError(res, e);
+  }
+
   const apiKey = process.env.XP_API_KEY;
   const baseUrl = (process.env.PERSO_API_BASE_URL || 'https://api.perso.ai').replace(/\/+$/, '');
 
@@ -13,6 +22,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { _path: pathParam, ...restQuery } = req.query as Record<string, string | string[]>;
   const persoPath = Array.isArray(pathParam) ? pathParam[0] : pathParam || '';
+
+  if (persoPath && !ALLOWED_PATH_PREFIX.test(persoPath)) {
+    return res.status(400).json({ error: 'Invalid proxy path' });
+  }
   const targetUrl = buildTargetUrl(baseUrl, persoPath, restQuery);
   const forwardHeaders = buildForwardHeaders(apiKey, req.headers['content-type'] as string | undefined, req.method);
   const body = serializeBody(req.method, req.body);

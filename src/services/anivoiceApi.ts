@@ -142,7 +142,7 @@ export async function deductCredits(projectId: number, durationMs: number, langu
   return data;
 }
 
-export async function purchaseCredits(params: { seconds?: number; description?: string }): Promise<{ creditSeconds: number }> {
+export async function purchaseCredits(params: { seconds?: number; description?: string; paymentIntentId?: string }): Promise<{ creditSeconds: number; added: number }> {
   const { data } = await api.post('/credits/purchase', params);
   return data;
 }
