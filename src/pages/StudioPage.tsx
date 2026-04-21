@@ -297,23 +297,8 @@ export default function StudioPage() {
         delete next[sentenceSeq];
         return next;
       });
-
-      if (spaceSeq) {
-        setProcessStage('re-dubbing');
-        setIsProcessing(true);
-        await requestProofread(projectSeq, spaceSeq);
-        await pollProgress(projectSeq, spaceSeq, (p) => {
-          setProgress(p.progress);
-        });
-        const links = await getDownloadLinks(projectSeq, spaceSeq);
-        setDownloadLinks(links);
-        setIsProcessing(false);
-        setProcessStage('done');
-        setProgress(100);
-      }
     } catch (err) {
       setError(getErrorMessage(err));
-      setIsProcessing(false);
     } finally {
       setSavingSentence(null);
     }

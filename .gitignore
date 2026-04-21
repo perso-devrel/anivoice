@@ -53,3 +53,5 @@ review.md
 
 # Test media files (dev-only, large binaries)
 public/test_*
+.vercel
+.env*.local

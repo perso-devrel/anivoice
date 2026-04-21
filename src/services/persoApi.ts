@@ -497,7 +497,7 @@ export async function getDownloadLinks(
     'voiceAudio',
     'voicewithBackgroundAudio',
     'translatedSubtitle',
-    'all', // zip
+    'all',
   ];
 
   const results = await Promise.allSettled(
