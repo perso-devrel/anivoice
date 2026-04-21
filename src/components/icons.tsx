@@ -22,7 +22,6 @@ import {
   ArrowsClockwise as PhArrowsClockwise,
   Microphone as PhMicrophone,
   Globe as PhGlobe,
-  SmileyWink as PhSmileyWink,
   PencilSimple as PhPencilSimple,
   Faders as PhFaders,
   Translate as PhTranslate,
@@ -138,9 +137,6 @@ export function GlobeIcon({ className = 'w-8 h-8' }: IconProps) {
   return <PhGlobe className={className} weight="regular" />;
 }
 
-export function LipSyncIcon({ className = 'w-8 h-8' }: IconProps) {
-  return <PhSmileyWink className={className} weight="regular" />;
-}
 
 export function EditIcon({ className = 'w-8 h-8' }: IconProps) {
   return <PhPencilSimple className={className} weight="regular" />;

@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { buildTargetUrl, buildForwardHeaders, serializeBody, isHopByHopHeader } from './_lib/proxy.js';
 import { verifyFirebaseToken, sendAuthAwareError } from './_lib/auth.js';
 
-const ALLOWED_PATH_PREFIX = /^(spaces|files|projects|dubbing|editing|lip-sync|languages|quota)\b/;
+const ALLOWED_PATH_PREFIX = /^(portal|video-translator|spaces|files|projects|dubbing|editing|languages|quota)\b/;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {

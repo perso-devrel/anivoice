@@ -243,7 +243,6 @@ interface TranslateRequest {
   sourceLanguageCode: string;
   targetLanguageCodes: string[];
   numberOfSpeakers: number;
-  withLipSync?: boolean;
   preferredSpeedType: 'GREEN' | 'RED';
 }
 
@@ -277,7 +276,7 @@ export async function requestTranslation(
 }
 
 /**
- * Extract project ID array from Perso translate / lip-sync responses.
+ * Extract project ID array from Perso translate responses.
  * Response shapes vary (`{ result: { startGenerateProjectIdList } }`,
  * `{ startGenerateProjectIdList }`, `{ projectSeqList }`, single object, etc.)
  * so we try all known variants.
@@ -462,31 +461,13 @@ export async function resetSentence(projectSeq: number, sentenceSeq: number) {
 export async function requestProofread(
   projectSeq: number,
   spaceSeq: number,
-  isLipSync = false
 ) {
   return retryWithBackoff(async () => {
     const { data } = await api.post(
       `/video-translator/api/v1/project/${projectSeq}/space/${spaceSeq}/proofread`,
-      { isLipSync, preferredSpeedType: 'GREEN' }
-    );
-    return unwrapResult(data);
-  });
-}
-
-export async function requestLipSync(projectSeq: number, spaceSeq: number) {
-  return retryWithBackoff(async () => {
-    const { data } = await api.post(
-      `/video-translator/api/v1/projects/${projectSeq}/spaces/${spaceSeq}/lip-sync`,
       { preferredSpeedType: 'GREEN' }
     );
-
-    const ids = extractProjectIds(data);
-    if (ids.length === 0) {
-      throw new Error(
-        `Perso lip-sync API did not return project IDs. Response: ${JSON.stringify(data).slice(0, ERROR_SNIPPET_LENGTH)}`
-      );
-    }
-    return ids;
+    return unwrapResult(data);
   });
 }
 
@@ -594,7 +575,6 @@ export async function estimateQuota(
   spaceSeq: number,
   params: {
     mediaType: 'VIDEO' | 'AUDIO';
-    lipSync: boolean;
     durationMs: number;
     targetLanguageSize?: number;
   }

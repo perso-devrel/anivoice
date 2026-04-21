@@ -51,11 +51,6 @@ describe('mapDbStatus', () => {
     expect(mapDbStatus(makeProject({ status: '', progress: 100 }))).toBe('completed');
   });
 
-  it('returns lip-syncing for lip-related status', () => {
-    expect(mapDbStatus(makeProject({ status: 'lip_sync' }))).toBe('lip-syncing');
-    expect(mapDbStatus(makeProject({ status: 'Lip Syncing' }))).toBe('lip-syncing');
-  });
-
   it('returns dubbing for dub/translat status', () => {
     expect(mapDbStatus(makeProject({ status: 'dubbing' }))).toBe('dubbing');
     expect(mapDbStatus(makeProject({ status: 'translating' }))).toBe('dubbing');
@@ -92,10 +87,6 @@ describe('getProgressBarColor', () => {
 
   it('returns blue for dubbing', () => {
     expect(getProgressBarColor('dubbing')).toBe('bg-blue-400');
-  });
-
-  it('returns blue for lip-syncing', () => {
-    expect(getProgressBarColor('lip-syncing')).toBe('bg-blue-400');
   });
 
   it('returns green for completed', () => {
@@ -245,9 +236,8 @@ describe('countProjectStats', () => {
       makeMapped({ mappedStatus: 'uploading' }),
       makeMapped({ mappedStatus: 'analyzing' }),
       makeMapped({ mappedStatus: 'dubbing' }),
-      makeMapped({ mappedStatus: 'lip-syncing' }),
     ];
-    expect(countProjectStats(projects)).toEqual({ inProgress: 4, completed: 0 });
+    expect(countProjectStats(projects)).toEqual({ inProgress: 3, completed: 0 });
   });
 });
 

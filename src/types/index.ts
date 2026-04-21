@@ -10,7 +10,7 @@ export interface User {
 
 export type SupportedLanguage = 'ja' | 'ko' | 'en' | 'es' | 'pt' | 'id' | 'ar' | 'zh';
 
-export type ProjectStatus = 'uploading' | 'analyzing' | 'dubbing' | 'lip-syncing' | 'completed' | 'failed';
+export type ProjectStatus = 'uploading' | 'analyzing' | 'dubbing' | 'completed' | 'failed';
 
 // Perso API types
 

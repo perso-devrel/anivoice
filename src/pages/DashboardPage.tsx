@@ -18,7 +18,7 @@ import type { ProjectStatus } from '../types';
 const PROJECT_PAGE_SIZE = 20;
 const CREDIT_HISTORY_DAYS = 30;
 const PROGRESS_POLL_MS = 5000;
-const ACTIVE_STATUSES = new Set(['analyzing', 'uploading', 'dubbing', 'lip-syncing']);
+const ACTIVE_STATUSES = new Set(['analyzing', 'uploading', 'dubbing']);
 
 const DASHBOARD_TABS: { key: FilterTab; i18nKey: string }[] = [
   { key: 'all', i18nKey: 'common.all' },
@@ -31,7 +31,6 @@ const PROJECT_STATUS: Record<string, { labelKey: string; badgeClass: string }> =
   analyzing: { labelKey: 'dashboard.statusAnalyzing', badgeClass: 'text-david bg-david/10' },
   uploading: { labelKey: 'dashboard.statusUploading', badgeClass: 'text-david bg-david/10' },
   dubbing: { labelKey: 'dashboard.statusDubbing', badgeClass: 'text-lucy bg-lucy/10' },
-  'lip-syncing': { labelKey: 'dashboard.statusLipSyncing', badgeClass: 'text-wire bg-wire/10' },
   completed: { labelKey: 'dashboard.statusCompleted', badgeClass: 'text-wire bg-wire/10' },
   failed: { labelKey: 'dashboard.statusFailed', badgeClass: 'text-rebecca bg-rebecca/10' },
 };

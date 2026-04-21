@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
-import { UploadIcon, VoiceIcon, GlobeIcon, LipSyncIcon, EditIcon, SettingsIcon, DownloadIcon, PlayIcon, ChevronDownIcon, ClockIcon } from '../components/icons';
+import { UploadIcon, VoiceIcon, GlobeIcon, EditIcon, SettingsIcon, DownloadIcon, PlayIcon, ChevronDownIcon, ClockIcon } from '../components/icons';
 import { SUPPORTED_LANGUAGES } from '../constants';
 import { CREDIT_PRICE_PER_MINUTE_USD, TIME_PACK_10_MIN_SECONDS, TIME_PACK_50_MIN_SECONDS, TIME_PACK_100_MIN_SECONDS, TIME_PACK_10_MIN_PRICE, TIME_PACK_50_MIN_PRICE, TIME_PACK_100_MIN_PRICE } from '../utils/pricing';
 
@@ -16,14 +16,12 @@ const FAQ_KEYS = [
 const FEATURE_KEYS = [
   { iconId: 'voice', titleKey: 'landing.featureVoice', descKey: 'landing.featureVoiceDesc' },
   { iconId: 'globe', titleKey: 'landing.featureLang', descKey: 'landing.featureLangDesc' },
-  { iconId: 'lipSync', titleKey: 'landing.featureLipSync', descKey: 'landing.featureLipSyncDesc' },
   { iconId: 'edit', titleKey: 'landing.featureEdit', descKey: 'landing.featureEditDesc' },
 ] as const;
 
 const FEATURE_ICONS: Record<string, React.ReactNode> = {
   voice: <VoiceIcon />,
   globe: <GlobeIcon />,
-  lipSync: <LipSyncIcon />,
   edit: <EditIcon />,
 };
 

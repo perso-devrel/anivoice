@@ -6,7 +6,7 @@ import { PlayIcon, DownloadIcon, AlertCircleIcon, LoadingSpinner } from './icons
 import { SentenceEditList } from './SentenceEditList';
 import { PublishSection } from './PublishSection';
 
-type ProcessStage = 'uploading' | 'dubbing' | 're-dubbing' | 'lip-syncing' | 'done';
+type ProcessStage = 'uploading' | 'dubbing' | 're-dubbing' | 'done';
 
 const FLOW_STAGES: Record<string, { key: string; i18nKey: string }[]> = {
   initial: [
@@ -18,15 +18,10 @@ const FLOW_STAGES: Record<string, { key: string; i18nKey: string }[]> = {
     { key: 're-dubbing', i18nKey: 'studio.progressEditing' },
     { key: 'done', i18nKey: 'studio.progressComplete' },
   ],
-  lipsync: [
-    { key: 'lip-syncing', i18nKey: 'studio.progressLipSync' },
-    { key: 'done', i18nKey: 'studio.progressComplete' },
-  ],
 };
 
 function getFlowType(stage: ProcessStage): string {
   if (stage === 're-dubbing') return 'editing';
-  if (stage === 'lip-syncing') return 'lipsync';
   return 'initial';
 }
 
@@ -61,7 +56,6 @@ interface ResultStepProps {
   downloadLinks: PersoDownloadLinks | null;
   projectSeq: number | null;
   spaceSeq: number | null;
-  withLipSync: boolean;
   sentences: PersoScriptSentence[];
   editingValues: Record<number, string>;
   savingSentence: number | null;
@@ -74,7 +68,6 @@ interface ResultStepProps {
   onRetry: () => void;
   onGoBack: () => void;
   onDownload: (type: 'video' | 'subtitle' | 'audio' | 'zip') => void;
-  onRequestLipSync: () => void;
   onTagToggle: (tagId: number) => void;
   onPublish: () => void;
   onUnpublish: () => void;
@@ -95,7 +88,6 @@ export function ResultStep({
   downloadLinks,
   projectSeq,
   spaceSeq,
-  withLipSync,
   sentences,
   editingValues,
   savingSentence,
@@ -108,7 +100,6 @@ export function ResultStep({
   onRetry,
   onGoBack,
   onDownload,
-  onRequestLipSync,
   onTagToggle,
   onPublish,
   onUnpublish,
@@ -245,16 +236,6 @@ export function ResultStep({
           </button>
         ))}
       </div>
-
-      {!withLipSync && projectSeq && spaceSeq && (
-        <button
-          type="button"
-          onClick={onRequestLipSync}
-          className="w-full bg-ink border-2 border-bone/30 px-4 py-3 font-mono uppercase text-sm text-wire hover:text-bone transition-colors"
-        >
-          {t('studio.progressLipSync')}
-        </button>
-      )}
 
       <PublishSection
         isPublished={isPublished}

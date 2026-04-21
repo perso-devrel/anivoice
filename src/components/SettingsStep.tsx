@@ -19,11 +19,9 @@ interface SettingsStepProps {
   selectedFile: File | null;
   sourceLanguage: string;
   targetLanguages: string[];
-  withLipSync: boolean;
   onFileReset: () => void;
   onSourceLanguageChange: (lang: string) => void;
   onTargetLanguageToggle: (lang: string) => void;
-  onWithLipSyncToggle: () => void;
   onStartDubbing: () => void;
 }
 
@@ -31,11 +29,9 @@ export function SettingsStep({
   selectedFile,
   sourceLanguage,
   targetLanguages,
-  withLipSync,
   onFileReset,
   onSourceLanguageChange,
   onTargetLanguageToggle,
-  onWithLipSyncToggle,
   onStartDubbing,
 }: SettingsStepProps) {
   const { t } = useTranslation();
@@ -116,22 +112,6 @@ export function SettingsStep({
             );
           })}
         </div>
-      </SettingsSection>
-
-      <SettingsSection label="OPTIONS" className="">
-        <label className="flex items-center gap-3 cursor-pointer">
-          <button
-            type="button"
-            onClick={onWithLipSyncToggle}
-            className={`w-11 h-6 rounded-full transition-colors relative ${withLipSync ? 'bg-lucy' : 'bg-bone/30'}`}
-          >
-            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-bone transition-transform ${withLipSync ? 'left-5.5 translate-x-0' : 'left-0.5'}`} />
-          </button>
-          <div>
-            <span className="font-mono uppercase text-sm text-bone/80">{t('studio.progressLipSync')}</span>
-            <p className="text-xs text-bone/40 mt-0.5">{t('studio.lipSyncProRequired')}</p>
-          </div>
-        </label>
       </SettingsSection>
 
       <button

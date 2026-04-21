@@ -13,7 +13,6 @@ import {
   getProgress,
   translateSentence,
   requestProofread,
-  requestLipSync,
   getDownloadLinks,
   resolvePersoFileUrl,
 } from '../services/persoApi';
@@ -35,8 +34,6 @@ import {
   PROGRESS_TRANSLATION_REQUESTED,
   PROGRESS_POLL_COMPLETE,
   PROGRESS_SCRIPT_FETCHED,
-  PROGRESS_LIP_SYNC_BASE,
-  PROGRESS_LIP_SYNC_SCALE,
 } from '../utils/studio';
 import { StepIndicator, type Step } from '../components/StepIndicator';
 import { SettingsStep } from '../components/SettingsStep';
@@ -54,10 +51,8 @@ export default function StudioPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [sourceLanguage, setSourceLanguage] = useState('auto');
   const [targetLanguages, setTargetLanguages] = useState<string[]>([]);
-  const [withLipSync, setWithLipSync] = useState(false);
-
   const [isProcessing, setIsProcessing] = useState(false);
-  const [processStage, setProcessStage] = useState<'uploading' | 'dubbing' | 're-dubbing' | 'lip-syncing' | 'done'>('uploading');
+  const [processStage, setProcessStage] = useState<'uploading' | 'dubbing' | 're-dubbing' | 'done'>('uploading');
   const [progress, setProgress] = useState(0);
   const [remainingMinutes, setRemainingMinutes] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -219,7 +214,6 @@ export default function StudioPage() {
         sourceLanguageCode: sourceLanguage,
         targetLanguageCodes: targetLanguages,
         numberOfSpeakers: 1,
-        withLipSync,
         preferredSpeedType: 'GREEN',
       });
 
@@ -284,7 +278,7 @@ export default function StudioPage() {
       setRemainingMinutes(null);
       setIsProcessing(false);
     }
-  }, [selectedFile, sourceLanguage, targetLanguages, withLipSync, t, navigate]);
+  }, [selectedFile, sourceLanguage, targetLanguages, t, navigate]);
 
   async function handleSaveSentence(sentenceSeq: number) {
     if (!projectSeq || !(sentenceSeq in editingValues)) return;
@@ -342,31 +336,6 @@ export default function StudioPage() {
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
-      setIsProcessing(false);
-    }
-  }
-
-  async function handleRequestLipSync() {
-    if (!projectSeq || !spaceSeq) return;
-    setProcessStage('lip-syncing');
-    setIsProcessing(true);
-    setProgress(PROGRESS_LIP_SYNC_BASE);
-    try {
-      const lipSyncIds = await requestLipSync(projectSeq, spaceSeq);
-      const lipSyncProjectSeq = lipSyncIds[0];
-      if (!lipSyncProjectSeq) {
-        throw new Error(t('studio.noLipSyncProjectId'));
-      }
-      await pollProgress(lipSyncProjectSeq, spaceSeq, (p) => {
-        setProgress(PROGRESS_LIP_SYNC_BASE + p.progress * PROGRESS_LIP_SYNC_SCALE);
-      });
-      const links = await getDownloadLinks(projectSeq, spaceSeq);
-      setDownloadLinks(links);
-      setIsProcessing(false);
-      setProcessStage('done');
-      setProgress(100);
-    } catch (err) {
-      setError(getErrorMessage(err));
       setIsProcessing(false);
     }
   }
@@ -441,7 +410,6 @@ export default function StudioPage() {
     setEditingValues({});
     setError(null);
     setProgress(0);
-    setWithLipSync(false);
     setDbProjectId(null);
     setSelectedTags([]);
     setIsPublished(false);
@@ -463,11 +431,9 @@ export default function StudioPage() {
             selectedFile={selectedFile}
             sourceLanguage={sourceLanguage}
             targetLanguages={targetLanguages}
-            withLipSync={withLipSync}
             onFileReset={handleFileReset}
             onSourceLanguageChange={handleSourceLanguageChange}
             onTargetLanguageToggle={handleTargetLanguageToggle}
-            onWithLipSyncToggle={() => setWithLipSync(!withLipSync)}
             onStartDubbing={handleStartDubbing}
           />
         )}
@@ -482,7 +448,6 @@ export default function StudioPage() {
             downloadLinks={downloadLinks}
             projectSeq={projectSeq}
             spaceSeq={spaceSeq}
-            withLipSync={withLipSync}
             sentences={sentences}
             editingValues={editingValues}
             savingSentence={savingSentence}
@@ -495,7 +460,6 @@ export default function StudioPage() {
             onRetry={handleStartDubbing}
             onGoBack={() => { setError(null); setStep('settings'); }}
             onDownload={handleDownload}
-            onRequestLipSync={handleRequestLipSync}
             onTagToggle={(tagId) => setSelectedTags((prev) => toggleArrayItem(prev, tagId))}
             onPublish={handlePublish}
             onUnpublish={handleUnpublish}

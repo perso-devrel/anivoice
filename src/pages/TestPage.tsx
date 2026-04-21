@@ -235,7 +235,7 @@ export default function TestPage() {
     await run('languages', () => api.getSupportedLanguages());
     if (spaceSeq) {
       await run('quotaStatus', () => api.getQuotaStatus(spaceSeq!));
-      await run('estimateQuota', () => api.estimateQuota(spaceSeq!, { mediaType: 'VIDEO', lipSync: false, durationMs: 30000 }));
+      await run('estimateQuota', () => api.estimateQuota(spaceSeq!, { mediaType: 'VIDEO', durationMs: 30000 }));
       await run('ensureQueue', () => api.ensureSpaceQueue(spaceSeq!));
       await run('listProjects', () => api.listProjects(spaceSeq!, { size: 5 }));
     }
@@ -652,40 +652,7 @@ export default function TestPage() {
           )}
         </Section>
 
-        {/* ── 6. Lip Sync API ── */}
-        <Section title="Lip Sync API" description="Sync mouth movements to dubbed audio (Pro plan)" num={6}>
-          <TestRow
-            label="Request lip sync"
-            description="Apply lip sync to a completed translation project."
-            endpoint={`POST /video-translator/api/v1/projects/${projectSeq ?? '{projectSeq}'}/spaces/${spaceSeq ?? '{spaceSeq}'}/lip-sync`}
-            status={statuses['lipSync'] || 'idle'}
-            result={results['lipSync'] || null}
-            docExpected={`{ "result": { "startGenerateProjectIdList": [1, 2, 3] } }`}
-            onRun={() => {
-              if (!projectSeq || !spaceSeq) return alert('ID is required');
-              run('lipSync', () => api.requestLipSync(projectSeq!, spaceSeq!));
-            }}
-          />
-
-          <TestRow
-            label="Lip sync history"
-            description="Retrieve lip sync generation history with pagination."
-            endpoint={`GET .../lip-sync/generated`}
-            status={statuses['lipSyncHistory'] || 'idle'}
-            result={results['lipSyncHistory'] || null}
-            onRun={() => {
-              if (!projectSeq || !spaceSeq) return alert('ID is required');
-              run('lipSyncHistory', async () => {
-                const { data } = await axios.get(
-                  `${BASE}/video-translator/api/v1/projects/${projectSeq}/spaces/${spaceSeq}/lip-sync/generated`
-                );
-                return data;
-              });
-            }}
-          />
-        </Section>
-
-        {/* ── 7. Language API ── */}
+        {/* ── 6. Language API ── */}
         <Section title="Language API" description="Retrieve supported translation languages" num={7}>
           <TestRow
             label="Supported languages"
@@ -717,7 +684,7 @@ export default function TestPage() {
             status={statuses['estimateQuota'] || 'idle'}
             result={results['estimateQuota'] || null}
             docExpected={`{ "result": { "expectedUsedQuota": 5000 } }`}
-            onRun={() => { if (!spaceSeq) return alert('spaceSeq is required'); run('estimateQuota', () => api.estimateQuota(spaceSeq!, { mediaType: 'VIDEO', lipSync: false, durationMs: 30000 })); }}
+            onRun={() => { if (!spaceSeq) return alert('spaceSeq is required'); run('estimateQuota', () => api.estimateQuota(spaceSeq!, { mediaType: 'VIDEO', durationMs: 30000 })); }}
           />
         </Section>
 
@@ -881,7 +848,7 @@ export default function TestPage() {
             onRun={() => {
               if (!projectSeq || !spaceSeq) return alert('ID is required');
               run('edgeBrokenTargets', async () => {
-                const targets = ['video', 'originalSubtitle', 'translatedSubtitle', 'originalVoiceAudio', 'backgroundAudio', 'translatedAudio', 'lipSyncVideo', 'originalVoiceSpeakers', 'speakerSegmentExcel', 'speakerSegmentWithTranslationExcel'];
+                const targets = ['video', 'originalSubtitle', 'translatedSubtitle', 'originalVoiceAudio', 'backgroundAudio', 'translatedAudio', 'originalVoiceSpeakers', 'speakerSegmentExcel', 'speakerSegmentWithTranslationExcel'];
                 const results: Record<string, string> = {};
                 for (const t of targets) {
                   try {

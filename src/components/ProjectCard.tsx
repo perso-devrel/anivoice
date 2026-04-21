@@ -22,12 +22,6 @@ const STATUS_CONFIG: Record<
     badgeBg: 'bg-blue-400/10',
     badgeText: 'text-blue-400',
   },
-  'lip-syncing': {
-    labelKey: 'dashboard.statusLipSyncing',
-    dotClass: 'bg-blue-300',
-    badgeBg: 'bg-blue-300/10',
-    badgeText: 'text-blue-300',
-  },
   uploading: {
     labelKey: 'dashboard.statusUploading',
     dotClass: 'bg-yellow-300',
