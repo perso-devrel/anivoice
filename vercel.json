@@ -1,4 +1,11 @@
 {
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "feature/*": false,
+      "dev": false
+    }
+  },
   "functions": {
     "api/**/*.ts": {
       "includeFiles": "api/_lib/**"

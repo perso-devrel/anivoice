@@ -23,6 +23,7 @@ import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../
 import { getErrorMessage } from '../utils/format';
 import {
   getDownloadUrl,
+  downloadSrt,
   computeDubbingProgress,
   computeDeductSeconds,
   buildShareUrl,
@@ -297,23 +298,8 @@ export default function StudioPage() {
         delete next[sentenceSeq];
         return next;
       });
-
-      if (spaceSeq) {
-        setProcessStage('re-dubbing');
-        setIsProcessing(true);
-        await requestProofread(projectSeq, spaceSeq);
-        await pollProgress(projectSeq, spaceSeq, (p) => {
-          setProgress(p.progress);
-        });
-        const links = await getDownloadLinks(projectSeq, spaceSeq);
-        setDownloadLinks(links);
-        setIsProcessing(false);
-        setProcessStage('done');
-        setProgress(100);
-      }
     } catch (err) {
       setError(getErrorMessage(err));
-      setIsProcessing(false);
     } finally {
       setSavingSentence(null);
     }
@@ -341,6 +327,13 @@ export default function StudioPage() {
   }
 
   function handleDownload(type: 'video' | 'subtitle' | 'audio' | 'zip') {
+    if (type === 'subtitle') {
+      if (sentences.length > 0) {
+        const name = selectedFile?.name?.replace(/\.[^.]+$/, '') || 'subtitle';
+        downloadSrt(sentences, `${name}.srt`);
+      }
+      return;
+    }
     const path = getDownloadUrl(type, downloadLinks);
     if (path) {
       const fullUrl = resolvePersoFileUrl(path);

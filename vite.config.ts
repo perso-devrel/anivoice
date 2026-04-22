@@ -37,6 +37,7 @@ export default defineConfig(({ mode }) => {
               }
               proxyReq.removeHeader('origin');
               proxyReq.removeHeader('referer');
+              proxyReq.removeHeader('authorization');
               console.log(`[proxy] ${req.method} ${req.url} → ${persoApiTarget}${proxyReq.path}`);
             });
             proxy.on('proxyRes', (proxyRes, req) => {
@@ -68,6 +69,7 @@ export default defineConfig(({ mode }) => {
               }
               proxyReq.removeHeader('origin');
               proxyReq.removeHeader('referer');
+              proxyReq.removeHeader('authorization');
             });
           },
         },

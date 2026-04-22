@@ -496,8 +496,7 @@ export async function getDownloadLinks(
     'dubbingVideo',
     'voiceAudio',
     'voicewithBackgroundAudio',
-    'translatedSubtitle',
-    'all', // zip
+    'all',
   ];
 
   const results = await Promise.allSettled(

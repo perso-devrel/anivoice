@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getDownloadUrl, computeDubbingProgress, buildShareUrl, toggleArrayItem } from './studio';
+import { getDownloadUrl, buildSrt, computeDubbingProgress, buildShareUrl, toggleArrayItem } from './studio';
 import type { PersoDownloadLinks } from '../types';
 
 describe('getDownloadUrl', () => {
@@ -112,5 +112,22 @@ describe('toggleArrayItem', () => {
     const original = [1, 2, 3];
     toggleArrayItem(original, 2);
     expect(original).toEqual([1, 2, 3]);
+  });
+});
+
+describe('buildSrt', () => {
+  it('generates valid SRT from sentences', () => {
+    const sentences = [
+      { seq: 1, speakerOrderIndex: 0, offsetMs: 0, durationMs: 2500, originalText: 'こんにちは', translatedText: 'Hello' },
+      { seq: 2, speakerOrderIndex: 0, offsetMs: 3000, durationMs: 1500, originalText: 'さようなら', translatedText: 'Goodbye' },
+    ];
+    const srt = buildSrt(sentences);
+    expect(srt).toBe(
+      '1\n00:00:00,000 --> 00:00:02,500\nHello\n\n2\n00:00:03,000 --> 00:00:04,500\nGoodbye'
+    );
+  });
+
+  it('returns empty string for empty sentences', () => {
+    expect(buildSrt([])).toBe('');
   });
 });

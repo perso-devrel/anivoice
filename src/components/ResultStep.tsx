@@ -35,13 +35,12 @@ const DOWNLOAD_BUTTONS = [
   { i18nKey: 'studio.downloadZip', type: 'zip' },
 ] as const;
 
-function isDownloadAvailable(type: string, links: PersoDownloadLinks | null): boolean {
-  if (!links) return false;
+function isDownloadAvailable(type: string, links: PersoDownloadLinks | null, sentenceCount = 0): boolean {
   switch (type) {
-    case 'video': return !!links.videoFile?.videoDownloadLink;
-    case 'subtitle': return !!(links.srtFile?.translatedSubtitleDownloadLink || links.srtFile?.originalSubtitleDownloadLink);
-    case 'audio': return !!(links.audioFile?.voiceWithBackgroundAudioDownloadLink || links.audioFile?.voiceAudioDownloadLink);
-    case 'zip': return !!links.zippedFileDownloadLink;
+    case 'video': return !!links?.videoFile?.videoDownloadLink;
+    case 'subtitle': return sentenceCount > 0;
+    case 'audio': return !!(links?.audioFile?.voiceWithBackgroundAudioDownloadLink || links?.audioFile?.voiceAudioDownloadLink);
+    case 'zip': return !!links?.zippedFileDownloadLink;
     default: return false;
   }
 }
@@ -228,7 +227,7 @@ export function ResultStep({
             key={type}
             type="button"
             onClick={() => onDownload(type)}
-            disabled={!isDownloadAvailable(type, downloadLinks)}
+            disabled={!isDownloadAvailable(type, downloadLinks, sentences.length)}
             className="bg-ink border-2 border-bone/30 px-4 py-3 flex items-center justify-center gap-2 font-mono uppercase text-[11px] tracking-wider text-bone/80 hover:text-bone hover:border-bone transition-colors disabled:opacity-30"
           >
             <DownloadIcon className="w-4 h-4" />
