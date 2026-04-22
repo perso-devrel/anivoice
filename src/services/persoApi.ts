@@ -184,10 +184,17 @@ export async function getSpace(spaceSeq: number): Promise<PersoSpaceBanner> {
   return unwrapResult(data);
 }
 
+function sanitizeFileName(name: string): string {
+  const ext = name.lastIndexOf('.') >= 0 ? name.slice(name.lastIndexOf('.')) : '';
+  const base = name.slice(0, name.length - ext.length);
+  const safe = base.replace(/[^\w.-]/g, '_').replace(/_{2,}/g, '_');
+  return (safe || 'file') + ext;
+}
+
 export async function getSasToken(fileName: string) {
   return retryWithBackoff(async () => {
     const { data } = await api.get('/file/api/upload/sas-token', {
-      params: { fileName },
+      params: { fileName: sanitizeFileName(fileName) },
     });
     const payload = (data?.result ?? data) as { blobSasUrl: string; expirationDatetime: string };
     if (!payload?.blobSasUrl) {
@@ -233,7 +240,7 @@ export async function uploadVideoFile(
   const sas = await getSasToken(file.name);
   await uploadToAzure(sas.blobSasUrl, file);
   const fileUrl = sas.blobSasUrl.split('?')[0];
-  return registerVideo(spaceSeq, fileUrl, file.name);
+  return registerVideo(spaceSeq, fileUrl, sanitizeFileName(file.name));
 }
 
 
