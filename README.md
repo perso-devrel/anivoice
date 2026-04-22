@@ -12,6 +12,12 @@ Path: ./PROMPT.md
 
 # AniVoice
 
+[![CI](https://github.com/perso-devrel/anivoice/actions/workflows/ci.yml/badge.svg)](https://github.com/perso-devrel/anivoice/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/perso-devrel/anivoice/actions/workflows/codeql.yml/badge.svg)](https://github.com/perso-devrel/anivoice/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub release](https://img.shields.io/github/v/release/perso-devrel/anivoice)](https://github.com/perso-devrel/anivoice/releases)
+[![GitHub Discussions](https://img.shields.io/github/discussions/perso-devrel/anivoice)](https://github.com/perso-devrel/anivoice/discussions)
+
 [English](./docs/i18n/README.en.md) | [日本語](./docs/i18n/README.ja.md) | [中文](./docs/i18n/README.zh.md)
 
 **일본 애니메이션을 원하는 언어로 더빙하세요.** 캐릭터 음성을 보존한 채 8개 이상 언어로 AI 더빙하는 오픈소스 웹 서비스입니다.
