@@ -38,7 +38,7 @@ ralph-logs/
 .ralph/.runtime-prompt.md
 .ralph/scheduled.pid
 
-# Claude Code local settings
+# Claude Code local settings (not .github/)
 .claude/
 
 # Vite dev cache

@@ -20,7 +20,7 @@ AniVoice 팀은 보안 취약점 보고를 환영합니다. 책임 있는 공개
 
 ### 2. 이메일
 
-- `security@perso.ai` (제목에 `[AniVoice Security]` 포함)
+- `devrel.365@gmail.com` (제목에 `[AniVoice Security]` 포함)
 - 가능하면 재현 스크립트 / PoC 첨부
 
 ## 보고 시 포함해 주세요
