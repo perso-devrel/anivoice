@@ -43,7 +43,7 @@ function useScrambleText(target: string, active: boolean): string {
 
   useEffect(() => {
     if (!active) {
-      setDisplay(target);
+      setDisplay(target); // eslint-disable-line react-hooks/set-state-in-effect -- sync display with target when animation stops
       if (intervalRef.current) clearInterval(intervalRef.current);
       return;
     }
