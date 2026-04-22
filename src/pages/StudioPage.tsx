@@ -439,8 +439,6 @@ export default function StudioPage() {
             remainingMinutes={remainingMinutes}
             error={error}
             downloadLinks={downloadLinks}
-            projectSeq={projectSeq}
-            spaceSeq={spaceSeq}
             sentences={sentences}
             editingValues={editingValues}
             savingSentence={savingSentence}

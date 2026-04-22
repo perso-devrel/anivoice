@@ -53,8 +53,6 @@ interface ResultStepProps {
   remainingMinutes: number | null;
   error: string | null;
   downloadLinks: PersoDownloadLinks | null;
-  projectSeq: number | null;
-  spaceSeq: number | null;
   sentences: PersoScriptSentence[];
   editingValues: Record<number, string>;
   savingSentence: number | null;
@@ -85,8 +83,6 @@ export function ResultStep({
   remainingMinutes,
   error,
   downloadLinks,
-  projectSeq,
-  spaceSeq,
   sentences,
   editingValues,
   savingSentence,
