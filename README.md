@@ -26,7 +26,7 @@ Path: ./PROMPT.md
 
 ## 데모
 
-[![AniVoice Demo](https://img.youtube.com/vi/0bYM_8Q8eD0/maxresdefault.jpg)](https://youtu.be/0bYM_8Q8eD0)
+[![AniVoice Demo](https://img.youtube.com/vi/_zlYVuuxf-k/maxresdefault.jpg)](https://youtu.be/_zlYVuuxf-k)
 
 ## 아키텍처
 
