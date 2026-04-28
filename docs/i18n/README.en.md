@@ -20,7 +20,7 @@ Powered by the [Perso.ai](https://developers.perso.ai) API.
 
 ## Demo
 
-[![KoeDub Demo](https://img.youtube.com/vi/0bYM_8Q8eD0/maxresdefault.jpg)](https://youtu.be/0bYM_8Q8eD0)
+[![KoeDub Demo](https://img.youtube.com/vi/_zlYVuuxf-k/maxresdefault.jpg)](https://youtu.be/_zlYVuuxf-k)
 
 ## Architecture
 
