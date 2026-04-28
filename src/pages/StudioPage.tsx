@@ -159,10 +159,15 @@ export default function StudioPage() {
     setSelectedFile(file);
     setError(null);
     setStep('settings');
-    showToast(t('studio.testRequestNotice'), 'info');
   }
 
   const handleStartDubbing = useCallback(async () => {
+    const userEmail = useAuthStore.getState().user?.email;
+    if (userEmail !== 'ronald@estsoft.com') {
+      showToast(t('studio.creditShortageNotice'), 'error');
+      return;
+    }
+
     setIsProcessing(true);
     setError(null);
     setRemainingMinutes(null);
@@ -196,11 +201,9 @@ export default function StudioPage() {
       const requiredSeconds = computeDeductSeconds(uploadedFile.durationMs, targetLanguages.length);
       const currentCredits = useAuthStore.getState().user?.creditSeconds ?? 0;
       if (currentCredits < requiredSeconds) {
-        const requiredMin = Math.ceil(requiredSeconds / 60);
-        const balanceMin = Math.floor(currentCredits / 60);
-        setError(t('studio.insufficientCredits', { required: requiredMin, balance: balanceMin }));
+        showToast(t('studio.creditShortageNotice'), 'error');
         setIsProcessing(false);
-        navigate('/pricing');
+        setStep('settings');
         return;
       }
 

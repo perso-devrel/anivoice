@@ -166,6 +166,7 @@ export default {
     insufficientCredits: 'クレジットが不足しています。必要: {{required}}分、残高: {{balance}}分。クレジットを追加購入してください。',
     goToPricing: 'クレジット購入',
     testRequestNotice: 'テスト用の動画がある方は devrel.365@gmail.com までご連絡ください！コストの都合上、1〜3分以内の動画でお願いします。',
+    creditShortageNotice: 'クレジットが不足しています。テストしたい動画がある方は devrel.365@gmail.com までご連絡ください！',
   },
   library: {
     title: '吹き替えアーカイブ',

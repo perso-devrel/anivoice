@@ -166,6 +166,7 @@ export default {
     insufficientCredits: 'Insufficient credits. Required: {{required}} min, Balance: {{balance}} min. Please purchase more credits.',
     goToPricing: 'Buy credits',
     testRequestNotice: 'Want to test with your own video? Contact devrel.365@gmail.com! Due to cost constraints, please keep videos under 1–3 minutes.',
+    creditShortageNotice: 'Insufficient credits. If you have a video you\'d like to test, contact devrel.365@gmail.com!',
   },
   library: {
     title: 'Dubbing Archive',

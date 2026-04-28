@@ -166,6 +166,7 @@ export default {
     insufficientCredits: '点数不足。所需: {{required}}分钟，余额: {{balance}}分钟。请充值点数。',
     goToPricing: '充值点数',
     testRequestNotice: '如需测试您的视频，请联系 devrel.365@gmail.com！由于成本原因，请提供1~3分钟以内的视频。',
+    creditShortageNotice: '点数不足。测试视频请联系 devrel.365@gmail.com！',
   },
   library: {
     title: '配音档案馆',

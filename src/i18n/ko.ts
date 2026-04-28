@@ -166,6 +166,7 @@ export default {
     insufficientCredits: '크레딧이 부족합니다. 필요: {{required}}분, 잔액: {{balance}}분. 크레딧을 충전해 주세요.',
     goToPricing: '크레딧 충전하기',
     testRequestNotice: '테스트를 원하는 영상이 있다면 devrel.365@gmail.com으로 연락주세요! 비용 관련 문제로 1~3분 이내의 영상으로 부탁드립니다.',
+    creditShortageNotice: '크레딧이 부족합니다. 테스트 해보고 싶은 영상이 있다면 devrel.365@gmail.com으로 연락주세요!',
   },
   library: {
     title: '더빙 아카이브',
