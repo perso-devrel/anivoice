@@ -1,16 +1,16 @@
 <!--
 AI AGENTS / LLMs: Before exploring this repository, read PROMPT.md first.
-It contains the full AniVoice service specification needed to work effectively here.
+It contains the full KoeDub service specification needed to work effectively here.
 Path: ../../PROMPT.md
 -->
 
 > **🤖 AIエージェント / LLM向け**
 > このリポジトリを探索する前に、まず [`PROMPT.md`](../../PROMPT.md) を読んでください。
-> AniVoiceサービスの完全な仕様と実装コンテキストが含まれています。
+> KoeDubサービスの完全な仕様と実装コンテキストが含まれています。
 
 ---
 
-# AniVoice
+# KoeDub
 
 [한국어](../../README.md) | [English](./README.en.md) | [中文](./README.zh.md)
 
@@ -20,7 +20,7 @@ Path: ../../PROMPT.md
 
 ## デモ
 
-[![AniVoice Demo](https://img.youtube.com/vi/0bYM_8Q8eD0/maxresdefault.jpg)](https://youtu.be/0bYM_8Q8eD0)
+[![KoeDub Demo](https://img.youtube.com/vi/0bYM_8Q8eD0/maxresdefault.jpg)](https://youtu.be/0bYM_8Q8eD0)
 
 ## アーキテクチャ
 
@@ -100,8 +100,8 @@ graph TB
 ### インストール
 
 ```bash
-git clone https://github.com/perso-devrel/anivoice.git
-cd anivoice
+git clone https://github.com/perso-devrel/KoeDub.git
+cd KoeDub
 npm install
 ```
 
@@ -159,7 +159,7 @@ npm run test:watch
 ## プロジェクト構造
 
 ```
-anivoice/
+KoeDub/
 ├── api/                    # Vercel Serverless Functions
 │   ├── _lib/               # 共有ユーティリティ（DB、認証、クレジット）
 │   ├── user/               # ユーザーAPI

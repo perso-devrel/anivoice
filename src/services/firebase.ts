@@ -8,11 +8,11 @@ const FIREBASE_CONFIGURED =
 /**
  * After authenticating, sync the store with the DB user record
  * (which has the real credit balance). Uses dynamic import to
- * avoid circular dependency with anivoiceApi.ts.
+ * avoid circular dependency with koedubApi.ts.
  */
 async function syncUserFromDb(): Promise<void> {
   try {
-    const { getMe } = await import('./anivoiceApi.js');
+    const { getMe } = await import('./koedubApi.js');
     const dbUser = await getMe();
     const { user } = useAuthStore.getState();
     if (user) {
@@ -43,7 +43,7 @@ const MOCK_ACCOUNTS: Record<string, { password: string; user: User }> = {
   },
 };
 
-const MOCK_STORAGE_KEY = 'anivoice_mock_user';
+const MOCK_STORAGE_KEY = 'koedub_mock_user';
 
 function getMockUser(): User | null {
   try {

@@ -1,4 +1,4 @@
-# Contributing to AniVoice
+# Contributing to KoeDub
 
 기여에 관심을 가져주셔서 감사합니다! 이 가이드가 시작하는 데 도움이 될 것입니다.
 
@@ -13,8 +13,8 @@
 ### 설정
 
 ```bash
-git clone https://github.com/perso-devrel/anivoice.git
-cd anivoice
+git clone https://github.com/perso-devrel/KoeDub.git
+cd KoeDub
 cp .env.example .env
 npm install
 ```

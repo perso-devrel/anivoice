@@ -44,7 +44,7 @@ describe('firebase mock auth', () => {
 
     it('persists user to localStorage', async () => {
       await signInWithEmail('demo@example.com', 'demo1234');
-      const stored = JSON.parse(storage.get('anivoice_mock_user')!);
+      const stored = JSON.parse(storage.get('koedub_mock_user')!);
       expect(stored.email).toBe('demo@example.com');
     });
 
@@ -71,7 +71,7 @@ describe('firebase mock auth', () => {
 
     it('persists new user to localStorage', async () => {
       await signUpWithEmail('persist@example.com', 'pass123', 'Persist');
-      const stored = JSON.parse(storage.get('anivoice_mock_user')!);
+      const stored = JSON.parse(storage.get('koedub_mock_user')!);
       expect(stored.email).toBe('persist@example.com');
     });
 
@@ -91,16 +91,16 @@ describe('firebase mock auth', () => {
 
     it('persists user to localStorage', async () => {
       await signInWithGoogle();
-      expect(storage.has('anivoice_mock_user')).toBe(true);
+      expect(storage.has('koedub_mock_user')).toBe(true);
     });
   });
 
   describe('signOut', () => {
     it('removes user from localStorage', async () => {
       await signInWithEmail('demo@example.com', 'demo1234');
-      expect(storage.has('anivoice_mock_user')).toBe(true);
+      expect(storage.has('koedub_mock_user')).toBe(true);
       await signOut();
-      expect(storage.has('anivoice_mock_user')).toBe(false);
+      expect(storage.has('koedub_mock_user')).toBe(false);
     });
 
     it('clears auth store user', async () => {
@@ -116,7 +116,7 @@ describe('firebase mock auth', () => {
   describe('initAuthListener', () => {
     it('loads persisted user into auth store', () => {
       storage.set(
-        'anivoice_mock_user',
+        'koedub_mock_user',
         JSON.stringify({
           id: 'u1', email: 'a@b.com', displayName: 'A',
           creditSeconds: 100, language: 'ko', createdAt: '',
@@ -140,7 +140,7 @@ describe('firebase mock auth', () => {
         creditSeconds: 3600000, language: 'ko', createdAt: '',
       });
       await updateProfile('NewName');
-      const stored = JSON.parse(storage.get('anivoice_mock_user')!);
+      const stored = JSON.parse(storage.get('koedub_mock_user')!);
       expect(stored.displayName).toBe('NewName');
       expect(useAuthStore.getState().user?.displayName).toBe('NewName');
     });

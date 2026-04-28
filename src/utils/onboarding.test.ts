@@ -31,6 +31,6 @@ describe('onboarding', () => {
 
   it('markOnboardingDone sets localStorage key', () => {
     markOnboardingDone();
-    expect(storage.get('anivoice_onboarding_done')).toBe('1');
+    expect(storage.get('koedub_onboarding_done')).toBe('1');
   });
 });

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
-import { listMyProjects, toggleFavorite, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/anivoiceApi';
+import { listMyProjects, toggleFavorite, getCreditHistory, type DbProject, type CreditHistoryDay } from '../services/koedubApi';
 import { getProgress } from '../services/persoApi';
 import { formatCreditTime, formatDuration, getErrorMessage } from '../utils/format';
 import { PlusIcon, AlertCircleIcon, SearchIcon, StarIcon, LoadingSpinner } from '../components/icons';

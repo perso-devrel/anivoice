@@ -1,6 +1,6 @@
 export default {
   common: {
-    appName: 'AniVoice',
+    appName: 'KoeDub',
     tagline: '캐릭터 목소리 그대로, 당신의 언어로',
     login: '로그인',
     signup: '회원가입',
@@ -75,8 +75,8 @@ export default {
     step3: '결과 확인',
     step3Desc: '더빙된 영상을 확인하고 다운로드하세요.',
     faq: '자주 묻는 질문',
-    faqVoiceQ: 'AniVoice는 캐릭터 원본 음성을 어떻게 보존하나요?',
-    faqVoiceA: 'AniVoice는 고급 AI 음성 클로닝 기술을 사용하여 각 캐릭터의 고유한 음성 특성(음높이, 톤, 리듬, 감정)을 분석한 뒤, 대상 언어로 음성을 재구성하면서 이러한 특성을 그대로 유지합니다.',
+    faqVoiceQ: 'KoeDub는 캐릭터 원본 음성을 어떻게 보존하나요?',
+    faqVoiceA: 'KoeDub는 고급 AI 음성 클로닝 기술을 사용하여 각 캐릭터의 고유한 음성 특성(음높이, 톤, 리듬, 감정)을 분석한 뒤, 대상 언어로 음성을 재구성하면서 이러한 특성을 그대로 유지합니다.',
     faqLimitQ: '영상 길이에 제한이 있나요?',
     faqLimitA: '크레딧을 충전하여 사용한 만큼만 결제합니다. 1분당 $1이며, 10분/50분/100분 패키지를 구매할 수 있습니다.',
     faqFormatQ: '어떤 영상 형식을 지원하나요?',
@@ -165,6 +165,7 @@ export default {
     clipboardError: '링크를 클립보드에 복사하지 못했습니다',
     insufficientCredits: '크레딧이 부족합니다. 필요: {{required}}분, 잔액: {{balance}}분. 크레딧을 충전해 주세요.',
     goToPricing: '크레딧 충전하기',
+    testRequestNotice: '테스트를 원하는 영상이 있다면 devrel.365@gmail.com으로 연락주세요! 비용 관련 문제로 1~3분 이내의 영상으로 부탁드립니다.',
   },
   library: {
     title: '더빙 아카이브',
@@ -249,9 +250,10 @@ export default {
     dubbingTimeLabel: '{{amount}} 더빙 시간',
     creditRecharge: '{{amount}} 충전',
     remainingTime: '현재 잔여 시간:',
+    paymentNotAvailable: '현재 결제 기능을 지원하지 않습니다. 추후 지원 예정입니다.',
   },
   onboarding: {
-    welcome: 'AniVoice에 오신 것을 환영합니다!',
+    welcome: 'KoeDub에 오신 것을 환영합니다!',
     step1Title: '영상 업로드',
     step1Desc: 'MP4, MOV, WebM 형식의 애니메이션 영상을 업로드하세요. 드래그 앤 드롭도 지원합니다.',
     step2Title: '더빙 언어 선택',
@@ -280,7 +282,7 @@ export default {
     terms: '이용약관',
     privacy: '개인정보처리방침',
     dmca: 'DMCA',
-    allRights: '© 2026 AniVoice. All rights reserved.',
+    allRights: '© 2026 KoeDub. All rights reserved.',
   },
   pageTitle: {
     landing: '홈',
@@ -296,14 +298,14 @@ export default {
   },
   pageDesc: {
     landing: 'AI 애니메이션 더빙 서비스 — 캐릭터 목소리를 보존한 채 6개 이상 언어로 더빙합니다.',
-    auth: 'AniVoice에 로그인하여 더빙 프로젝트를 관리하세요.',
+    auth: 'KoeDub에 로그인하여 더빙 프로젝트를 관리하세요.',
     dashboard: '더빙 프로젝트, 크레딧, 사용량을 한눈에 확인하세요.',
     studio: '애니메이션 영상을 업로드하고 원하는 언어로 AI 더빙하세요.',
     library: '공개된 더빙 작품을 탐색하고 감상하세요.',
     libraryDetail: '더빙 결과를 확인하고 영상, 음성, 자막을 다운로드하세요.',
     pricing: '더빙 필요에 맞는 요금제를 선택하세요.',
     settings: '계정, 언어, 환경설정을 관리하세요.',
-    test: 'AniVoice API 연동 테스트를 위한 개발자 도구입니다.',
+    test: 'KoeDub API 연동 테스트를 위한 개발자 도구입니다.',
     notFound: '요청하신 페이지를 찾을 수 없습니다.',
   },
   notFound: {

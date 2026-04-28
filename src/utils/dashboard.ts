@@ -1,4 +1,4 @@
-import type { DbProject } from '../services/anivoiceApi';
+import type { DbProject } from '../services/koedubApi';
 import type { ProjectStatus } from '../types';
 
 export type FilterTab = 'all' | 'favorites' | 'in-progress' | 'completed';

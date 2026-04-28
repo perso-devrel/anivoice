@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUIStore } from '../stores/uiStore';
 import { useAuthStore } from '../stores/authStore';
 import { signOut } from '../services/firebase';
-import { getCreditTransactions, type CreditTransaction } from '../services/anivoiceApi';
+import { getCreditTransactions, type CreditTransaction } from '../services/koedubApi';
 import { CREDIT_PRICE_PER_MINUTE_USD } from '../utils/pricing';
 import { CheckmarkIcon } from '../components/icons';
 import { ProfileTab } from '../components/ProfileTab';

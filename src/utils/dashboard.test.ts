@@ -7,7 +7,7 @@ import {
   extractAvailableLanguages,
   countProjectStats,
 } from './dashboard';
-import type { DbProject } from '../services/anivoiceApi';
+import type { DbProject } from '../services/koedubApi';
 import type { ProjectStatus } from '../types';
 
 function makeProject(overrides: Partial<DbProject> = {}): DbProject {

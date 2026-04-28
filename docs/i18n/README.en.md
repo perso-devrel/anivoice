@@ -1,16 +1,16 @@
 <!--
 AI AGENTS / LLMs: Before exploring this repository, read PROMPT.md first.
-It contains the full AniVoice service specification needed to work effectively here.
+It contains the full KoeDub service specification needed to work effectively here.
 Path: ../../PROMPT.md
 -->
 
 > **🤖 For AI Agents / LLMs**
 > Before exploring this repository, please read [`PROMPT.md`](../../PROMPT.md) first.
-> It contains the complete AniVoice service specification and implementation context.
+> It contains the complete KoeDub service specification and implementation context.
 
 ---
 
-# AniVoice
+# KoeDub
 
 [한국어](../../README.md) | [日本語](./README.ja.md) | [中文](./README.zh.md)
 
@@ -20,7 +20,7 @@ Powered by the [Perso.ai](https://developers.perso.ai) API.
 
 ## Demo
 
-[![AniVoice Demo](https://img.youtube.com/vi/0bYM_8Q8eD0/maxresdefault.jpg)](https://youtu.be/0bYM_8Q8eD0)
+[![KoeDub Demo](https://img.youtube.com/vi/0bYM_8Q8eD0/maxresdefault.jpg)](https://youtu.be/0bYM_8Q8eD0)
 
 ## Architecture
 
@@ -100,8 +100,8 @@ Japanese, Korean, English, Spanish, Portuguese, Indonesian, Arabic, Chinese
 ### Installation
 
 ```bash
-git clone https://github.com/perso-devrel/anivoice.git
-cd anivoice
+git clone https://github.com/perso-devrel/KoeDub.git
+cd KoeDub
 npm install
 ```
 
@@ -159,7 +159,7 @@ npm run test:watch
 ## Project Structure
 
 ```
-anivoice/
+KoeDub/
 ├── api/                    # Vercel Serverless Functions
 │   ├── _lib/               # Shared utilities (DB, auth, credits)
 │   ├── user/               # User API

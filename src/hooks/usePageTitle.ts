@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const APP_NAME = 'AniVoice';
+const APP_NAME = 'KoeDub';
 const DEFAULT_DESC = '';
 
 function getMetaDescription(): HTMLMetaElement | null {

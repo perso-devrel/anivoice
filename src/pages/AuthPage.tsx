@@ -82,9 +82,9 @@ export default function AuthPage() {
         <div className="flex items-center justify-center gap-3 mb-8 relative">
           <span className="absolute -top-4 -right-4 font-jp text-5xl text-bone/[0.05] select-none pointer-events-none" aria-hidden="true">認証</span>
           <div className="w-10 h-10 bg-lucy text-void flex items-center justify-center font-display font-black text-xl">
-            A
+            K
           </div>
-          <span className="text-2xl font-display font-bold text-bone">AniVoice</span>
+          <span className="text-2xl font-display font-bold text-bone">KoeDub</span>
         </div>
 
         {/* Tabs */}

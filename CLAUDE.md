@@ -1,4 +1,4 @@
-# AniVoice Project Context
+# KoeDub Project Context
 
 ## 프로젝트 설명
 Perso.ai API를 활용한 애니메이션 AI 더빙 서비스.

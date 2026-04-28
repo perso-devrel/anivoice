@@ -19,10 +19,10 @@ export default function Footer() {
                 <div className="absolute inset-0 bg-lucy" style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
                 <div className="absolute inset-0 bg-david" style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 100%)' }} />
                 <span className="absolute inset-0 flex items-center justify-center font-display font-black text-sm text-void">
-                  A
+                  K
                 </span>
               </div>
-              <span className="font-display font-bold text-lg text-bone">AniVoice</span>
+              <span className="font-display font-bold text-lg text-bone">KoeDub</span>
             </div>
             <p className="text-sm text-bone/50 leading-relaxed max-w-xs">
               {t('common.tagline')}
@@ -44,7 +44,7 @@ export default function Footer() {
             <h4 className={FOOTER_HEADING_CLASS}>{t('footer.support')}</h4>
             <div className={FOOTER_SECTION_CLASS}>
               <a href="#faq" className={FOOTER_LINK_CLASS}>{t('footer.faq')}</a>
-              <a href="mailto:support@anivoice.ai" className={FOOTER_LINK_CLASS}>{t('footer.contact')}</a>
+              <a href="mailto:support@koedub.ai" className={FOOTER_LINK_CLASS}>{t('footer.contact')}</a>
             </div>
           </div>
 

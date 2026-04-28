@@ -865,7 +865,7 @@ export default function TestPage() {
         </Section>
 
         <div className="text-center text-xs text-bone/30 py-8">
-          AniVoice Perso API Test Tool — {allKeys.length} tests registered
+          KoeDub Perso API Test Tool — {allKeys.length} tests registered
           <br />
           <span className="text-bone/30">This page is for testing only. To remove, delete TestPage.tsx and the /test route in App.tsx.</span>
         </div>

@@ -1,6 +1,6 @@
 export default {
   common: {
-    appName: 'AniVoice',
+    appName: 'KoeDub',
     tagline: 'キャラクターの声はそのまま、あなたの言語で',
     login: 'ログイン',
     signup: '新規登録',
@@ -75,8 +75,8 @@ export default {
     step3: '結果を確認',
     step3Desc: '吹き替えた動画を確認してダウンロードしてください。',
     faq: 'よくある質問',
-    faqVoiceQ: 'AniVoiceはキャラクターの声をどうやって保持しますか？',
-    faqVoiceA: 'AniVoiceは高度なAI音声クローニング技術を使用し、各キャラクターの声の特徴（音程、トーン、リズム、感情）を分析した後、対象言語で音声を再構成しながらこれらの特徴を維持します。',
+    faqVoiceQ: 'KoeDubはキャラクターの声をどうやって保持しますか？',
+    faqVoiceA: 'KoeDubは高度なAI音声クローニング技術を使用し、各キャラクターの声の特徴（音程、トーン、リズム、感情）を分析した後、対象言語で音声を再構成しながらこれらの特徴を維持します。',
     faqLimitQ: '動画の長さに制限はありますか？',
     faqLimitA: '1分あたり$1でクレジットを購入し、使った分だけお支払いいただきます。',
     faqFormatQ: 'どの動画形式に対応していますか？',
@@ -165,6 +165,7 @@ export default {
     clipboardError: 'リンクをクリップボードにコピーできませんでした',
     insufficientCredits: 'クレジットが不足しています。必要: {{required}}分、残高: {{balance}}分。クレジットを追加購入してください。',
     goToPricing: 'クレジット購入',
+    testRequestNotice: 'テスト用の動画がある方は devrel.365@gmail.com までご連絡ください！コストの都合上、1〜3分以内の動画でお願いします。',
   },
   library: {
     title: '吹き替えアーカイブ',
@@ -249,9 +250,10 @@ export default {
     dubbingTimeLabel: '{{amount}}吹き替え時間',
     creditRecharge: '{{amount}}チャージ',
     remainingTime: '残り時間：',
+    paymentNotAvailable: '現在、決済機能はご利用いただけません。近日対応予定です。',
   },
   onboarding: {
-    welcome: 'AniVoiceへようこそ！',
+    welcome: 'KoeDubへようこそ！',
     step1Title: '動画をアップロード',
     step1Desc: 'MP4、MOV、WebM形式のアニメ動画をアップロードしてください。ドラッグ＆ドロップも対応しています。',
     step2Title: '吹き替え言語を選択',
@@ -280,7 +282,7 @@ export default {
     terms: '利用規約',
     privacy: 'プライバシーポリシー',
     dmca: 'DMCA',
-    allRights: '© 2026 AniVoice. All rights reserved.',
+    allRights: '© 2026 KoeDub. All rights reserved.',
   },
   pageTitle: {
     landing: 'ホーム',
@@ -296,14 +298,14 @@ export default {
   },
   pageDesc: {
     landing: 'AIアニメ吹き替えサービス — キャラクターの声を保持したまま6言語以上に吹き替え。',
-    auth: 'AniVoiceにログインして吹き替えプロジェクトを管理しましょう。',
+    auth: 'KoeDubにログインして吹き替えプロジェクトを管理しましょう。',
     dashboard: '吹き替えプロジェクト、クレジット、使用量を一目で確認。',
     studio: 'アニメ動画をアップロードしてAIで好きな言語に吹き替え。',
     library: '公開された吹き替え作品を探索・視聴。',
     libraryDetail: '吹き替え結果を確認し、動画・音声・字幕をダウンロード。',
     pricing: '吹き替えニーズに合ったプランを選択してください。',
     settings: 'アカウント、言語、環境設定を管理。',
-    test: 'AniVoice API連携テスト用開発者ツール。',
+    test: 'KoeDub API連携テスト用開発者ツール。',
     notFound: 'ご要望のページが見つかりません。',
   },
   notFound: {

@@ -309,7 +309,7 @@ export default function LandingPage() {
         <div className="relative z-10 px-6 md:px-12 pt-24 md:pt-28 flex items-center justify-between font-mono text-[10px] md:text-xs uppercase tracking-[0.3em] text-bone/60">
           <span className="flex items-center gap-2">
             <span className="block w-2 h-2 bg-lucy" />
-            EP.01 / ANIVOICE
+            EP.01 / KOEDUB
           </span>
           <span className="hidden md:inline">DUBBING — WITHOUT LOSING THE VOICE</span>
           <span>2026 ——</span>
@@ -429,7 +429,7 @@ export default function LandingPage() {
               02 / FEATURES
             </div>
             <h2 className="font-display font-black text-3xl md:text-5xl leading-none text-bone">
-              왜 <span className="text-david">AniVoice</span>인가
+              왜 <span className="text-david">KoeDub</span>인가
             </h2>
           </div>
           <span
@@ -657,7 +657,7 @@ export default function LandingPage() {
           {t('landing.copyright')}
         </p>
         <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-bone/40">
-          ANIVOICE / 2026 / TRIGGER-EDITION
+          KOEDUB / 2026 / TRIGGER-EDITION
         </span>
       </footer>
     </main>

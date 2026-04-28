@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
-import { purchaseCredits } from '../services/anivoiceApi';
+import { purchaseCredits } from '../services/koedubApi';
 import { formatCreditTime } from '../utils/format';
 import { showToast } from '../stores/toastStore';
 import { ClockIcon } from '../components/icons';
@@ -52,6 +52,9 @@ export default function PricingPage() {
       navigate('/login');
       return;
     }
+    showToast(t('pricing.paymentNotAvailable'), 'info');
+    return;
+
     const label = t(pkg.labelKey);
     setSelectedSeconds(pkg.seconds);
     setModal({

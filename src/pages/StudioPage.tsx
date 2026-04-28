@@ -16,9 +16,9 @@ import {
   getDownloadLinks,
   resolvePersoFileUrl,
 } from '../services/persoApi';
-import { createProject, updateProject, deductCredits, getTags, publishProject, getProjectByPersoSeq } from '../services/anivoiceApi';
+import { createProject, updateProject, deductCredits, getTags, publishProject, getProjectByPersoSeq } from '../services/koedubApi';
 import { useAuthStore } from '../stores/authStore';
-import type { Tag } from '../services/anivoiceApi';
+import type { Tag } from '../services/koedubApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { getErrorMessage } from '../utils/format';
 import {
@@ -40,6 +40,7 @@ import { StepIndicator, type Step } from '../components/StepIndicator';
 import { SettingsStep } from '../components/SettingsStep';
 import { UploadStep } from '../components/UploadStep';
 import { ResultStep } from '../components/ResultStep';
+import { showToast } from '../stores/toastStore';
 
 export default function StudioPage() {
   const { t } = useTranslation();
@@ -158,6 +159,7 @@ export default function StudioPage() {
     setSelectedFile(file);
     setError(null);
     setStep('settings');
+    showToast(t('studio.testRequestNotice'), 'info');
   }
 
   const handleStartDubbing = useCallback(async () => {

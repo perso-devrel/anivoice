@@ -29,7 +29,7 @@ async function getFirebaseIdToken(): Promise<string | null> {
     return user.getIdToken();
   } catch {
     // Firebase not initialized — check localStorage for mock token
-    const mockUser = localStorage.getItem('anivoice_mock_user');
+    const mockUser = localStorage.getItem('koedub_mock_user');
     if (mockUser) {
       // For mock auth, create a fake JWT-like token
       const payload = btoa(JSON.stringify({

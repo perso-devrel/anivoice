@@ -1,4 +1,4 @@
-# AniVoice 아키텍처
+# KoeDub 아키텍처
 
 ## 시스템 개요
 
@@ -11,7 +11,7 @@ graph TB
         Store[Zustand 스토어<br/>auth · ui · toast]
         I18n[i18next<br/>ko · en · ja · zh]
         SvcPerso[persoApi.ts]
-        SvcBackend[anivoiceApi.ts]
+        SvcBackend[koedubApi.ts]
         SvcAuth[firebase.ts]
     end
 
