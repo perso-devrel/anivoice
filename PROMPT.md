@@ -1,18 +1,18 @@
-# AniVoice 서비스 재현 프롬프트
+# KoeDub 서비스 재현 프롬프트
 
-> 이 프롬프트를 Claude에 보내면 AniVoice 서비스를 처음부터 구축할 수 있습니다.
+> 이 프롬프트를 Claude에 보내면 KoeDub 서비스를 처음부터 구축할 수 있습니다.
 
 ---
 
 ## 프롬프트 시작
 
-다음 명세를 따라 **AniVoice** — 일본 애니메이션 AI 더빙 웹 서비스를 만들어주세요.
+다음 명세를 따라 **KoeDub** — 일본 애니메이션 AI 더빙 웹 서비스를 만들어주세요.
 
 ---
 
 ## 1. 프로젝트 개요
 
-AniVoice는 일본 애니메이션 영상을 업로드하면 캐릭터 음성을 보존한 채 8개 언어로 AI 더빙하는 웹 서비스입니다. [Perso.ai](https://developers.perso.ai) API를 활용하여 번역, 더빙, 립싱크를 수행합니다.
+KoeDub는 일본 애니메이션 영상을 업로드하면 캐릭터 음성을 보존한 채 8개 언어로 AI 더빙하는 웹 서비스입니다. [Perso.ai](https://developers.perso.ai) API를 활용하여 번역, 더빙, 립싱크를 수행합니다.
 
 **핵심 가치:** 원본 캐릭터 음성 톤을 유지하면서 다국어 더빙을 제공하는 것.
 
@@ -40,7 +40,7 @@ HTTP 클라이언트: Axios
 ## 3. 프로젝트 구조
 
 ```
-anivoice/
+KoeDub/
 ├── api/                          # Vercel Serverless Functions (백엔드)
 │   ├── _lib/
 │   │   ├── auth.ts               # Firebase 토큰 검증 + 헬퍼
@@ -104,7 +104,7 @@ anivoice/
 │   ├── services/
 │   │   ├── persoApi.ts           # Perso.ai API 클라이언트 (전체)
 │   │   ├── firebase.ts           # Firebase 인증 + Mock 인증 폴백
-│   │   └── anivoiceApi.ts        # AniVoice 백엔드 클라이언트
+│   │   └── koedubApi.ts        # KoeDub 백엔드 클라이언트
 │   ├── stores/
 │   │   ├── authStore.ts          # Zustand: 사용자 상태
 │   │   ├── uiStore.ts            # Zustand: UI 상태 (사이드바, 언어)
@@ -758,7 +758,7 @@ export default defineConfig({
         },
       },
       '/api': {
-        target: process.env.VITE_ANIVOICE_API_URL || 'http://localhost:3000',
+        target: process.env.VITE_KOEDUB_API_URL || 'http://localhost:3000',
         changeOrigin: true,
       },
     },
@@ -821,7 +821,7 @@ TURSO_DATABASE_URL=libsql://your_db.turso.io
 TURSO_AUTH_TOKEN=your_turso_auth_token
 
 # 백엔드 URL (프리뷰/프로덕션)
-VITE_ANIVOICE_API_URL=https://your-app.vercel.app
+VITE_KOEDUB_API_URL=https://your-app.vercel.app
 ```
 
 ---

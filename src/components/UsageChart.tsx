@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import type { CreditHistoryDay } from '../services/anivoiceApi';
+import type { CreditHistoryDay } from '../services/koedubApi';
 import { formatChartDay } from '../utils/format';
 
 const CHART_MARGIN = { top: 4, right: 8, bottom: 0, left: 0 };

@@ -16,9 +16,9 @@ import {
   getDownloadLinks,
   resolvePersoFileUrl,
 } from '../services/persoApi';
-import { createProject, updateProject, deductCredits, getTags, publishProject, getProjectByPersoSeq } from '../services/anivoiceApi';
+import { createProject, updateProject, deductCredits, getTags, publishProject, getProjectByPersoSeq } from '../services/koedubApi';
 import { useAuthStore } from '../stores/authStore';
-import type { Tag } from '../services/anivoiceApi';
+import type { Tag } from '../services/koedubApi';
 import type { PersoProgress, PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { getErrorMessage } from '../utils/format';
 import {

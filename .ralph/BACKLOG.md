@@ -155,7 +155,7 @@
 - [x] StudioPage 하드코딩 `Translation failed` 에러를 i18n 키 `studio.translationFailed` 로 교체 ← iter-159, #501, PR #502/#503
 - [x] unused export 정리: DownloadType (studio.ts), TimeLabels (format.ts) 내부 전용화 ← iter-160, #506, PR #507/#508
 - [x] persoApi.ts 매직 넘버 12개를 명명 상수로 추출 (가독성 개선) ← iter-161, #512, PR #513/#514
-- [x] 미사용 export 정리: TranslateRequest (persoApi.ts), DbUser (anivoiceApi.ts), formatSeconds (format.ts) 내부 전용화 ← iter-162, #517, PR #518/#519
+- [x] 미사용 export 정리: TranslateRequest (persoApi.ts), DbUser (koedubApi.ts), formatSeconds (format.ts) 내부 전용화 ← iter-162, #517, PR #518/#519
 - [x] pollProgress transient error console.warn 제거 (src/ 내 console.* 0개 달성) ← iter-163, #523, PR #524/#525
 - [x] StrokeIcon 내부 래퍼 추출로 29개 stroke 아이콘 SVG 보일러플레이트 제거 ← iter-164, #526, PR #527/#528
 - [x] LibraryPage 중복 sort 버튼을 SORT_MODES 상수 + .map() 루프로 교체 ← iter-165, #531, PR #532/#533

@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'anivoice_onboarding_done';
+const STORAGE_KEY = 'koedub_onboarding_done';
 
 export function shouldShowOnboarding(projectCount: number): boolean {
   if (projectCount > 0) return false;

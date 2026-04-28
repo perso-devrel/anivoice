@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
-import { getLibrary, getTags, type LibraryItem, type Tag } from '../services/anivoiceApi';
+import { getLibrary, getTags, type LibraryItem, type Tag } from '../services/koedubApi';
 import { getErrorMessage } from '../utils/format';
 import { SearchIcon, ChevronDownIcon, SpinnerIcon } from '../components/icons';
 import { LibraryCard } from '../components/LibraryCard';

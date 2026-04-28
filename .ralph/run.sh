@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # .ralph/run.sh
-# AniVoice Ralph harness — 무한 자율 모드.
+# KoeDub Ralph harness — 무한 자율 모드.
 #
 # 매 iteration 마다:
 #   1. dub-flow 회귀 테스트를 돌려 현재 회귀가 깨졌는지 확인

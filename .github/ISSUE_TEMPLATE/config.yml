@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Question / 질문
-    url: https://github.com/perso-devrel/anivoice/discussions/categories/q-a
+    url: https://github.com/perso-devrel/KoeDub/discussions/categories/q-a
     about: 질문은 GitHub Discussions에서 작성해주세요. Issues는 버그 보고와 기능 제안용입니다.

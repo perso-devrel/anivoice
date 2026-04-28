@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { resolvePersoFileUrl } from '../services/persoApi';
-import type { Tag } from '../services/anivoiceApi';
+import type { Tag } from '../services/koedubApi';
 import type { PersoScriptSentence, PersoDownloadLinks } from '../types';
 import { PlayIcon, DownloadIcon, AlertCircleIcon, LoadingSpinner } from './icons';
 import { SentenceEditList } from './SentenceEditList';

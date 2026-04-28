@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import type { LibraryItem } from '../services/anivoiceApi';
+import type { LibraryItem } from '../services/koedubApi';
 import { resolvePersoFileUrl } from '../services/persoApi';
 import { formatCreditTimeMs } from '../utils/format';
 import { PlayIcon, ClockIcon } from './icons';

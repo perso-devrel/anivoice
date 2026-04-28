@@ -1,22 +1,22 @@
 <!--
 AI AGENTS / LLMs: Before exploring this repository, read PROMPT.md first.
-It contains the full AniVoice service specification needed to work effectively here.
+It contains the full KoeDub service specification needed to work effectively here.
 Path: ./PROMPT.md
 -->
 
 > **🤖 AI 에이전트 / LLM 안내**
 > 이 저장소를 탐색하기 전에 [`PROMPT.md`](./PROMPT.md)를 먼저 읽어주세요.
-> AniVoice 서비스의 전체 명세와 구현 컨텍스트가 담겨 있습니다.
+> KoeDub 서비스의 전체 명세와 구현 컨텍스트가 담겨 있습니다.
 
 ---
 
-# AniVoice
+# KoeDub
 
-[![CI](https://github.com/perso-devrel/anivoice/actions/workflows/ci.yml/badge.svg)](https://github.com/perso-devrel/anivoice/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/perso-devrel/anivoice/actions/workflows/codeql.yml/badge.svg)](https://github.com/perso-devrel/anivoice/actions/workflows/codeql.yml)
+[![CI](https://github.com/perso-devrel/KoeDub/actions/workflows/ci.yml/badge.svg)](https://github.com/perso-devrel/KoeDub/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/perso-devrel/KoeDub/actions/workflows/codeql.yml/badge.svg)](https://github.com/perso-devrel/KoeDub/actions/workflows/codeql.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/v/release/perso-devrel/anivoice)](https://github.com/perso-devrel/anivoice/releases)
-[![GitHub Discussions](https://img.shields.io/github/discussions/perso-devrel/anivoice)](https://github.com/perso-devrel/anivoice/discussions)
+[![GitHub release](https://img.shields.io/github/v/release/perso-devrel/KoeDub)](https://github.com/perso-devrel/KoeDub/releases)
+[![GitHub Discussions](https://img.shields.io/github/discussions/perso-devrel/KoeDub)](https://github.com/perso-devrel/KoeDub/discussions)
 
 [English](./docs/i18n/README.en.md) | [日本語](./docs/i18n/README.ja.md) | [中文](./docs/i18n/README.zh.md)
 
@@ -26,7 +26,7 @@ Path: ./PROMPT.md
 
 ## 데모
 
-[![AniVoice Demo](https://img.youtube.com/vi/0bYM_8Q8eD0/maxresdefault.jpg)](https://youtu.be/0bYM_8Q8eD0)
+[![KoeDub Demo](https://img.youtube.com/vi/0bYM_8Q8eD0/maxresdefault.jpg)](https://youtu.be/0bYM_8Q8eD0)
 
 ## 아키텍처
 
@@ -106,8 +106,8 @@ graph TB
 ### 설치
 
 ```bash
-git clone https://github.com/perso-devrel/anivoice.git
-cd anivoice
+git clone https://github.com/perso-devrel/KoeDub.git
+cd KoeDub
 npm install
 ```
 
@@ -165,7 +165,7 @@ npm run test:watch
 ## 프로젝트 구조
 
 ```
-anivoice/
+KoeDub/
 ├── api/                    # Vercel Serverless Functions
 │   ├── _lib/               # 공유 유틸 (DB, 인증, 크레딧)
 │   ├── user/               # 사용자 API

@@ -1,6 +1,6 @@
 # Security Policy
 
-AniVoice 팀은 보안 취약점 보고를 환영합니다. 책임 있는 공개 절차에 협조해 주시면 감사드립니다.
+KoeDub 팀은 보안 취약점 보고를 환영합니다. 책임 있는 공개 절차에 협조해 주시면 감사드립니다.
 
 ## Supported Versions
 
@@ -20,7 +20,7 @@ AniVoice 팀은 보안 취약점 보고를 환영합니다. 책임 있는 공개
 
 ### 2. 이메일
 
-- `devrel.365@gmail.com` (제목에 `[AniVoice Security]` 포함)
+- `devrel.365@gmail.com` (제목에 `[KoeDub Security]` 포함)
 - 가능하면 재현 스크립트 / PoC 첨부
 
 ## 보고 시 포함해 주세요
@@ -44,7 +44,7 @@ AniVoice 팀은 보안 취약점 보고를 환영합니다. 책임 있는 공개
 
 **In scope:**
 
-- AniVoice 웹 앱 (`src/`, `api/`)
+- KoeDub 웹 앱 (`src/`, `api/`)
 - CI / GitHub Actions 워크플로 (`.github/workflows/`)
 - 의존성 CVE (`package.json` 직/간접 의존성)
 
@@ -64,4 +64,4 @@ AniVoice 팀은 보안 취약점 보고를 환영합니다. 책임 있는 공개
 - **OSV-Scanner + npm audit** — 주간 CVE 스캔 (`.github/workflows/security-audit.yml`)
 - **Branch protection** — `main` 브랜치는 owner 승인 필수, force push 금지
 
-감사합니다. AniVoice 사용자를 보호하는 데 기여해 주셔서 진심으로 감사드립니다.
+감사합니다. KoeDub 사용자를 보호하는 데 기여해 주셔서 진심으로 감사드립니다.

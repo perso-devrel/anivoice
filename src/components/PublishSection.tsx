@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { Tag } from '../services/anivoiceApi';
+import type { Tag } from '../services/koedubApi';
 import { SpinnerIcon, LinkIcon } from './icons';
 
 interface PublishSectionProps {

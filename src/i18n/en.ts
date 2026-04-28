@@ -1,6 +1,6 @@
 export default {
   common: {
-    appName: 'AniVoice',
+    appName: 'KoeDub',
     tagline: 'Same character voice, your language',
     login: 'Log in',
     signup: 'Sign up',
@@ -75,8 +75,8 @@ export default {
     step3: 'Get results',
     step3Desc: 'Review and download your dubbed video.',
     faq: 'FAQ',
-    faqVoiceQ: 'How does AniVoice preserve the original character voice?',
-    faqVoiceA: "AniVoice uses advanced AI voice-cloning technology to analyze each character's unique vocal signature — pitch, tone, cadence, and emotion — then reconstructs speech in the target language while preserving those characteristics.",
+    faqVoiceQ: 'How does KoeDub preserve the original character voice?',
+    faqVoiceA: "KoeDub uses advanced AI voice-cloning technology to analyze each character's unique vocal signature — pitch, tone, cadence, and emotion — then reconstructs speech in the target language while preserving those characteristics.",
     faqLimitQ: 'Is there a limit on video length?',
     faqLimitA: 'Purchase credits and pay only for what you use. $1 per minute, available in 10/50/100-minute packs.',
     faqFormatQ: 'What video formats are supported?',
@@ -253,7 +253,7 @@ export default {
     paymentNotAvailable: 'Payment is not available at this time. Coming soon.',
   },
   onboarding: {
-    welcome: 'Welcome to AniVoice!',
+    welcome: 'Welcome to KoeDub!',
     step1Title: 'Upload your video',
     step1Desc: 'Upload an anime video in MP4, MOV, or WebM format. Drag & drop is supported.',
     step2Title: 'Choose dubbing language',
@@ -282,7 +282,7 @@ export default {
     terms: 'Terms of Service',
     privacy: 'Privacy Policy',
     dmca: 'DMCA',
-    allRights: '© 2026 AniVoice. All rights reserved.',
+    allRights: '© 2026 KoeDub. All rights reserved.',
   },
   pageTitle: {
     landing: 'Home',
@@ -298,14 +298,14 @@ export default {
   },
   pageDesc: {
     landing: 'AI anime dubbing service — preserve character voices and dub into 6+ languages.',
-    auth: 'Sign in to AniVoice to manage your dubbing projects.',
+    auth: 'Sign in to KoeDub to manage your dubbing projects.',
     dashboard: 'View your dubbing projects, credits, and usage at a glance.',
     studio: 'Upload an anime video and dub it into your chosen language with AI.',
     library: 'Explore and enjoy publicly shared dubbed works.',
     libraryDetail: 'View dubbing results, download video, audio, and subtitles.',
     pricing: 'Choose a plan that fits your dubbing needs.',
     settings: 'Manage your account, language, and preferences.',
-    test: 'Developer tools for testing AniVoice API integration.',
+    test: 'Developer tools for testing KoeDub API integration.',
     notFound: 'The page you are looking for could not be found.',
   },
   notFound: {

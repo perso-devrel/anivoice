@@ -1,7 +1,7 @@
-# AniVoice Roadmap
+# KoeDub Roadmap
 
 프로젝트의 향후 개발 방향입니다. 우선순위는 변경될 수 있습니다.
-기능 제안은 [GitHub Discussions](https://github.com/perso-devrel/anivoice/discussions)에서 환영합니다.
+기능 제안은 [GitHub Discussions](https://github.com/perso-devrel/KoeDub/discussions)에서 환영합니다.
 
 ---
 

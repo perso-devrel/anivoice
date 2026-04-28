@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import type { DbProject } from '../services/anivoiceApi';
+import type { DbProject } from '../services/koedubApi';
 import type { ProjectStatus } from '../types';
 import { getProgressBarColor } from '../utils/dashboard';
 import { formatDuration } from '../utils/format';

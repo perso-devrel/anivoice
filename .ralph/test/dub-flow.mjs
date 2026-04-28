@@ -9,7 +9,7 @@
  *   node .ralph/test/dub-flow.mjs
  *
  * 환경변수:
- *   BASE_URL          (default: https://anivoice-lime.vercel.app)
+ *   BASE_URL          (default: https://koedub.vercel.app)
  *   TARGET_LANGUAGE   (default: en)
  *   POLL_INTERVAL_MS  (default: 8000)
  *   MAX_POLL_MINUTES  (default: 25)  — 한 영상당 최대 대기
@@ -29,7 +29,7 @@ const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
 const STATE_FILE = path.join(__dirname, 'state.json');
 
-const BASE_URL = (process.env.BASE_URL || 'https://anivoice-lime.vercel.app').replace(/\/+$/, '');
+const BASE_URL = (process.env.BASE_URL || 'https://koedub.vercel.app').replace(/\/+$/, '');
 const PROXY = `${BASE_URL}/api/perso`;
 const TARGET_LANGUAGE = process.env.TARGET_LANGUAGE || 'en';
 const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS || 8000);

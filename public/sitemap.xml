@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://anivoice-lime.vercel.app/</loc>
+    <loc>https://koedub.vercel.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://anivoice-lime.vercel.app/archive</loc>
+    <loc>https://koedub.vercel.app/archive</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://anivoice-lime.vercel.app/pricing</loc>
+    <loc>https://koedub.vercel.app/pricing</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://anivoice-lime.vercel.app/login</loc>
+    <loc>https://koedub.vercel.app/login</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://anivoice-lime.vercel.app/signup</loc>
+    <loc>https://koedub.vercel.app/signup</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

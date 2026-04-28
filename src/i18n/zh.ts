@@ -1,6 +1,6 @@
 export default {
   common: {
-    appName: 'AniVoice',
+    appName: 'KoeDub',
     tagline: '保留角色声音，用你的语言欣赏',
     login: '登录',
     signup: '注册',
@@ -75,8 +75,8 @@ export default {
     step3: '查看结果',
     step3Desc: '预览配音视频并下载。',
     faq: '常见问题',
-    faqVoiceQ: 'AniVoice 如何保留角色原声？',
-    faqVoiceA: 'AniVoice 使用先进的AI声音克隆技术，分析每个角色声音的特征（音调、音色、节奏、情感），在目标语言重建音频时保留这些特征。',
+    faqVoiceQ: 'KoeDub 如何保留角色原声？',
+    faqVoiceA: 'KoeDub 使用先进的AI声音克隆技术，分析每个角色声音的特征（音调、音色、节奏、情感），在目标语言重建音频时保留这些特征。',
     faqLimitQ: '视频时长有限制吗？',
     faqLimitA: '按每分钟$1购买点数，只需为实际使用量付费。',
     faqFormatQ: '支持哪些视频格式？',
@@ -253,7 +253,7 @@ export default {
     paymentNotAvailable: '目前暂不支持支付功能，敬请期待。',
   },
   onboarding: {
-    welcome: '欢迎来到 AniVoice！',
+    welcome: '欢迎来到 KoeDub！',
     step1Title: '上传视频',
     step1Desc: '上传 MP4、MOV、WebM 格式的动漫视频，支持拖放上传。',
     step2Title: '选择配音语言',
@@ -282,7 +282,7 @@ export default {
     terms: '服务条款',
     privacy: '隐私政策',
     dmca: 'DMCA',
-    allRights: '© 2026 AniVoice. All rights reserved.',
+    allRights: '© 2026 KoeDub. All rights reserved.',
   },
   pageTitle: {
     landing: '首页',
@@ -298,14 +298,14 @@ export default {
   },
   pageDesc: {
     landing: 'AI动漫配音服务 — 保留角色声音，支持6种以上语言配音。',
-    auth: '登录 AniVoice 管理你的配音项目。',
+    auth: '登录 KoeDub 管理你的配音项目。',
     dashboard: '一览配音项目、点数和使用量。',
     studio: '上传动漫视频，用AI配音为你喜欢的语言。',
     library: '探索和欣赏公开的配音作品。',
     libraryDetail: '查看配音结果，下载视频、音频和字幕。',
     pricing: '选择适合你配音需求的方案。',
     settings: '管理账户、语言和偏好设置。',
-    test: '用于 AniVoice API 集成测试的开发者工具。',
+    test: '用于 KoeDub API 集成测试的开发者工具。',
     notFound: '找不到您请求的页面。',
   },
   notFound: {

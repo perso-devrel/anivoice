@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { useClipboard } from '../hooks/useClipboard';
-import { getLibraryItem, type LibraryItemDetail } from '../services/anivoiceApi';
+import { getLibraryItem, type LibraryItemDetail } from '../services/koedubApi';
 import { formatCreditTimeMs } from '../utils/format';
 import { resolvePersoFileUrl } from '../services/persoApi';
 import { DownloadIcon, LinkIcon, ChevronLeftIcon, LoadingSpinner } from '../components/icons';

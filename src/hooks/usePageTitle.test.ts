@@ -31,7 +31,7 @@ const canonicalEl = { setAttribute: vi.fn(), removeAttribute: vi.fn() };
 
 Object.defineProperty(globalThis, 'document', {
   value: {
-    title: 'AniVoice',
+    title: 'KoeDub',
     querySelector: (sel: string) => {
       if (sel === 'meta[name="description"]') return metaEl;
       if (sel === 'link[rel="canonical"]') return canonicalEl;
@@ -45,7 +45,7 @@ Object.defineProperty(globalThis, 'document', {
 
 Object.defineProperty(globalThis, 'window', {
   value: {
-    location: { origin: 'https://anivoice-lime.vercel.app', pathname: '/dashboard' },
+    location: { origin: 'https://koedub.vercel.app', pathname: '/dashboard' },
   },
   writable: true,
 });
@@ -54,7 +54,7 @@ import { usePageTitle } from './usePageTitle';
 
 describe('usePageTitle', () => {
   beforeEach(() => {
-    document.title = 'AniVoice';
+    document.title = 'KoeDub';
     effectFn = null;
     metaEl.getAttribute.mockReturnValue('default desc');
     metaEl.setAttribute.mockClear();
@@ -65,26 +65,26 @@ describe('usePageTitle', () => {
   it('sets document.title with translated key and app name', () => {
     usePageTitle('pageTitle.dashboard');
     effectFn?.();
-    expect(document.title).toBe('Dashboard | AniVoice');
+    expect(document.title).toBe('Dashboard | KoeDub');
   });
 
   it('uses different title for studio', () => {
     usePageTitle('pageTitle.studio');
     effectFn?.();
-    expect(document.title).toBe('Dubbing Studio | AniVoice');
+    expect(document.title).toBe('Dubbing Studio | KoeDub');
   });
 
   it('falls back to app name when translation is empty', () => {
     usePageTitle('pageTitle.empty');
     effectFn?.();
-    expect(document.title).toBe('AniVoice');
+    expect(document.title).toBe('KoeDub');
   });
 
   it('cleanup restores default title', () => {
     usePageTitle('pageTitle.dashboard');
     const cleanup = effectFn?.() as unknown as (() => void) | undefined;
     cleanup?.();
-    expect(document.title).toBe('AniVoice');
+    expect(document.title).toBe('KoeDub');
   });
 
   it('sets meta description from pageDesc key', () => {
@@ -117,7 +117,7 @@ describe('usePageTitle', () => {
     effectFn?.();
     expect(canonicalEl.setAttribute).toHaveBeenCalledWith(
       'href',
-      'https://anivoice-lime.vercel.app/dashboard',
+      'https://koedub.vercel.app/dashboard',
     );
   });
 
@@ -126,7 +126,7 @@ describe('usePageTitle', () => {
     effectFn?.();
     expect(canonicalEl.setAttribute).toHaveBeenCalledWith(
       'href',
-      'https://anivoice-lime.vercel.app/dashboard',
+      'https://koedub.vercel.app/dashboard',
     );
     expect(document.head.appendChild).not.toHaveBeenCalled();
   });

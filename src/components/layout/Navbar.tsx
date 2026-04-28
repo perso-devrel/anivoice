@@ -98,7 +98,7 @@ export default function Navbar() {
               <div className="absolute inset-0 bg-lucy" style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
               <div className="absolute inset-0 bg-david" style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 100%)' }} />
               <span className="absolute inset-0 flex items-center justify-center font-display font-black text-sm text-void group-hover:[text-shadow:-1px_0_var(--color-wire),1px_0_var(--color-rebecca)] transition-all">
-                A
+                K
               </span>
             </div>
             <span className="font-display font-bold text-lg text-bone group-hover:text-lucy transition-colors">
