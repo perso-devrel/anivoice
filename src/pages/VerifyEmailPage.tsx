@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
@@ -17,9 +17,29 @@ export default function VerifyEmailPage() {
   const { user } = useAuthStore();
   const [resending, setResending] = useState(false);
   const [checking, setChecking] = useState(false);
-  const [cooldownUntil, setCooldownUntil] = useState(0);
+  const [cooldownLeft, setCooldownLeft] = useState(0);
+  const cooldownTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const cooldownLeft = Math.max(0, cooldownUntil - Date.now());
+  useEffect(() => {
+    return () => {
+      if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
+    };
+  }, []);
+
+  const startCooldown = (ms: number) => {
+    const startedAt = Date.now();
+    setCooldownLeft(ms);
+    if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
+    cooldownTimerRef.current = setInterval(() => {
+      const left = Math.max(0, ms - (Date.now() - startedAt));
+      setCooldownLeft(left);
+      if (left === 0 && cooldownTimerRef.current) {
+        clearInterval(cooldownTimerRef.current);
+        cooldownTimerRef.current = null;
+      }
+    }, 1000);
+  };
+
   const canResend = cooldownLeft === 0 && !resending;
 
   const handleResend = async () => {
@@ -27,7 +47,7 @@ export default function VerifyEmailPage() {
     setResending(true);
     try {
       await resendEmailVerification();
-      setCooldownUntil(Date.now() + RESEND_COOLDOWN_MS);
+      startCooldown(RESEND_COOLDOWN_MS);
       showToast(t('auth.verifyResent'), 'success');
     } catch (err) {
       showToast(mapAuthError(err, t));

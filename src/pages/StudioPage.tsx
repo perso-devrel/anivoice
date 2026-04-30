@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { useClipboard } from '../hooks/useClipboard';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   listSpaces,
   uploadVideoFile,
@@ -47,8 +47,6 @@ import { showToast } from '../stores/toastStore';
 export default function StudioPage() {
   const { t } = useTranslation();
   usePageTitle('pageTitle.studio');
-  const navigate = useNavigate();
-
   const [searchParams] = useSearchParams();
 
   const [step, setStep] = useState<Step>('upload');
@@ -165,6 +163,10 @@ export default function StudioPage() {
     setStep('settings');
 
     const url = URL.createObjectURL(file);
+    if (!url.startsWith('blob:')) {
+      // URL.createObjectURL must return a blob: URL; bail out if not.
+      return;
+    }
     const video = document.createElement('video');
     video.preload = 'metadata';
     video.onloadedmetadata = () => {
@@ -295,7 +297,7 @@ export default function StudioPage() {
       setRemainingMinutes(null);
       setIsProcessing(false);
     }
-  }, [selectedFile, sourceLanguage, targetLanguages, apiKey, t, navigate]);
+  }, [selectedFile, sourceLanguage, targetLanguages, apiKey, t]);
 
   async function handleSaveSentence(sentenceSeq: number) {
     if (!projectSeq || !(sentenceSeq in editingValues)) return;
