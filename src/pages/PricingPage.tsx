@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
-import { purchaseCredits } from '../services/koedubApi';
 import { formatCreditTime } from '../utils/format';
 import { showToast } from '../stores/toastStore';
 import { trackEvent } from '../services/analytics';
@@ -16,7 +15,6 @@ import {
   TIME_PACK_10_MIN_PRICE,
   TIME_PACK_50_MIN_PRICE,
   TIME_PACK_100_MIN_PRICE,
-  FAKE_PAYMENT_DELAY_MS,
   MOCK_CARD_DEFAULTS,
   CREDIT_PRICE_PER_MINUTE_USD,
 } from '../utils/pricing';
@@ -41,7 +39,6 @@ export default function PricingPage() {
 
   const [modal, setModal] = useState<ModalState | null>(null);
   const [cardForm, setCardForm] = useState<CardForm>(MOCK_CARD_DEFAULTS);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [selectedSeconds, setSelectedSeconds] = useState<number | null>(null);
 
   const handleCardFormChange = (field: keyof CardForm, value: string) => {
@@ -49,7 +46,7 @@ export default function PricingPage() {
   };
 
   const handleBuyTime = (pkg: typeof TIME_PACKAGE_CONFIGS[number]) => {
-    trackEvent('checkout_attempt', {
+    trackEvent('checkout_open', {
       package_seconds: pkg.seconds,
       package_price_usd: pkg.priceNum,
       logged_in: !!user,
@@ -58,8 +55,6 @@ export default function PricingPage() {
       navigate('/login');
       return;
     }
-    showToast(t('pricing.paymentNotAvailable'), 'info');
-    return;
 
     const label = t(pkg.labelKey);
     setSelectedSeconds(pkg.seconds);
@@ -72,26 +67,11 @@ export default function PricingPage() {
 
   const handleCheckout = async () => {
     if (!user || !modal) return;
-    setIsProcessing(true);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, FAKE_PAYMENT_DELAY_MS));
-
-      const result = await purchaseCredits({
-        seconds: modal.seconds,
-        description: t('pricing.creditRecharge', { amount: modal.label }),
-        paymentIntentId: `mock_${Date.now()}`,
-      });
-      useAuthStore.getState().setCreditSeconds(result.creditSeconds);
-
-      setIsProcessing(false);
-      setModal(null);
-      setSelectedSeconds(null);
-      showToast(t('pricing.creditsAdded', { amount: modal.label }), 'success');
-    } catch {
-      setIsProcessing(false);
-      showToast(t('pricing.paymentError'));
-    }
+    trackEvent('checkout_attempt', {
+      package_seconds: modal.seconds,
+      package_label: modal.label,
+    });
+    showToast(t('pricing.paymentNotAvailable'), 'info');
   };
 
   return (
@@ -199,7 +179,7 @@ export default function PricingPage() {
           label={modal.label}
           price={modal.price}
           cardForm={cardForm}
-          isProcessing={isProcessing}
+          isProcessing={false}
           onCardFormChange={handleCardFormChange}
           onCheckout={handleCheckout}
           onClose={() => { setModal(null); setSelectedSeconds(null); }}
