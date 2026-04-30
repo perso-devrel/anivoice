@@ -2,10 +2,12 @@ import type { Analytics } from 'firebase/analytics';
 
 const MEASUREMENT_ID = import.meta.env.VITE_FIREBASE_MEASUREMENT_ID;
 const FIREBASE_API_KEY = import.meta.env.VITE_FIREBASE_API_KEY;
+const APP_ID = import.meta.env.VITE_FIREBASE_APP_ID;
 const ENABLED =
   !!FIREBASE_API_KEY &&
   FIREBASE_API_KEY !== 'your_firebase_key' &&
-  !!MEASUREMENT_ID;
+  !!MEASUREMENT_ID &&
+  !!APP_ID;
 
 if (typeof window !== 'undefined') {
   // 진단용 로그: 배포된 사이트 콘솔에서 한 번만 노출되어 어떤 단계에서
@@ -13,6 +15,7 @@ if (typeof window !== 'undefined') {
   console.info('[KoeDub Analytics] init', {
     enabled: ENABLED,
     hasApiKey: !!FIREBASE_API_KEY,
+    hasAppId: !!APP_ID,
     measurementId: MEASUREMENT_ID || '(missing)',
   });
 }
@@ -36,6 +39,7 @@ async function getAnalytics(): Promise<Analytics | null> {
         apiKey: FIREBASE_API_KEY,
         authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
         projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+        appId: APP_ID,
         measurementId: MEASUREMENT_ID,
       });
       const a = analyticsMod.getAnalytics(app);
