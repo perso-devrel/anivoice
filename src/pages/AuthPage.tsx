@@ -37,6 +37,11 @@ export default function AuthPage() {
 
   const handleSuccess = (u: User) => {
     useAuthStore.getState().setUser(u);
+    const isPassword = !u.providerId || u.providerId === 'password';
+    if (isPassword && u.emailVerified === false) {
+      navigate('/verify-email', { replace: true });
+      return;
+    }
     const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/dashboard';
     navigate(from, { replace: true });
   };

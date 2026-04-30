@@ -16,7 +16,15 @@ const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const TestPage = lazy(() => import('./pages/TestPage'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
+const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+
+function needsEmailVerification(user: { emailVerified?: boolean; providerId?: string } | null) {
+  if (!user) return false;
+  // Google/OAuth users come pre-verified; only password users get gated.
+  const isPassword = !user.providerId || user.providerId === 'password';
+  return isPassword && user.emailVerified === false;
+}
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuthStore();
@@ -32,6 +40,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (needsEmailVerification(user) && location.pathname !== '/verify-email') {
+    return <Navigate to="/verify-email" replace />;
   }
 
   return <>{children}</>;
@@ -62,6 +74,14 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<AuthPage />} />
         <Route path="/signup" element={<AuthPage />} />
+        <Route
+          path="/verify-email"
+          element={
+            <ProtectedRoute>
+              <VerifyEmailPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/archive" element={<LibraryPage />} />
         <Route path="/archive/:id" element={<LibraryDetailPage />} />
         <Route path="/pricing" element={<PricingPage />} />

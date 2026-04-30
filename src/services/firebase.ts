@@ -125,6 +125,8 @@ type GoogleFn = () => Promise<User>;
 type SignOutFn = () => Promise<void>;
 type InitFn = () => void;
 type UpdateProfileFn = (displayName: string) => Promise<void>;
+type ResendVerificationFn = () => Promise<void>;
+type ReloadFn = () => Promise<boolean>;
 
 let firebaseSignIn: SignInFn;
 let firebaseSignUp: SignUpFn;
@@ -132,6 +134,8 @@ let firebaseGoogleSignIn: GoogleFn;
 let firebaseSignOut: SignOutFn;
 let firebaseInitListener: InitFn;
 let firebaseUpdateProfile: UpdateProfileFn;
+let firebaseResendVerification: ResendVerificationFn;
+let firebaseReloadEmailVerified: ReloadFn;
 
 if (FIREBASE_CONFIGURED) {
   // Lazy import to avoid Firebase init errors when not configured
@@ -156,6 +160,8 @@ if (FIREBASE_CONFIGURED) {
       creditSeconds: 0,
       language: 'ko',
       createdAt: fbUser.metadata.creationTime || new Date().toISOString(),
+      emailVerified: fbUser.emailVerified,
+      providerId: fbUser.providerData[0]?.providerId,
     };
   }
 
@@ -172,7 +178,27 @@ if (FIREBASE_CONFIGURED) {
   firebaseSignUp = async (email: string, password: string, displayName: string) => {
     const result = await firebaseAuth.createUserWithEmailAndPassword(auth, email, password);
     await firebaseAuth.updateProfile(result.user, { displayName });
+    await firebaseAuth.sendEmailVerification(result.user);
     return mapFirebaseUser(result.user);
+  };
+
+  firebaseResendVerification = async () => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) throw new Error('Not authenticated');
+    if (currentUser.emailVerified) return;
+    await firebaseAuth.sendEmailVerification(currentUser);
+  };
+
+  firebaseReloadEmailVerified = async () => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return false;
+    await currentUser.reload();
+    const verified = !!auth.currentUser?.emailVerified;
+    if (verified) {
+      const { user } = useAuthStore.getState();
+      if (user) useAuthStore.getState().setUser({ ...user, emailVerified: true });
+    }
+    return verified;
   };
 
   firebaseSignOut = async () => {
@@ -202,9 +228,26 @@ if (FIREBASE_CONFIGURED) {
 
 // ── Exports (auto-switch between mock and Firebase) ──
 
+const mockResendVerification: ResendVerificationFn = async () => {
+  await new Promise((r) => setTimeout(r, 300));
+};
+
+const mockReloadEmailVerified: ReloadFn = async () => {
+  const user = getMockUser();
+  if (!user) return false;
+  if (!user.emailVerified) {
+    const verified = { ...user, emailVerified: true };
+    setMockUser(verified);
+    useAuthStore.getState().setUser(verified);
+  }
+  return true;
+};
+
 export const signInWithEmail: SignInFn = FIREBASE_CONFIGURED ? firebaseSignIn! : mockSignInWithEmail;
 export const signUpWithEmail: SignUpFn = FIREBASE_CONFIGURED ? firebaseSignUp! : mockSignUpWithEmail;
 export const signInWithGoogle: GoogleFn = FIREBASE_CONFIGURED ? firebaseGoogleSignIn! : mockSignInWithGoogle;
 export const signOut: SignOutFn = FIREBASE_CONFIGURED ? firebaseSignOut! : mockSignOut;
 export const initAuthListener: InitFn = FIREBASE_CONFIGURED ? firebaseInitListener! : mockInitAuthListener;
 export const updateProfile: UpdateProfileFn = FIREBASE_CONFIGURED ? firebaseUpdateProfile! : mockUpdateProfile;
+export const resendEmailVerification: ResendVerificationFn = FIREBASE_CONFIGURED ? firebaseResendVerification! : mockResendVerification;
+export const reloadEmailVerified: ReloadFn = FIREBASE_CONFIGURED ? firebaseReloadEmailVerified! : mockReloadEmailVerified;

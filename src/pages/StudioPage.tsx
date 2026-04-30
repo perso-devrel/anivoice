@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { useClipboard } from '../hooks/useClipboard';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   listSpaces,
   uploadVideoFile,
@@ -15,6 +15,7 @@ import {
   requestProofread,
   getDownloadLinks,
   resolvePersoFileUrl,
+  setPersoApiKey,
 } from '../services/persoApi';
 import { createProject, updateProject, deductCredits, getTags, publishProject, getProjectByPersoSeq } from '../services/koedubApi';
 import { useAuthStore } from '../stores/authStore';
@@ -28,6 +29,7 @@ import {
   computeDeductSeconds,
   buildShareUrl,
   toggleArrayItem,
+  formatTimecode,
   PROGRESS_GET_SPACE,
   PROGRESS_UPLOAD_START,
   PROGRESS_UPLOAD_DONE,
@@ -45,14 +47,14 @@ import { showToast } from '../stores/toastStore';
 export default function StudioPage() {
   const { t } = useTranslation();
   usePageTitle('pageTitle.studio');
-  const navigate = useNavigate();
-
   const [searchParams] = useSearchParams();
 
   const [step, setStep] = useState<Step>('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [videoDuration, setVideoDuration] = useState(0);
   const [sourceLanguage, setSourceLanguage] = useState('auto');
   const [targetLanguages, setTargetLanguages] = useState<string[]>([]);
+  const [apiKey, setApiKey] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [processStage, setProcessStage] = useState<'uploading' | 'dubbing' | 're-dubbing' | 'done'>('uploading');
   const [progress, setProgress] = useState(0);
@@ -159,14 +161,34 @@ export default function StudioPage() {
     setSelectedFile(file);
     setError(null);
     setStep('settings');
+
+    const url = URL.createObjectURL(file);
+    let parsed: URL;
+    try {
+      parsed = new URL(url);
+    } catch {
+      URL.revokeObjectURL(url);
+      return;
+    }
+    if (parsed.protocol !== 'blob:') {
+      URL.revokeObjectURL(url);
+      return;
+    }
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.onloadedmetadata = () => {
+      setVideoDuration(video.duration);
+      URL.revokeObjectURL(url);
+    };
+    video.src = parsed.href;
   }
 
   const handleStartDubbing = useCallback(async () => {
-    const userEmail = useAuthStore.getState().user?.email;
-    if (userEmail !== 'ronald@estsoft.com') {
-      showToast(t('studio.creditShortageNotice'), 'error');
+    if (!apiKey.trim()) {
+      showToast(t('studio.apiKeyRequired'), 'error');
       return;
     }
+    setPersoApiKey(apiKey);
 
     setIsProcessing(true);
     setError(null);
@@ -282,7 +304,7 @@ export default function StudioPage() {
       setRemainingMinutes(null);
       setIsProcessing(false);
     }
-  }, [selectedFile, sourceLanguage, targetLanguages, t, navigate]);
+  }, [selectedFile, sourceLanguage, targetLanguages, apiKey, t]);
 
   async function handleSaveSentence(sentenceSeq: number) {
     if (!projectSeq || !(sentenceSeq in editingValues)) return;
@@ -398,6 +420,7 @@ export default function StudioPage() {
   function handleResetProject() {
     setStep('upload');
     setSelectedFile(null);
+    setVideoDuration(0);
     setTargetLanguages([]);
     setProjectSeq(null);
     setSpaceSeq(null);
@@ -417,7 +440,7 @@ export default function StudioPage() {
         <span className="font-mono text-[11px] uppercase tracking-widest text-bone/40">
           {selectedFile ? selectedFile.name : t('studio.uploadTitle')}
         </span>
-        <span className="font-mono text-[11px] tracking-wider text-wire">00:00:00:00</span>
+        <span className="font-mono text-[11px] tracking-wider text-wire">{formatTimecode(videoDuration)}</span>
       </div>
       <div className="max-w-6xl mx-auto px-6 md:px-12 py-6 sm:py-8">
         <StepIndicator currentStep={step} labels={stepLabels} />
@@ -427,6 +450,8 @@ export default function StudioPage() {
             selectedFile={selectedFile}
             sourceLanguage={sourceLanguage}
             targetLanguages={targetLanguages}
+            apiKey={apiKey}
+            onApiKeyChange={setApiKey}
             onFileReset={handleFileReset}
             onSourceLanguageChange={handleSourceLanguageChange}
             onTargetLanguageToggle={handleTargetLanguageToggle}

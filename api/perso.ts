@@ -11,12 +11,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return sendAuthAwareError(res, e);
   }
 
-  const apiKey = process.env.XP_API_KEY;
+  // The Perso API key is provided per-request by the client in the `X-Perso-Api-Key` header.
+  // It is NOT read from environment variables, written to disk, logged, or persisted in any form —
+  // it is forwarded once to Perso as `XP-API-KEY` and discarded when the request ends.
+  const headerKey = req.headers['x-perso-api-key'];
+  const apiKey = (Array.isArray(headerKey) ? headerKey[0] : headerKey)?.trim();
   const baseUrl = (process.env.PERSO_API_BASE_URL || 'https://api.perso.ai').replace(/\/+$/, '');
 
   if (!apiKey) {
-    return res.status(500).json({
-      error: 'XP_API_KEY is not configured. Check Vercel environment variables or .env file.',
+    return res.status(401).json({
+      error: 'Perso API key missing. Provide it in the dubbing settings before starting.',
     });
   }
 
