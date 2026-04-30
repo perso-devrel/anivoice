@@ -76,7 +76,7 @@ export default function PricingPage() {
     setIsProcessing(true);
     await new Promise((resolve) => setTimeout(resolve, FAKE_PAYMENT_DELAY_MS));
     setIsProcessing(false);
-    showToast(t('pricing.paymentError'), 'error');
+    showToast(t('pricing.paymentNotAvailable'), 'error');
   };
 
   return (
