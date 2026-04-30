@@ -24,6 +24,16 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+let userPersoApiKey: string | null = null;
+
+export function setPersoApiKey(key: string | null) {
+  userPersoApiKey = key && key.trim() ? key.trim() : null;
+}
+
+export function getPersoApiKey(): string | null {
+  return userPersoApiKey;
+}
+
 api.interceptors.request.use(async (config) => {
   try {
     const { getAuth } = await import('firebase/auth');
@@ -33,6 +43,9 @@ api.interceptors.request.use(async (config) => {
     }
   } catch {
     // Firebase not available
+  }
+  if (userPersoApiKey) {
+    config.headers['X-Perso-Api-Key'] = userPersoApiKey;
   }
   return config;
 });

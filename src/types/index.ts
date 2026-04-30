@@ -6,6 +6,8 @@ export interface User {
   creditSeconds: number;
   language: SupportedLanguage;
   createdAt: string;
+  emailVerified?: boolean;
+  providerId?: string;
 }
 
 export type SupportedLanguage = 'ja' | 'ko' | 'en' | 'es' | 'pt' | 'id' | 'ar' | 'zh';

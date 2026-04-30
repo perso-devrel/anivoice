@@ -15,6 +15,7 @@ import {
   requestProofread,
   getDownloadLinks,
   resolvePersoFileUrl,
+  setPersoApiKey,
 } from '../services/persoApi';
 import { createProject, updateProject, deductCredits, getTags, publishProject, getProjectByPersoSeq } from '../services/koedubApi';
 import { useAuthStore } from '../stores/authStore';
@@ -55,6 +56,7 @@ export default function StudioPage() {
   const [videoDuration, setVideoDuration] = useState(0);
   const [sourceLanguage, setSourceLanguage] = useState('auto');
   const [targetLanguages, setTargetLanguages] = useState<string[]>([]);
+  const [apiKey, setApiKey] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [processStage, setProcessStage] = useState<'uploading' | 'dubbing' | 're-dubbing' | 'done'>('uploading');
   const [progress, setProgress] = useState(0);
@@ -173,11 +175,11 @@ export default function StudioPage() {
   }
 
   const handleStartDubbing = useCallback(async () => {
-    const userEmail = useAuthStore.getState().user?.email;
-    if (userEmail !== 'ronald@estsoft.com') {
-      showToast(t('studio.creditShortageNotice'), 'error');
+    if (!apiKey.trim()) {
+      showToast(t('studio.apiKeyRequired'), 'error');
       return;
     }
+    setPersoApiKey(apiKey);
 
     setIsProcessing(true);
     setError(null);
@@ -293,7 +295,7 @@ export default function StudioPage() {
       setRemainingMinutes(null);
       setIsProcessing(false);
     }
-  }, [selectedFile, sourceLanguage, targetLanguages, t, navigate]);
+  }, [selectedFile, sourceLanguage, targetLanguages, apiKey, t, navigate]);
 
   async function handleSaveSentence(sentenceSeq: number) {
     if (!projectSeq || !(sentenceSeq in editingValues)) return;
@@ -439,6 +441,8 @@ export default function StudioPage() {
             selectedFile={selectedFile}
             sourceLanguage={sourceLanguage}
             targetLanguages={targetLanguages}
+            apiKey={apiKey}
+            onApiKeyChange={setApiKey}
             onFileReset={handleFileReset}
             onSourceLanguageChange={handleSourceLanguageChange}
             onTargetLanguageToggle={handleTargetLanguageToggle}

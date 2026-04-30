@@ -19,6 +19,8 @@ interface SettingsStepProps {
   selectedFile: File | null;
   sourceLanguage: string;
   targetLanguages: string[];
+  apiKey: string;
+  onApiKeyChange: (key: string) => void;
   onFileReset: () => void;
   onSourceLanguageChange: (lang: string) => void;
   onTargetLanguageToggle: (lang: string) => void;
@@ -29,12 +31,16 @@ export function SettingsStep({
   selectedFile,
   sourceLanguage,
   targetLanguages,
+  apiKey,
+  onApiKeyChange,
   onFileReset,
   onSourceLanguageChange,
   onTargetLanguageToggle,
   onStartDubbing,
 }: SettingsStepProps) {
   const { t } = useTranslation();
+  const apiKeyMissing = !apiKey.trim();
+  const canStart = !apiKeyMissing && targetLanguages.length > 0;
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -72,6 +78,25 @@ export function SettingsStep({
             </option>
           ))}
         </select>
+      </SettingsSection>
+
+      <SettingsSection label="API KEY">
+        <label className="block font-mono uppercase text-[11px] tracking-widest text-bone/50">
+          {t('studio.apiKeyLabel')}
+          <span className="ml-1 text-red-400" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="password"
+          value={apiKey}
+          onChange={(e) => onApiKeyChange(e.target.value)}
+          placeholder={t('studio.apiKeyPlaceholder')}
+          autoComplete="off"
+          spellCheck={false}
+          className="w-full bg-void border-2 border-bone/30 px-4 py-2.5 text-sm text-bone placeholder-bone/30 focus:outline-none focus:border-lucy transition-colors font-mono"
+        />
+        <p className="text-[11px] text-bone/40 leading-relaxed">
+          {t('studio.apiKeyHint')}
+        </p>
       </SettingsSection>
 
       <SettingsSection label="TARGET">
@@ -117,12 +142,22 @@ export function SettingsStep({
       <button
         type="button"
         onClick={onStartDubbing}
-        disabled={targetLanguages.length === 0}
-        aria-disabled={targetLanguages.length === 0}
-        title={targetLanguages.length === 0 ? t('studio.selectTargetLanguage') : undefined}
+        disabled={!canStart}
+        aria-disabled={!canStart}
+        title={
+          apiKeyMissing
+            ? t('studio.apiKeyRequired')
+            : targetLanguages.length === 0
+              ? t('studio.selectTargetLanguage')
+              : undefined
+        }
         className="w-full bg-david text-void font-mono font-bold uppercase tracking-widest py-3 text-base border-2 border-david hover:bg-void hover:text-david transition-colors disabled:opacity-40 disabled:cursor-not-allowed flicker-on-hover"
       >
-        {targetLanguages.length > 0 ? (<>EXECUTE DUBBING &#9654;</>) : t('studio.selectTargetLanguage')}
+        {apiKeyMissing
+          ? t('studio.apiKeyRequired')
+          : targetLanguages.length > 0
+            ? (<>EXECUTE DUBBING &#9654;</>)
+            : t('studio.selectTargetLanguage')}
       </button>
     </div>
   );
