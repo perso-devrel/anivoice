@@ -15,6 +15,7 @@ import {
   TIME_PACK_10_MIN_PRICE,
   TIME_PACK_50_MIN_PRICE,
   TIME_PACK_100_MIN_PRICE,
+  FAKE_PAYMENT_DELAY_MS,
   MOCK_CARD_DEFAULTS,
   CREDIT_PRICE_PER_MINUTE_USD,
 } from '../utils/pricing';
@@ -40,6 +41,7 @@ export default function PricingPage() {
   const [modal, setModal] = useState<ModalState | null>(null);
   const [cardForm, setCardForm] = useState<CardForm>(MOCK_CARD_DEFAULTS);
   const [selectedSeconds, setSelectedSeconds] = useState<number | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleCardFormChange = (field: keyof CardForm, value: string) => {
     setCardForm((prev) => ({ ...prev, [field]: value }));
@@ -71,7 +73,10 @@ export default function PricingPage() {
       package_seconds: modal.seconds,
       package_label: modal.label,
     });
-    showToast(t('pricing.paymentNotAvailable'), 'info');
+    setIsProcessing(true);
+    await new Promise((resolve) => setTimeout(resolve, FAKE_PAYMENT_DELAY_MS));
+    setIsProcessing(false);
+    showToast(t('pricing.paymentError'), 'error');
   };
 
   return (
@@ -179,7 +184,7 @@ export default function PricingPage() {
           label={modal.label}
           price={modal.price}
           cardForm={cardForm}
-          isProcessing={false}
+          isProcessing={isProcessing}
           onCardFormChange={handleCardFormChange}
           onCheckout={handleCheckout}
           onClose={() => { setModal(null); setSelectedSeconds(null); }}
